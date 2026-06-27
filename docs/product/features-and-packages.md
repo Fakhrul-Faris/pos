@@ -397,6 +397,106 @@ Custom franchise / enterprise · white-label · API · custom SLA.
 
 ---
 
+## Why they upgrade
+
+**Principle:** Merchants upgrade when they **hit a wall in the moment** — not from a pricing page. Show the upgrade prompt **in context**, when pain is felt.
+
+**One-line ladder:**
+
+| Step | What the merchant thinks |
+| :--- | :--- |
+| **Lite → Ocelot** | *“My shop has 3 barbers — I need the system to match.”* |
+| **Ocelot → Mantis** | *“Booking is solved — now fix my payment mess.”* |
+| **Mantis → Patriot** | *“I have multiple branches — I need one dashboard.”* |
+
+---
+
+### Lite → Ocelot (RM109)
+
+**Lite = shop still open. Ocelot = run a real multi-chair barbershop.**
+
+| Trigger | What they feel | What Ocelot fixes |
+| :--- | :--- | :--- |
+| **Day 14 after trial** | Had 3 barbers + calendar — now barber 3 is gone | Keep the setup they already used |
+| **Add 2nd / 3rd barber** | Hired Ali — system only shows 1 chair | Up to 4 barbers + barber switcher on POS |
+| **25 online bookings hit** | QR full again — customers can’t book | Unlimited online bookings |
+| **Customer asks “boleh pilih barber?”** | Shop next door lets you pick | Pick-your-barber + **Full** badges |
+| **Peak hours chaos** | Walk-ins eat all online slots | Walk-in-only blocks + daily caps per barber |
+| **Owner asks “Ali dapat berapa?”** | No per-chair revenue view | Per-barber reports + CSV export |
+| **POS drops offline** | Queue lost when WiFi dies | Full offline sync |
+| **Need help** | Stuck on Lite = docs only | Email support |
+
+**Strongest hook (3-chair ICP):** Lite max = **1 barber**. They cannot run their shop without Ocelot — not upsell, but *pay or go back to WhatsApp booking*.
+
+**Psychology:** Loss aversion from 14-day trial. They tasted calendar + 3 barbers; day 15 removes it while **customer QR stays live** — they feel the gap, not betrayal.
+
+**ROI (EN):** *“RM109 = less than 4 haircuts/month. One extra online booking covers it.”*  
+**ROI (BM):** *“RM109 — kurang dari 4 potong rambut sebulan. Satu booking extra dah cover.”*
+
+#### In-app copy — Lite → Ocelot
+
+| Moment | EN | BM |
+| :--- | :--- | :--- |
+| Trial day 10 | Ali’s profile pauses in 4 days — keep full Ocelot for RM109/mo | Profil Ali pause 4 hari lagi — kekal Ocelot penuh RM109/bulan |
+| Add barber 2 | Add Ali — upgrade to Ocelot (4 barbers) | Tambah Ali — upgrade Ocelot (4 barber) |
+| Booking #26 | Online booking full this month — upgrade or wait till 1st | Booking online penuh bulan ni — upgrade atau tunggu 1hb |
+| Enable pick-barber | Customers pick their barber — Ocelot required | Customer pilih barber — perlu Ocelot |
+
+---
+
+### Ocelot → Mantis (RM199)
+
+**Ocelot runs the shop. Mantis stops the money headache.**
+
+| Trigger | What they feel | What Mantis fixes |
+| :--- | :--- | :--- |
+| **“Dah bayar belum?” all day** | Staff checking phones constantly | App QR → payment auto-closes order |
+| **Wrong DuitNow amount** | Customer paid RM45, bill RM54 | Dynamic QR — amount pre-filled |
+| **End-of-day tally mismatch** | Cash + 3 bank apps + chaos | Reconciliation dashboard |
+| **5th–8th barber / 2nd location** | Outgrew 4 chairs or new branch | 8 barbers · 2 locations |
+| **Large parties** | Groups of 6+ | Party size up to 8 |
+| **Want WhatsApp support** | Ocelot = email only | Priority WhatsApp included |
+| **High counter QR volume** | Lots of DuitNow at till | First RM20k/mo App QR at **0%** fee |
+
+**Strongest hook:** Payment pain, not booking pain. Ocelot customers already trust the product — Mantis sells **time back** and **fewer disputes at the counter**.
+
+**Psychology:** Not “more features” — *“I don’t chase payments anymore.”*
+
+**ROI (EN):** *“If auto-reconcile saves 30 min/day, RM199 is cheap for a second pair of hands.”*  
+**ROI (BM):** *“Jimat 30 minit sehari check payment — RM199 berbaloi.”*
+
+#### In-app copy — Ocelot → Mantis
+
+| Moment | EN | BM |
+| :--- | :--- | :--- |
+| End-of-day unmatched | 3 unmatched payments today — Mantis auto-reconciles | 3 payment tak match hari ni — Mantis auto rekod |
+| Checkout screen | Tired of checking bank app? Try Mantis | Penat check app bank? Cuba Mantis |
+| Add 5th barber | 5 chairs — upgrade to Mantis (8 barbers) | 5 kerusi — upgrade Mantis (8 barber) |
+
+---
+
+### Mantis → Patriot (RM349)
+
+| Trigger | What they feel | What Patriot fixes |
+| :--- | :--- | :--- |
+| **3+ locations** | Each branch is a silo | HQ dashboard + cross-branch reports |
+| **Franchise / partner shops** | Need central visibility | Multi-branch command centre |
+| **Compliance / scale** | Outgrown 2-location cap | Unlimited barbers · 5+ locations · SLA |
+
+*Patriot is Phase 1 aspirational tier — expect volume from Year 2+.*
+
+---
+
+### Who stays on Lite (acceptable)
+
+**Profile:** 1-chair solo · &lt;25 online bookings/mo · walk-in heavy.
+
+**Strategy:** Do not force upgrade. Low COGS (~RM4/mo). May refer a 3-chair shop later. Monitor Lite % of active — target **&lt;45% Y1**.
+
+**Do not optimize for Lite conversions.** Optimize for **3-chair ICP → Ocelot** at trial end and barber-cap wall.
+
+---
+
 ## Add-ons (optional)
 
 | Add-on | Price | Notes |
@@ -460,6 +560,7 @@ Custom franchise / enterprise · white-label · API · custom SLA.
 | 2026-06-25 | Lite: 1 barber · 25 bookings/mo · QR stays live |
 | 2026-06-25 | App QR on **Mantis+** (not discounted SaaS tier) |
 | 2026-06-25 | Founding barber RM89/mo — 50 shops/city cap |
+| 2026-06-27 | **Why they upgrade** — pain-based upgrade moments + in-app copy (EN/BM) |
 
 ---
 
