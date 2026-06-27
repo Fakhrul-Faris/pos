@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "Businessstrategy": {
+      "source": "robdtaylor/personal-ai-infrastructure",
+      "sourceType": "github",
+      "skillPath": "skills/BusinessStrategy/SKILL.md",
+      "computedHash": "4b53912ec9660b4c7b3592a29c8977b966b744e1d12a3a3e29ecb6f185fb724d"
+    },
+    "business-logic-vulnerabilities": {
+      "source": "yaklang/hack-skills",
+      "sourceType": "github",
+      "skillPath": "skills/business-logic-vulnerabilities/SKILL.md",
+      "computedHash": "5b528d1f75b264e7c25dc3cd24a1b1cf606f6bf27505616e68528188216f0121"
+    },
+    "business-model": {
+      "source": "phuryn/pm-skills",
+      "sourceType": "github",
+      "skillPath": "pm-product-strategy/skills/business-model/SKILL.md",
+      "computedHash": "c6eee0cd2d102bb2982a41c7e6ec49515146be622858f76d5a5e1977e144e755"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "computedHash": "781bd6d3f9b19f8c9af6b53d8d0e4876d0183841b565db34ca7092ffa412d111"
+    }
+  }
+}
