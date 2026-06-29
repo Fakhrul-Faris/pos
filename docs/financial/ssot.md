@@ -4,7 +4,7 @@
 **Supersedes:** Scattered §5 figures in [`../planning/initial-brd.md`](../planning/initial-brd.md) for **operational planning** (strategy narrative stays there).  
 **Related:** [`../product/features-and-packages.md`](../product/features-and-packages.md) · [`../product/barbershop-spec.md`](../product/barbershop-spec.md)
 
-**Version:** 2.0 · **Date:** June 2026 · **Update when:** pricing, infra stack, or forecast assumptions change.
+**Version:** 2.1 · **Date:** June 2026 · **Update when:** pricing, infra stack, HitPay terms, or forecast assumptions change.
 
 ---
 
@@ -33,12 +33,12 @@
 | ID | Input | Value | Notes |
 | :--- | :--- | :--- | :--- |
 | P-01 | Ocelot monthly | RM109 | vs StoreHub Starter RM122 |
-| P-02 | Mantis monthly | RM199 | vs StoreHub Advanced RM235; includes App QR |
+| P-02 | Mantis monthly | RM199 | vs StoreHub Advanced RM235; includes HitPay |
 | P-03 | Patriot monthly | RM349 | vs StoreHub Pro RM471 |
 | P-04 | Founding Ocelot (locked) | RM89/mo | First 50 shops/city; ~8% of Ocelot payers |
 | P-05 | Ocelot Lite | RM0 | Post-trial exit only — not signup tier |
-| P-06 | App QR net take rate | 0.70% | After partner share; Mantis+ only |
-| P-07 | App QR free volume cap | RM20,000/mo per merchant | 0% fee below |
+| P-06 | HitPay platform take | 0.80% of service subtotal | Customer pays 2% surcharge; Mantis+ only |
+| P-07 | HitPay partner share | ~1.20% of service subtotal | Of customer 2% fee; confirm with HitPay |
 | P-08 | Annual prepay | 10 months paid = 12 months | 17% discount |
 | P-09 | Extra barber add-on | RM19/mo | 9th+ chair |
 | P-10 | Extra POS screen | RM29/mo | |
@@ -86,22 +86,22 @@ Founding% = 8% of Ocelot payers
 | ID | Input | Y1 H2 | Y2 | Y3 |
 | :--- | :--- | :--- | :--- | :--- |
 | PAY-01 | Avg shop GMV / month | RM18,000 | RM22,000 | RM25,000 |
-| PAY-02 | % GMV through App QR | 35% | 50% | 55% |
-| PAY-03 | Net take (after partner) | 0.70% | 0.70% | 0.70% |
+| PAY-02 | % GMV through HitPay (Mantis+ merchants) | 35% | 50% | 55% |
+| PAY-03 | Platform take (of service subtotal) | 0.80% | 0.80% | 0.80% |
 | PAY-04 | % paying merchants on Mantis+ | 15% | 28% | 38% |
 
-**Payment net revenue per Mantis+ merchant / month:**
+**Payment net revenue per Mantis+ merchant / month** (fee on service subtotal, not customer total):
 
 ```
 pay_merchant = PAY-01 × PAY-02 × PAY-03
-             = 18000 × 0.35 × 0.007 ≈ RM44  (Y1 H2 example)
+             = 18000 × 0.35 × 0.008 ≈ RM50  (Y1 H2 example)
 ```
 
 | Year | pay_merchant | PAY-04 | Blended ARPU_pay (all paying) |
 | :--- | :--- | :--- | :--- |
-| Y1 | RM44 | 15% | **RM7** |
-| Y2 | RM77 | 28% | **RM22** |
-| Y3 | RM96 | 38% | **RM36** |
+| Y1 | RM50 | 15% | **RM8** |
+| Y2 | RM88 | 28% | **RM25** |
+| Y3 | RM110 | 38% | **RM42** |
 
 ### 1.4 Add-ons
 
@@ -138,9 +138,9 @@ ARPU_addons = A-01 × A-02
 | :--- | :--- | :--- | :--- | :--- |
 | COGS-F | Fixed platform RM/mo | RM200 | RM350 | RM600 |
 | COGS-V | Variable RM / merchant / mo | RM3 | RM4 | RM5 |
-| COGS-P | Payment partner share of pay gross | 30% | 30% | 30% |
+| COGS-P | HitPay partner share of customer 2% fee | ~60% | ~60% | ~60% |
 
-**Already netted in PAY-03** — do not double-count partner fee if using net take rate.
+**Platform net in PAY-03** (~0.8% of subtotal). Customer-facing surcharge is 2% — do not double-count partner share.
 
 ```
 COGS_month = COGS-F + (merchants × COGS-V)
@@ -180,7 +180,7 @@ OPEX_month = sum(OPEX-01..05)
 | :--- | :--- | :--- |
 | **Ocelot Lite** | RM0 | Trial exit — capped; not signup |
 | **Ocelot** | RM109/mo · RM1,090/yr | Recurring SaaS |
-| **Mantis** | RM199/mo · RM1,990/yr | SaaS + App QR included |
+| **Mantis** | RM199/mo · RM1,990/yr | SaaS + HitPay included |
 | **Patriot** | RM349/mo · RM3,490/yr | SaaS + multi-branch |
 | **Founding Ocelot** | RM89/mo locked | Promotional SaaS |
 | **Arsenal** | Custom (~RM500+) | Enterprise |
@@ -199,19 +199,19 @@ flowchart LR
         AD[Add-ons]
     end
     subgraph variable [Variable Phase 1B]
-        QR[App QR 0.7% net]
+        HP[HitPay ~0.8% of subtotal]
     end
     O --> MRR
     M --> MRR
     P --> MRR
     AD --> MRR
-    QR --> MRR
+    HP --> MRR
 ```
 
 | Stream | Recognition | Margin profile |
 | :--- | :--- | :--- |
 | **SaaS subscription** | Monthly / annual prepaid | **~80–95%** gross (target) |
-| **App QR net** | Per transaction | **~100%** of net (partner fee in PAY-03) |
+| **HitPay platform net** | Per transaction (Mantis+) | **~100%** of PAY-03 (partner in P-07) |
 | **Add-ons** | Monthly | **~90%** |
 
 **Explicitly RM0 variable:** Cash · merchant own DuitNow QR.
@@ -328,7 +328,7 @@ Using §1 inputs at **end-of-year paying merchant count**:
 | M5 | 7 | 11 | 1,008 | 0 | 1,008 | |
 | M6 | 11 | 18 | 1,584 | 0 | 1,584 | |
 | M7 | 16 | 24 | 2,304 | 0 | 2,304 | |
-| M8 | 22 | 30 | 3,168 | 154 | 3,322 | Mantis / App QR live |
+| M8 | 22 | 30 | 3,168 | 176 | 3,344 | Mantis / HitPay live |
 | M9 | 28 | 36 | 4,032 | 196 | 4,228 | |
 | M10 | 35 | 40 | 5,040 | 245 | 5,285 | PMF gate |
 | M11 | 40 | 42 | 5,760 | 280 | 6,040 | |
@@ -387,7 +387,7 @@ Track monthly. Copy to spreadsheet with same column names.
 | **Paying merchants** | Count active subscriptions | 45 | 130 |
 | **Lite merchants** | Post-trial free | 45 | 50 |
 | **MRR_saas** | Sum subscription invoices | RM6,480 | RM19,500 |
-| **MRR_pay** | App QR net fees | RM315 | RM2,860 |
+| **MRR_pay** | HitPay platform net | RM315 | RM2,860 |
 | **MRR_total** | SaaS + pay + addons | RM6,885 | RM22,880 |
 | **ARR** | MRR_total × 12 | RM82,620 | RM274,560 |
 | **ARPU_saas** | MRR_saas / paying | RM144 | RM150 |

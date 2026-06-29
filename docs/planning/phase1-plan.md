@@ -89,7 +89,7 @@ Stack record (aligned with team preference where noted):
 | Database | PostgreSQL (managed) |
 | Push (optional v1.1) | FCM — appointment reminders Phase 1B |
 | Media | Object storage + CDN for service photos |
-| E-invoice | MyInvois API integration (Pro tier) |
+| E-invoice | MyInvois add-on / Patriot (not MVP launch gate) |
 
 ---
 
@@ -164,13 +164,13 @@ Stack record (aligned with team preference where noted):
 
 | ID | Feature |
 | :--- | :--- |
-| B-01 | Pro + Payments (RM109/mo + 0.7% on App QR; 0% first RM20k/mo) |
-| B-02 | Dynamic DuitNow QR — amount pre-filled, auto-complete order |
-| B-03 | Multi-path checkout: App QR / Cash / Other DuitNow (no forced rail) |
+| B-01 | Mantis + HitPay (RM199/mo; customer pays 2% on QR/card) |
+| B-02 | HitPay QR + card tap — prefilled amount, auto-complete order |
+| B-03 | Multi-path checkout: HitPay / Cash / Own DuitNow (no forced rail) |
 | B-04 | Reconciliation dashboard — paid vs unmatched |
 | B-05 | SMS appointment/queue reminders (add-on) |
 | B-06 | Accountant read-only multi-client view (add-on) |
-| B-07 | Merchant referral tracking |
+| B-07 | Merchant referral — 1 month free after referee pays 1 month |
 
 ---
 
@@ -197,15 +197,15 @@ From [`../product/features-and-packages.md`](../product/features-and-packages.md
 | M0: Stack + auth + tenant skeleton | Month 1 | — |
 | M1: Queue + menu CRUD (web) + staff queue app | Month 2 | — |
 | M2: Checkout + receipts + offline sync | Month 3 | — |
-| M3: MyInvois + billing + trial flow | Month 4 | **MVP launch** |
+| M3: Billing + trial flow + org/outlet model | Month 4 | **MVP launch** |
 | M4: 10 paying merchants | Month 5 | — |
-| M5: Payment partner integrated | Month 8 | Phase 1B |
+| M5: HitPay integrated | Month 8 | Phase 1B |
 | M6: 50 paying merchants, <8% monthly churn | Month 10 | **Phase 2 discussion gate** |
 
 **Phase 2 gate (F&B):** Do not start [`../archive/fb-pos-brd-phase2.md`](../archive/fb-pos-brd-phase2.md) work until **all** are true:
 - [ ] 50+ paying merchants on service vertical
 - [ ] Monthly churn <8% for 3 consecutive months
-- [ ] MyInvois integration stable in production
+- [ ] HitPay integration stable in production (Phase 1B)
 - [ ] Founders agree bandwidth exists beyond support load
 
 ---
@@ -229,7 +229,7 @@ Primary revenue in Phase 1A is **SaaS**, not payment fees.
 | Channel | Action |
 | :--- | :--- |
 | Direct | TikTok/IG — barber/salon content; App Store ASO |
-| Referral | 1 month free after 90 days paid (both sides) |
+| Referral | 1 month free after referee pays 1 month (bill credit) |
 | Pilot | 3–5 salons in one city; hands-on onboarding |
 | **Not in Phase 1** | Accountant channel, franchise BD, mall bundles |
 

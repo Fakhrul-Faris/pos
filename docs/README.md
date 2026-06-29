@@ -22,6 +22,7 @@ docs/
 ├── product/                  Product definition & engineering
 │   ├── barbershop-spec.md    Authoritative rules, states, roles
 │   ├── features-and-packages.md   Feature catalog + Ocelot/Mantis/Patriot pricing
+│   ├── platform-architecture.md   Universal core vs country adapters
 │   └── engineering-modules.md     Backend modules & APIs
 ├── design/
 │   └── ui-specification.md   IA + Customer / POS / Owner screens

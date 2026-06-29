@@ -26,7 +26,7 @@ flowchart LR
 | **M0** (Month 1) | MOD-01, MOD-02 (skeleton), MOD-03 | Auth works; tenant + store created |
 | **M1** (Month 2) | MOD-04, MOD-05, MOD-06 (core) | Menu CRUD web; queue in staff app |
 | **M2** (Month 3) | MOD-07, MOD-10, MOD-11 | Checkout, receipt, offline sync |
-| **M3** (Month 4) | MOD-08, MOD-02 (full), MOD-09 | MyInvois, billing, trial, reports |
+| **M3** (Month 4) | MOD-08, MOD-02 (full), MOD-09, MOD-15 | Billing, trial, reports, CRM + stamps |
 | **Launch** | Polish, limits, QA | App Store / Play Store |
 | **1B** (Month 4–8) | MOD-12, MOD-13, MOD-14 | Payments, reconcile, SMS, accountant |
 
@@ -58,9 +58,10 @@ flowchart LR
 | MOD-09 | Reporting | 1A | Must |
 | MOD-10 | Offline Sync | 1A | Must |
 | MOD-11 | Device Registry | 1A | Must |
-| MOD-12 | Payment Rail (DuitNow) | 1B | Must |
+| MOD-12 | Payment Rail (HitPay) | 1B | Must |
 | MOD-13 | Reconciliation | 1B | Must |
 | MOD-14 | Growth (SMS, Accountant, Referral) | 1B | Should |
+| MOD-15 | Customers & Stamps | 1A | Must |
 
 ---
 
@@ -129,7 +130,7 @@ Enforce Ocelot / Mantis / Patriot tiers, 14-day trial → Lite exit ramp, plan l
 | Trial | 14-day full Ocelot | 4 barbers, unlimited bookings |
 | Ocelot Lite | RM0 (post-trial only) | 1 barber, 25 online bookings/mo, basic offline |
 | Ocelot | RM109/mo | 4 barbers, unlimited bookings, full calendar |
-| Mantis | RM199/mo | 8 barbers, 2 locations, App QR + reconcile |
+| Mantis | RM199/mo | 8 barbers, 2 locations, HitPay + reconcile |
 | Patriot | RM349/mo | Multi-branch HQ, unlimited barbers |
 
 ### Features
@@ -168,42 +169,47 @@ PlanUsage
 | Staff app | Upgrade prompt when limit hit |
 
 ### Acceptance criteria
-- [ ] Trial expires → merchant prompted to pick Lite or Pro; staff app read-only until resolved
-- [ ] Adding 3rd device on Lite blocked with upgrade message
-- [ ] E-invoice #501 on Pro in one month blocked or warned per policy
+- [ ] Trial expires → merchant prompted Lite or Ocelot; POS read-only until resolved
+- [ ] Adding 2nd barber on Lite blocked with upgrade message
+- [ ] Outlet count gated by plan (1 / 2 / 5+)
 
 ### Dependencies
 MOD-01, MOD-03
 
 ---
 
-## MOD-03 — Store & Settings
+## MOD-03 — Company, Outlets & Settings
 
 ### Purpose
-Single store per merchant in Phase 1A. Business profile and operational settings.
+**Company → Outlet** model from day 1. Solo onboarding auto-creates 1 company + 1 outlet; multi prompts org then outlets. Tier limits outlet count in UI.
 
 ### Features
 | ID | Feature |
 | :--- | :--- |
-| S-01 | Create store on onboarding (name, address, phone, SST reg optional) |
-| S-02 | Business hours display on queue board (optional) |
-| S-03 | Currency MYR; timezone Asia/Kuala_Lumpur |
-| S-04 | Receipt header/footer text |
-| S-05 | Default avg service duration (minutes) for wait estimate |
+| S-01 | Onboarding: solo vs multi path |
+| S-02 | Create company + outlet(s) — name, address, phone, SST reg optional |
+| S-03 | Business hours display on queue board (optional) |
+| S-04 | Currency MYR; timezone Asia/Kuala_Lumpur |
+| S-05 | Receipt header/footer text per outlet |
+| S-06 | Default avg service duration (minutes) for wait estimate |
 
 ### Entities
 ```
-Store
-  id, merchant_id, name, address?, phone?, sst_registration_no?
+Company
+  id, name, onboarding_mode: SOLO | MULTI
+
+Outlet
+  id, company_id, name, address, phone, settings_json
   timezone, receipt_footer?, avg_service_minutes, created_at
 ```
 
 ### API
 | Method | Path | Description |
 | :--- | :--- | :--- |
-| GET | `/store` | Store profile |
-| PATCH | `/store` | Update settings |
-| POST | `/onboarding/complete` | Mark setup done |
+| GET | `/outlets` | List outlets for company |
+| GET | `/outlets/{id}` | Outlet profile |
+| PATCH | `/outlets/{id}` | Update settings |
+| POST | `/onboarding/complete` | Mark setup done (solo or multi path) |
 
 ### Screens
 | Surface | Screen |
@@ -388,20 +394,21 @@ Ring up services, record payment method, close sale.
 | Cash | `CASH` | RM0 | Staff confirms |
 | Other DuitNow | `EXTERNAL_QR` | RM0 | Staff confirms manually |
 
-### Phase 1B adds
-| Method | Code | Fee |
-| :--- | :--- | :--- |
-| App QR (dynamic DuitNow) | `PLATFORM_QR` | 0.7% net (0% first RM20k/mo) |
+### Phase 1B adds (HitPay — Mantis+)
+| Method | Code | Customer fee | Merchant fee |
+| :--- | :--- | :--- | :--- |
+| HitPay QR | `HITPAY_QR` | 2% of subtotal | RM0 |
+| HitPay card tap | `HITPAY_CARD` | 2% of subtotal | RM0 |
 
 ### Features
 | ID | Feature |
 | :--- | :--- |
 | P-01 | Create transaction from 1+ service line items |
 | P-02 | Link optional queue_entry_id |
-| P-03 | Subtotal in sen; no variants v1 |
+| P-03 | Subtotal in sen; display **service fee (2%)** + total to customer on HitPay |
 | P-04 | Select payment method; complete sale |
 | P-05 | Void same-day transaction (owner only) — Should |
-| P-06 | Phase 1B: platform QR flow (see MOD-12) |
+| P-06 | Phase 1B: HitPay flow — QR display + card tap + webhook polling |
 
 ### Entities
 ```
@@ -425,7 +432,7 @@ TransactionLine
 | Surface | Screen |
 | :--- | :--- |
 | Staff app | Service picker → Cart → Payment method → Done |
-| Staff app | Phase 1B: App QR screen with dynamic QR + polling |
+| Staff app | Phase 1B: HitPay screen — subtotal + 2% fee + total; QR + card tap |
 
 ### Acceptance criteria
 - [ ] Completed transaction immutable except void by owner
@@ -586,41 +593,41 @@ MOD-02, MOD-01
 
 ---
 
-## MOD-12 — Payment Rail (Phase 1B)
+## MOD-12 — Payment Rail (HitPay — Phase 1B)
 
 ### Purpose
-Dynamic DuitNow QR via licensed partner; auto-complete on payment.
+HitPay integration: prefilled DuitNow QR + card tap on phone. Customer pays **subtotal + 2%**; merchant receives subtotal; webhook auto-completes transaction.
 
 ### Features
 | ID | Feature |
 | :--- | :--- |
-| PR-01 | Pro + Payments plan (RM109/mo + 0.7%) |
-| PR-02 | Generate dynamic QR for transaction amount |
-| PR-03 | Webhook from partner → mark paid → complete transaction |
-| PR-04 | 0% fee on first RM20k platform QR volume per month |
-| PR-05 | Staff can still choose Cash / External QR |
+| PR-01 | Mantis plan (RM199/mo incl. HitPay) |
+| PR-02 | Create HitPay session for transaction (subtotal + fee breakdown) |
+| PR-03 | Webhook from HitPay → mark paid → complete transaction |
+| PR-04 | Card tap flow on same fee rules as QR |
+| PR-05 | Staff can still choose Cash / External DuitNow (exact subtotal, RM0) |
 
 ### API
 | Method | Path | Description |
 | :--- | :--- | :--- |
-| POST | `/payments/qr-session` | Create QR for transaction |
-| POST | `/payments/webhook` | Partner callback |
-| GET | `/payments/qr-session/{id}/status` | Poll fallback |
+| POST | `/payments/hitpay-session` | Create QR/card session for transaction |
+| POST | `/payments/hitpay/webhook` | HitPay callback |
+| GET | `/payments/hitpay-session/{id}/status` | Poll fallback |
 
 ### Dependencies
-MOD-02, MOD-07, payment partner contract
+MOD-02, MOD-07, HitPay merchant agreement (validate 2% customer surcharge)
 
 ---
 
 ## MOD-13 — Reconciliation (Phase 1B)
 
 ### Purpose
-Show matched vs unmatched orders; nudge App QR adoption.
+Show matched vs unmatched orders; nudge HitPay adoption.
 
 ### Features
 | ID | Feature |
 | :--- | :--- |
-| RC-01 | Daily: total sales vs platform QR vs cash vs external QR |
+| RC-01 | Daily: total sales vs HitPay vs cash vs external QR |
 | RC-02 | Unmatched external QR warning count |
 | RC-03 | Accountant view read-only (MOD-14) |
 
@@ -643,13 +650,42 @@ SMS, accountant access, referrals.
 | :--- | :--- |
 | SMS | Appointment/queue reminders; RM79/mo add-on |
 | Accountant | Invite read-only; multi-merchant view; RM49/mo |
-| Referral | Code per merchant; credit after 90 days paid |
+| Referral | Code per merchant; **1 month bill credit** after referee pays 1 month |
 
 Defer detailed spec until Phase 1A launch.
 
 ---
 
-## Cross-Cutting: API Conventions
+## MOD-15 — Customers & Stamps (Phase 1A)
+
+### Purpose
+Auto customer profiles from booking phone; stamp loyalty on **paid** visits (Ocelot+; Lite excluded).
+
+### Features
+| ID | Feature |
+| :--- | :--- |
+| CU-01 | Upsert `Customer` on booking phone + name |
+| CU-02 | Visit history + lifetime spend on owner web |
+| CU-03 | 1 active stamp campaign per outlet (Ocelot+) |
+| CU-04 | Grant stamp on `Transaction` completed (not on booking alone) |
+| CU-05 | Merchant view: stamps remaining; manual remind v1 |
+
+### Entities
+```
+Customer
+  id, outlet_id, phone_e164, display_name, visit_count, lifetime_spend_cents
+
+StampCampaign
+  id, outlet_id, visits_required, active, tier_gate: OCELOT+
+
+StampLedger
+  id, customer_id, transaction_id?, stamps_earned, created_at
+```
+
+### Dependencies
+MOD-05 (booking), MOD-07 (payment), MOD-02 (tier gate)
+
+---
 
 | Topic | Rule |
 | :--- | :--- |

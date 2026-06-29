@@ -101,18 +101,22 @@
 
 ---
 
-## F. Payments
+## F. Payments (HitPay — Mantis+)
 
 | Feature | What it does | Phase |
 | :--- | :--- | :--- |
 | Pay after service | No pay-before-cut | 1A |
-| Cash | Manual confirm at counter | 1A |
-| Own DuitNow QR | Customer pays merchant bank QR — staff confirms | 1A |
-| App QR (dynamic) | Platform DuitNow — amount pre-filled | 1B |
-| Auto-complete on App QR | Payment → order closed automatically | 1B |
-| App QR fee | 0.7% on platform QR only; cash/own QR = RM0 | 1B |
-| Free QR volume | 0% fee on first RM20k/mo App QR | 1B |
+| Cash | Manual confirm at counter — **exact subtotal, RM0 platform fee** | 1A |
+| Own DuitNow QR | Customer pays merchant bank QR — staff confirms — **RM0 platform fee** | 1A |
+| **HitPay QR** | Platform DuitNow — amount pre-filled; customer pays **subtotal + 2% service fee** | 1B |
+| **HitPay card tap** | Tap-to-pay on phone (no terminal) — same **2% service fee** on customer | 1B |
+| Auto-complete on HitPay | Payment webhook → order closed automatically | 1B |
+| Customer service fee | **2% of service subtotal** — paid by customer, not merchant | 1B |
 | Link payment to booking | Every sale tied to booking record | 1A |
+
+**Example:** RM40 haircut → customer pays **RM40.80** (RM40 + 2%). Merchant receives RM40; platform ~0.8% of base, HitPay ~1.2% (confirm with partner).
+
+See **HitPay checkout flow** in Part 2 and full architecture in [`payment-architecture.md`](payment-architecture.md).
 
 ---
 
@@ -133,12 +137,60 @@
 | Feature | What it does | Phase |
 | :--- | :--- | :--- |
 | Daily sales summary | Totals for the day | 1A |
-| Payment method split | Cash vs DuitNow vs App QR | 1A |
+| Payment method split | Cash vs own DuitNow vs HitPay | 1A |
+| Advanced analytics | Utilisation, no-show rate, per-barber, payment mix, repeat rate | Patriot |
 | Per-barber revenue | Income per chair | 1A |
 | No-show log | Missed appointments history | 1A |
 | Export CSV | Download sales data | 1A |
+| Tax document export | CSV/JSON for accountant (not live govt submit) | 1B |
 | Reconciliation dashboard | Matched vs unmatched payments | 1B |
-| Multi-branch HQ dashboard | Cross-location roll-up | Later |
+| Multi-branch HQ dashboard | Cross-location roll-up | Patriot |
+
+---
+
+## L. Workforce — shifts & commission (not HR)
+
+| Feature | What it does | Phase |
+| :--- | :--- | :--- |
+| Barber profiles | Name, photo, active — see §I | 1A |
+| Per-barber revenue & cut count | Day/week reports | 1A |
+| **POS shift (clock-in)** | Tap barber on shared POS → start shift; no extra app | 1B |
+| Shift end | Switch barber, manual end, or auto at shop close | 1B |
+| Shift summary | Duration + services + revenue per shift | 1B |
+| **Commission rules** | % per service, chair rent, hybrid — per barber | 1B |
+| **Commission statement** | Period report: gross, shop share, barber share + CSV | 1B |
+| **Payroll export (static)** | Worksheet: base + commission + adjustments — for local HR tools | 1B |
+
+*Excluded worldwide: live payroll APIs, payslips, statutory contributions (KWSP/SOCSO/etc.), leave law, GPS clock-in app.*
+
+---
+
+## M. Customers & loyalty
+
+| Feature | What it does | Phase |
+| :--- | :--- | :--- |
+| Guest booking fields | Nickname + phone per booking | 1A |
+| Find my booking | Lookup by phone + date | 1A |
+| **Customer profile (auto)** | Built from phone on booking — visit history, spend | **Ocelot+** |
+| **Stamp loyalty** | 1 active campaign; stamp on **paid** visit (not booking alone) | **Ocelot+** |
+| Stamp progress (merchant) | “3 more visits” view; manual remind v1 | **Ocelot+** |
+| **Vouchers / discounts** | Redeemable rewards | Phase 3 |
+| Multi-campaign + SMS nudges | Beyond 1 stamp campaign | Add-on |
+
+*Phone at web booking binds profile. Stamp grants on completed payment. **Lite:** no stamps. See [`platform-architecture.md`](platform-architecture.md).*
+
+---
+
+## N. Tax compliance (receipt vs e-invoice)
+
+| Feature | What it does | Phase |
+| :--- | :--- | :--- |
+| Digital receipt | Customer-facing URL/QR — not a tax invoice | 1A |
+| Tax document capture | Optional buyer name + tax ID at checkout | 1B |
+| Tax export | CSV/JSON for accountant | 1B |
+| **MyInvois submit (Malaysia)** | Live LHDN validation + UUID | **Add-on** or Patriot |
+
+*Universal receipt everywhere; **country tax adapters** as add-ons. See [`platform-architecture.md`](platform-architecture.md).*
 
 ---
 
@@ -147,7 +199,9 @@
 | Feature | What it does | Phase |
 | :--- | :--- | :--- |
 | Owner account & login | Web access for setup | 1A |
-| Shop profile | Name, address, contact | 1A |
+| **Solo vs multi onboarding** | Solo → auto 1 company + 1 outlet; multi → create org then outlets | 1A |
+| **Company → outlet model** | Data model from day 1; UI shows 1 / 2 / 5+ locations by tier | 1A |
+| Shop / outlet profile | Name, address, contact per outlet | 1A |
 | Barber profiles | Name, photo per chair | 1A |
 | Shop QR generate/print | For window / counter | 1A |
 | TV queue board | Fullscreen browser for shop TV | 1A |
@@ -158,6 +212,7 @@
 | Priority WhatsApp support | Mantis+ included; add-on for Ocelot | Add-on |
 | Extra barber (9th+) | Per-chair add-on fee | Add-on |
 | Extra POS screen | Second tablet add-on | Add-on |
+| **Merchant referral** | Referrer gets **1 month free** after referee pays **1 month** (bill credit) | 1B |
 
 ---
 
@@ -178,13 +233,16 @@
 | :--- | :--- |
 | SMS / WhatsApp notifications | Later |
 | OTP verification | Later |
-| LHDN MyInvois | Patriot+ later |
-| Loyalty points | Later |
+| Payroll / payslips / statutory HR | **Never v1** — use local HR tools |
+| Separate staff clock-in app | **Never** — shift on POS only |
 | Inventory | Later |
-| Discounts / vouchers | Later |
+| Discounts / vouchers | Phase 3 |
 | Booking deposit | Later |
+| **Customer feedback / ratings** | **Post-PMF** — private, owner-only when built |
 | Customer native app | Not planned |
 | F&B table ordering | Phase 2 |
+
+*MyInvois live submit → §N and add-ons. Stamps + CRM on **Ocelot+** — see §M.*
 
 ---
 
@@ -252,7 +310,29 @@ flowchart LR
 
 **Founding barber:** first **50 shops per city** → **RM89/mo locked for life** on Ocelot (verify phone; non-transferable).
 
-**Payment rule:** 0.7% applies **only** to App QR (Mantis+). Cash and merchant’s own DuitNow QR = **RM0**. First **RM20,000/mo** App QR volume = **0%** fee.
+**Payment rule (Mantis+):** **HitPay** QR + card tap — customer pays **2% service fee** on top of subtotal. Cash and merchant’s own DuitNow = **exact subtotal, RM0** platform fee. Merchant never pays a processing fee on our rail.
+
+### HitPay checkout flow (Mantis+)
+
+```
+Cashier selects services → Subtotal RM40.00
+┌─────────────────────────────────────────────────────────┐
+│  [HitPay QR]  ← DEFAULT, highlighted                    │
+│   Customer scans · pays RM40.80 (RM40 + 2% fee)         │
+│   Auto-complete on webhook                              │
+├─────────────────────────────────────────────────────────┤
+│  [HitPay card tap]                                      │
+│   Tap to pay on phone · same 2% on customer             │
+├─────────────────────────────────────────────────────────┤
+│  [Cash]                                                 │
+│   Staff confirms · total RM40.00 · RM0 platform fee     │
+├─────────────────────────────────────────────────────────┤
+│  [Own DuitNow / bank QR]                                │
+│   Staff manually confirms · RM40.00 · not auto-matched  │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Revenue split (intent):** HitPay ~1.2% of base · platform ~0.8% of base — confirm surcharge support with HitPay before build.
 
 ---
 
@@ -318,17 +398,60 @@ Use **✓** = included · **—** = not included · **Cap** = limited · **Add**
 | Feature | Lite | Ocelot | Mantis | Patriot |
 | :--- | :---: | :---: | :---: | :---: |
 | Cash + own DuitNow | ✓ | ✓ | ✓ | ✓ |
-| App QR (dynamic) | — | — | ✓ | ✓ |
-| Auto-complete on App QR | — | — | ✓ | ✓ |
+| HitPay QR + card tap | — | — | ✓ | ✓ |
+| Auto-complete on HitPay | — | — | ✓ | ✓ |
 | Reconciliation dashboard | — | — | ✓ | ✓ |
 
-### E. Reports & platform
+### E. Service menu
+
+| Feature | Lite | Ocelot | Mantis | Patriot |
+| :--- | :---: | :---: | :---: | :---: |
+| Categories, price, duration | ✓ | ✓ | ✓ | ✓ |
+| Service photo | ✓ | ✓ | ✓ | ✓ |
+| Max services | Cap 15 | ✓ | ✓ | ✓ |
+
+### F. Workforce & commission
+
+| Feature | Lite | Ocelot | Mantis | Patriot |
+| :--- | :---: | :---: | :---: | :---: |
+| Per-barber revenue reports | — | ✓ | ✓ | ✓ |
+| POS shift (clock-in on switcher) | — | — | ✓ | ✓ |
+| Commission rules + statements | — | — | ✓ | ✓ |
+| Payroll export (static worksheet) | — | — | ✓ | ✓ |
+
+### G. Tax & receipts
+
+| Feature | Lite | Ocelot | Mantis | Patriot |
+| :--- | :---: | :---: | :---: | :---: |
+| Digital receipt | ✓ | ✓ | ✓ | ✓ |
+| Tax document export | — | — | ✓ | ✓ |
+| MyInvois live submit (MY) | — | Add | Add | ✓ included |
+
+### H. Customers & loyalty
+
+| Feature | Lite | Ocelot | Mantis | Patriot |
+| :--- | :---: | :---: | :---: | :---: |
+| Guest phone on booking | ✓ | ✓ | ✓ | ✓ |
+| Customer profile (auto) | — | ✓ | ✓ | ✓ |
+| Stamp loyalty (1 campaign) | — | ✓ | ✓ | ✓ |
+| Regulars & Rewards (multi-campaign + SMS) | — | Add | Add | Add |
+
+### I. Organization
+
+| Feature | Lite | Ocelot | Mantis | Patriot |
+| :--- | :---: | :---: | :---: | :---: |
+| Company + outlet data model | ✓ | ✓ | ✓ | ✓ |
+| Outlets visible in UI | 1 | 1 | 2 | 5+ |
+| Multi-outlet onboarding | — | — | ✓ | ✓ |
+
+### J. Reports & platform
 
 | Feature | Lite | Ocelot | Mantis | Patriot |
 | :--- | :---: | :---: | :---: | :---: |
 | Daily sales summary | Basic | ✓ | ✓ | ✓ |
 | Per-barber revenue | — | ✓ | ✓ | ✓ |
 | Export CSV | — | ✓ | ✓ | ✓ |
+| Advanced analytics | — | — | — | ✓ |
 | Multi-branch HQ dashboard | — | — | — | ✓ |
 | Email support | — | ✓ | ✓ | ✓ |
 | Priority WhatsApp | — | Add | ✓ | ✓ |
@@ -346,26 +469,30 @@ Use **✓** = included · **—** = not included · **Cap** = limited · **Add**
 ✓ Per-barber calendar + daily caps
 ✓ Walk-in-only blocks · pick barber
 ✓ Per-barber reports + CSV export
+✓ Customer profiles + 1 stamp campaign
 ✓ Full offline sync
-✗ App QR payments
+✗ HitPay payments
 ```
 
 **BM:** *RM109/bulan — booking online + POS kongsi + calendar penuh. Murah dari StoreHub RM122.*
 
 ### Mantis — RM199/mo
-**Tagline:** *Ocelot + auto payment reconcile — stop chasing “dah bayar belum?”*
+**Tagline:** *Ocelot + HitPay checkout — stop chasing “dah bayar belum?”*
 
 ```
 Everything in Ocelot, plus:
-✓ Dynamic App QR at counter
+✓ HitPay QR + card tap (customer pays 2% fee — merchant RM0)
 ✓ Auto-complete when customer pays
 ✓ Reconciliation dashboard
 ✓ Up to 8 barbers · 2 locations
-✓ 0% fee on first RM20k/mo App QR
+✓ POS shift (clock-in on barber tap — no extra app)
+✓ Commission rules + barber statements + payroll export
+✓ Tax document export for accountant
+✗ MyInvois live (add-on RM49) — Patriot includes it
 ✓ Priority WhatsApp support
 ```
 
-**BM:** *RM199/bulan — auto rekod DuitNow, cash & QR bank sendiri tetap percuma.*
+**BM:** *RM199/bulan — customer bayar 2% untuk QR/tap; cash & QR bank sendiri tetap RM0 untuk kedai.*
 
 ### Patriot — RM349/mo
 **Tagline:** *Multi-branch command centre for growing chains.*
@@ -374,6 +501,7 @@ Everything in Ocelot, plus:
 Everything in Mantis, plus:
 ✓ 5+ locations · unlimited barbers
 ✓ HQ dashboard + cross-branch reports
+✓ **Malaysia MyInvois tax pack included**
 ✓ Dedicated onboarding
 ✓ SLA support
 ```
@@ -392,7 +520,8 @@ Custom franchise / enterprise · white-label · API · custom SLA.
 | Hit 25 online bookings (Lite) | **Ocelot** or wait until next month |
 | Enable pick-your-barber | **Ocelot** required |
 | Set daily cap / walk-in blocks | **Ocelot** required |
-| Want App QR at counter | **Mantis** |
+| Want HitPay at counter | **Mantis** |
+| Add 2nd location / 5th barber | **Mantis** |
 | Add 5th location / branch | **Patriot** |
 
 ---
@@ -450,15 +579,15 @@ Custom franchise / enterprise · white-label · API · custom SLA.
 
 | Trigger | What they feel | What Mantis fixes |
 | :--- | :--- | :--- |
-| **“Dah bayar belum?” all day** | Staff checking phones constantly | App QR → payment auto-closes order |
-| **Wrong DuitNow amount** | Customer paid RM45, bill RM54 | Dynamic QR — amount pre-filled |
+| **“Dah bayar belum?” all day** | Staff checking phones constantly | HitPay → payment auto-closes order |
+| **Wrong DuitNow amount** | Customer paid RM45, bill RM54 | Prefilled QR — customer pays exact total + 2% |
 | **End-of-day tally mismatch** | Cash + 3 bank apps + chaos | Reconciliation dashboard |
 | **5th–8th barber / 2nd location** | Outgrew 4 chairs or new branch | 8 barbers · 2 locations |
+| **Payroll prep** | Excel every month | Static payroll export (base + commission) |
 | **Large parties** | Groups of 6+ | Party size up to 8 |
 | **Want WhatsApp support** | Ocelot = email only | Priority WhatsApp included |
-| **High counter QR volume** | Lots of DuitNow at till | First RM20k/mo App QR at **0%** fee |
 
-**Strongest hook:** Payment pain, not booking pain. Ocelot customers already trust the product — Mantis sells **time back** and **fewer disputes at the counter**.
+**Strongest hook:** Payment pain, not booking pain. Ocelot customers already trust the product — Mantis sells **time back**, **zero merchant processing fee**, and **fewer disputes at the counter**.
 
 **Psychology:** Not “more features” — *“I don’t chase payments anymore.”*
 
@@ -501,10 +630,14 @@ Custom franchise / enterprise · white-label · API · custom SLA.
 
 | Add-on | Price | Notes |
 | :--- | :--- | :--- |
+| **Tax Compliance — Malaysia (MyInvois)** | RM49/mo | Live LHDN submit; **included on Patriot** |
+| **Regulars & Rewards** | RM49/mo | Multi-campaign stamps + SMS nudges; vouchers Phase 3 |
 | Extra barber (9th+) | RM19/mo each | Mantis+ |
 | Extra POS screen | RM29/mo | Second tablet |
 | Priority WhatsApp (Ocelot only) | RM99/mo | Included on Mantis+ |
 | Extra owner login | RM15/mo | Accountant view — Phase 1B |
+
+*Future markets: **Tax Compliance — Singapore**, etc. — same add-on pattern, new adapter.*
 
 ---
 
@@ -517,9 +650,9 @@ Custom franchise / enterprise · white-label · API · custom SLA.
 | Customer QR booking | ✅ | ✅ | Partial |
 | Per-barber calendar + cap | ✅ | ✅ | Varies |
 | Shared 1-machine POS | ✅ | ✅ | Multi-device |
-| App QR auto-reconcile | — | ✅ | Varies |
+| HitPay auto-reconcile | — | ✅ | Varies |
 | Hardware bundle required | ❌ BYOD | ❌ BYOD | Often RM2k+ |
-| E-invoice | ❌ v1 | ❌ v1 | ✅ |
+| E-invoice | Add-on / Patriot | Patriot includes MY; Ocelot/Mantis use receipt + export |
 
 ---
 
@@ -558,9 +691,19 @@ Custom franchise / enterprise · white-label · API · custom SLA.
 | 2026-06-25 | **Ocelot / Mantis / Patriot / Arsenal** — StoreHub-gap pricing (109/199/349) |
 | 2026-06-25 | **No permanent free signup** — 14-day full trial → Ocelot Lite exit ramp |
 | 2026-06-25 | Lite: 1 barber · 25 bookings/mo · QR stays live |
-| 2026-06-25 | App QR on **Mantis+** (not discounted SaaS tier) |
+| 2026-06-25 | **HitPay on Mantis+** — 2% customer fee (customer pays); cash/own QR RM0 |
 | 2026-06-25 | Founding barber RM89/mo — 50 shops/city cap |
+| 2026-06-25 | **Stamps on Ocelot+** — paid visit triggers; 1 campaign; Lite excluded |
+| 2026-06-25 | **Org model** — Company → Outlet; solo vs multi onboarding |
+| 2026-06-25 | **Payroll export** static worksheet on Mantis — no statutory APIs |
+| 2026-06-25 | **Feedback/ratings** deferred post-PMF; private owner-only when built |
+| 2026-06-25 | **Referral** — 1 month free after referee pays 1 month |
+| 2026-06-25 | **Vouchers** Phase 3; **advanced analytics** on Patriot |
 | 2026-06-27 | **Why they upgrade** — pain-based upgrade moments + in-app copy (EN/BM) |
+| 2026-06-27 | **Platform architecture** — universal core + tax/workforce adapters ([`platform-architecture.md`](platform-architecture.md)) |
+| 2026-06-27 | **MyInvois = add-on RM49** (included Patriot); receipt + export on Mantis |
+| 2026-06-27 | **Workforce** — POS shift + commission on Mantis; no payroll APIs |
+| 2026-06-27 | **Regulars & Rewards** add-on — multi-campaign + SMS; base stamps on Ocelot |
 
 ---
 

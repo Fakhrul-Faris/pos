@@ -347,16 +347,18 @@ C-01-01 Landing
 | Field | Detail |
 | :--- | :--- |
 | **Entry** | After **Complete** on booking |
-| **Shows** | Actual services, total, linked booking # |
-| **Methods** | **[App QR]** (highlight) · Cash · Other DuitNow |
-| **Phase 1A** | Cash + Other DuitNow only |
-| **Phase 1B** | App QR dynamic amount |
+| **Shows** | Actual services, subtotal, linked booking # |
+| **Methods** | **[HitPay QR]** (highlight) · **[HitPay card]** · Cash · Own DuitNow |
+| **Phase 1A** | Cash + Own DuitNow only |
+| **Phase 1B** | HitPay — show subtotal + 2% service fee + total |
 | **Actions** | Complete payment → P-08 |
 
-### P-07-02 App QR (Phase 1B)
+### P-07-02 HitPay (Phase 1B)
 | Field | Detail |
 | :--- | :--- |
-| **Components** | QR large, amount, polling spinner |
+| **Components** | Line items RM40.00 · Service fee (2%) RM0.80 · **Total RM40.80** |
+| **QR mode** | Large QR, polling spinner |
+| **Card mode** | Tap to pay on phone |
 | **On paid** | Auto P-08 + show receipt link / counter QR |
 
 ---
@@ -400,7 +402,7 @@ P-01-02 Switch barber (Ali)
   → P-06-03 Mark arrived
   → P-06-04 Add beard trim
   → Start cut → IN_SERVICE
-  → Complete → P-07-01 Pay (App QR)
+  → Complete → P-07-01 Pay (HitPay)
   → P-08-01 Receipt link / counter QR shown
 ```
 

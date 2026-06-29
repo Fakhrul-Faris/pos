@@ -169,8 +169,8 @@ Side transitions:
 | :--- | :--- |
 | Timing | **After cut** only |
 | Who | **Barber or manager** on shared POS (whoever switched in) |
-| Methods | Cash / Other DuitNow / App QR (Phase 1B) — per [`../planning/initial-brd.md`](../planning/initial-brd.md) |
-| App QR | Default highlighted on Mantis+; 0% first RM20k/mo |
+| Methods | Cash / Own DuitNow (1A) · **HitPay** QR + card tap (1B, Mantis+) |
+| HitPay | Customer pays **subtotal + 2%**; merchant receives subtotal; cash/own QR = exact subtotal |
 | E-invoice | **No** — receipt only |
 | Receipt delivery | **Link + counter QR** (status page URL) — no SMS v1 |
 | Booking link | `transaction.booking_id` required |

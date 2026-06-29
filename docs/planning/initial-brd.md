@@ -49,7 +49,7 @@ Built by a two-person founding team (Business/UI and Technical Development), the
 | **Price** | **RM109/mo** | **RM199/mo** | **RM349/mo** |
 | **Annual** | RM1,090/yr | RM1,990/yr | RM3,490/yr |
 | **vs StoreHub** | Starter RM122 | Advanced RM235 | Pro RM471 |
-| **Target** | 2–4 chairs (3-barber shop) | App QR + 8 barbers · 2 locations | Multi-branch |
+| **Target** | 2–4 chairs (3-barber shop) | HitPay + 8 barbers · 2 locations | Multi-branch |
 | **Trial** | 14-day full Ocelot → Lite or subscribe | — | — |
 
 **Ocelot Lite (RM0):** post-trial exit only — 1 barber, 25 bookings/mo, QR stays live. Not a signup tier.
@@ -71,7 +71,7 @@ Built by a two-person founding team (Business/UI and Technical Development), the
 | :--- | :--- |
 | **Ocelot Lite** | QR booking (25/mo), walk-in POS, 1 barber, receipt link, cash/own DuitNow — trial exit |
 | **Ocelot** | + 4 barbers, unlimited bookings, calendar, caps, pick barber, reports, CSV, full offline |
-| **Mantis** | + App QR, auto-reconcile, 8 barbers, 2 locations, priority WhatsApp |
+| **Mantis** | + HitPay QR/card, auto-reconcile, 8 barbers, 2 locations, priority WhatsApp |
 | **Patriot** | + multi-branch HQ, unlimited barbers, SLA |
 
 **Not in v1:** SMS, e-invoice (except Patriot track later), loyalty.
@@ -82,13 +82,13 @@ See [`../product/features-and-packages.md`](../product/features-and-packages.md)
 
 **Phase 1A (MVP launch):** SaaS-only. No variable GMV fee. Checkout supports cash and manual payment confirmation (merchant's own DuitNow QR or cash).
 
-**Phase 1B (Months 4–8):** Optional **Pro + Payments** — partner-integrated dynamic DuitNow QR. Fee applies only on transactions through platform rail. Cash and merchant's own static bank QR remain free.
+**Phase 1B (Months 4–8):** Optional **Mantis + HitPay** — partner-integrated QR + card tap on phone. **2% service fee paid by customer** on HitPay rails. Cash and merchant's own static bank QR remain **exact subtotal, RM0** platform fee.
 
 | Revenue Stream | Rate | Notes |
 | :--- | :--- | :--- |
-| **Payment processing (net)** | 0.6–0.8% of GMV | **Only** on dynamic QR payments; cash & merchant's own QR = RM0 |
+| **HitPay platform net** | ~0.8% of service subtotal | Customer pays 2% surcharge; Mantis+ only |
 | **SaaS subscription** | RM109–349/mo | Ocelot / Mantis / Patriot |
-| **Mantis payment rail** | RM199/mo incl. + 0.7% App QR over cap | App QR on Mantis+; first RM20k/mo QR at 0% |
+| **Mantis payment rail** | RM199/mo incl. HitPay | No merchant processing fee on our rail |
 | **Per-branch fee** | RM49–79/branch/mo | Verifiable, scales with merchant growth |
 | **Per-device fee** | RM29/device/mo | Beyond plan allowance |
 | **Add-ons** | RM39–99/mo | SMS campaigns, loyalty, accountant pack, priority support |
@@ -133,35 +133,37 @@ We sell **time saved and fewer disputes**, not a tax on sales.
 | Charge fee on cash or merchant's own QR | Undetectable; breeds distrust |
 | Force payment rail at signup | Kills conversion; SaaS must work standalone |
 
-#### Checkout Flow (Phase 1B)
+#### Checkout Flow (Phase 1B — HitPay)
 
 ```
-Order ready: RM45 haircut
+Order ready: RM40 haircut
 ┌─────────────────────────────────────────────────────────┐
-│  [Pay via App QR]  ← DEFAULT, highlighted               │
-│   Dynamic DuitNow · amount pre-filled · auto-complete   │
-│   Platform fee: 0.7% (or 0% under RM20k/mo volume)      │
+│  [HitPay QR]  ← DEFAULT, highlighted                    │
+│   Prefilled DuitNow · customer pays RM40.80 (RM40 + 2%) │
+│   Auto-complete on webhook                              │
+├─────────────────────────────────────────────────────────┤
+│  [HitPay card tap]                                      │
+│   Tap to pay on phone · same 2% on customer             │
 ├─────────────────────────────────────────────────────────┤
 │  [Cash]                                                 │
-│   Staff confirms cash received · no platform fee        │
+│   Staff confirms · RM40.00 · no platform fee            │
 ├─────────────────────────────────────────────────────────┤
-│  [Other DuitNow / Bank QR]                              │
+│  [Own DuitNow / Bank QR]                                │
 │   Customer paid via merchant's own static QR            │
-│   Staff manually confirms · no platform fee             │
+│   Staff manually confirms · RM40.00 · no platform fee   │
 │   ⚠ "Not auto-reconciled" — shown in daily report       │
 └─────────────────────────────────────────────────────────┘
 ```
 
-All three paths complete the order. Platform QR is the **recommended default**; the others are first-class options.
+All paths complete the order. HitPay is the **recommended default**; cash and own QR are first-class options. **Merchant never pays a processing fee** on our rail.
 
-#### Incentives to Adopt Platform QR (Carrot, Not Stick)
+#### Incentives to Adopt HitPay (Carrot, Not Stick)
 
 | Incentive | Detail |
 | :--- | :--- |
-| **Free volume tier** | First RM20,000/mo through platform QR = 0% processing fee |
-| **SaaS discount** | Pro + Payments at RM109/mo vs Pro-only at RM129/mo |
-| **Auto e-invoice** | One-tap compliance — only auto-triggers on platform QR payments |
-| **Loyalty & SMS** | Points accrual and appointment reminders linked to matched payments |
+| **Zero merchant fee** | Customer pays 2% service fee — shop keeps full subtotal |
+| **Auto reconcile** | Payment received → order auto-completes |
+| **Stamps on paid visit** | Loyalty updates on matched HitPay payments |
 | **Reconciliation dashboard** | "RM1,840 unmatched orders this week" — visibility, not punishment |
 | **Accountant view** | Discrepancies visible to invited accountant (soft social pressure) |
 
@@ -182,7 +184,7 @@ Organised salons and busy clinics adopt fastest. Solo barbers on low volume may 
 
 | Signal | Action |
 | :--- | :--- |
-| High % of "Cash" / "Other DuitNow" vs peer benchmark | In-app nudge: "Salons like yours save ~45 min/day with App QR" |
+| High % of "Cash" / "Own DuitNow" vs peer benchmark | In-app nudge: "Salons like yours save ~45 min/day with HitPay" |
 | Unmatched order report | Daily/weekly summary for merchant and accountant |
 | Franchise HQ (Phase 3) | HQ dashboard flags outlets with low platform QR adoption |
 | Onboarding | Day-3 and day-10 checklist showing reconciliation time saved |
@@ -213,7 +215,7 @@ Organised salons and busy clinics adopt fastest. Solo barbers on low volume may 
 | Line | What merchant pays | What it covers |
 | :--- | :--- | :--- |
 | **1. Ocelot** | RM109/mo | Booking, POS, calendar, 4 barbers |
-| **2. Mantis** | RM199/mo | Ocelot + App QR + reconcile + 8 barbers |
+| **2. Mantis** | RM199/mo | Ocelot + HitPay + reconcile + 8 barbers |
 | **3. Patriot** | RM349/mo | Multi-branch HQ |
 | **4. Add-ons** | RM15–99/mo | Extra barber, priority support |
 
@@ -222,19 +224,19 @@ Barbershop v1: **no SMS, no e-invoice** in Ocelot/Mantis.
 #### Merchant-Facing Copy (English)
 
 **Ocelot — RM109/month** — up to 4 barbers, full calendar, unlimited bookings. *Below StoreHub RM122.*  
-**Mantis — RM199/month** — Ocelot + App QR auto-reconcile. *Below StoreHub RM235.*  
+**Mantis — RM199/month** — Ocelot + HitPay auto-reconcile. *Below StoreHub RM235.*  
 **Patriot — RM349/month** — multi-branch command centre.
 
 #### Merchant-Facing Copy (BM)
 
 **Ocelot — RM109/bulan** — 4 barber, calendar penuh, booking tanpa had. Murah dari StoreHub.  
-**Mantis — RM199/bulan** — auto rekod DuitNow, cash & QR bank sendiri percuma.  
+**Mantis — RM199/bulan** — HitPay auto rekod; customer bayar 2%, cash & QR bank sendiri RM0 untuk kedai.  
 **Patriot — RM349/bulan** — untuk rangkaian cawangan.
 
 #### FAQ (short)
 
-**"Must I use your QR?"** — No. Cash and your bank DuitNow QR are always free.  
-**"Fee on all sales?"** — No. Only 0.7% on optional App QR (Mantis+).  
+**"Must I use HitPay?"** — No. Cash and your bank DuitNow QR are always free (exact subtotal).  
+**"Fee on all sales?"** — No. **2% service fee on HitPay only** — paid by customer, not merchant.  
 **"Receipt?"** — Link on phone + QR at counter. No SMS in v1.  
 **"After trial?"** — Shop keeps running on Lite. Upgrade when you need barber 3+ or calendar.
 
@@ -244,7 +246,7 @@ Barbershop v1: **no SMS, no e-invoice** in Ocelot/Mantis.
 14-day full Ocelot trial
     → Day 14: subscribe or Ocelot Lite (1 barber, 25 bookings/mo)
     → 3+ barbers / calendar? → Ocelot RM109
-    → Want App QR reconcile? → Mantis RM199
+    → Want HitPay reconcile? → Mantis RM199
     → Multi-branch? → Patriot RM349
 ```
 
@@ -255,7 +257,7 @@ Barbershop v1: **no SMS, no e-invoice** in Ocelot/Mantis.
 ### Phase 1 — Direct + Vertical (Months 0–12)
 * App Store / Play Store listing optimized for "salon POS", "barber queue", "e-invoice POS Malaysia"
 * TikTok / Instagram content targeting barbershop and salon owners
-* Referral loop: referrer + referee each get 1 month free after 90 days paid
+* Referral loop: referrer gets **1 month free** after referee pays **1 month** (bill credit)
 * Target: **80–150 paying merchants** in one vertical
 
 ### Phase 2 — Channel GTM (Months 12–24)
@@ -294,7 +296,7 @@ See SSOT §5–§9 for downside/venture scenarios and monthly Year 1 cashflow.
 | | Us (Pro) | StoreHub (Advanced) |
 | :--- | :--- | :--- |
 | Monthly SaaS | RM129 | RM196–249 |
-| Payment fee | 0.7% net (opt-in, platform QR only) | 0.5–2% (tiered, their rail) |
+| Payment fee | 2% customer surcharge (HitPay); ~0.8% platform net | 0.5–2% (tiered, their rail) |
 | Hardware required | BYOD | Optional bundles RM2,199+ |
 | E-invoicing | Included on Pro | Included |
 | Queue / waitlist | Core product | Secondary feature |
@@ -336,12 +338,12 @@ See SSOT §5–§9 for downside/venture scenarios and monthly Year 1 cashflow.
 6. **Basic Reporting:** Daily sales summary, transaction export.
 
 ### Phase 1B Deliverables (Months 4–8)
-7. **Dynamic DuitNow QR:** Partner payment rail — amount pre-filled, auto-reconcile, platform take rate on QR payments only.
-8. **Multi-path checkout:** App QR (default) / Cash / Other DuitNow — all complete order; no forced rail.
+7. **HitPay integration:** QR + card tap — amount pre-filled, 2% customer surcharge, auto-reconcile.
+8. **Multi-path checkout:** HitPay (default) / Cash / Own DuitNow — all complete order; no forced rail.
 9. **Reconciliation dashboard:** Paid vs unmatched orders; daily summary for merchant and accountant.
 10. **SMS Reminders:** Appointment and queue notifications (add-on).
 11. **Accountant Read-Only Access:** Invite accountant, multi-client view.
-12. **Referral System:** Merchant-to-merchant referral tracking and rewards.
+12. **Referral System:** **1 month free** for referrer after referee pays **1 month** (bill credit).
 
 ### Explicitly Out of MVP Scope
 * Multi-branch / franchise HQ dashboard
