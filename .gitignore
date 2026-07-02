@@ -3,3 +3,9 @@
 *.swo
 .idea/
 .vscode/
+
+# MCP secrets — never commit Penpot keys
+.cursor/mcp.json
+.env
+.env.*
+!.env.example

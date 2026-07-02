@@ -1,4 +1,4 @@
-# Phase 1 Execution Plan — Path A (Bootstrap)
+# Phase 1 Execution Plan — Miki · Path A (Bootstrap)
 
 **Decision date:** 25 June 2026  
 **Status:** Approved — active development track  
@@ -26,7 +26,7 @@ After stress-testing the F&B BRD (see [`../archive/`](../archive/)), we chose **
 ### One-liner
 **Barbershop booking & queue** — customer books via QR (no account), shared POS for barbers, pay after cut.
 
-> **Full rules:** [`../product/barbershop-spec.md`](../product/barbershop-spec.md)
+> **Full rules:** [`../modules/barbershop/spec.md`](../modules/barbershop/spec.md)
 
 ### Primary user journey (barbershop — 3 barbers, 1 POS)
 
@@ -176,7 +176,7 @@ Stack record (aligned with team preference where noted):
 
 ## 7. Subscription Enforcement
 
-From [`../product/features-and-packages.md`](../product/features-and-packages.md):
+From [`../modules/barbershop/features-and-pricing.md`](../modules/barbershop/features-and-pricing.md):
 
 | Limit | Ocelot Lite | Ocelot RM109 |
 | :--- | :--- | :--- |
@@ -242,10 +242,10 @@ Primary revenue in Phase 1A is **SaaS**, not payment fees.
 | Document | Role |
 | :--- | :--- |
 | **[`../financial/ssot.md`](../financial/ssot.md)** | **Financial SSOT** — forecasts, metrics, cashflow |
-| **[`../product/features-and-packages.md`](../product/features-and-packages.md)** | Feature catalog, pricing & feature gates |
-| **[`../product/barbershop-spec.md`](../product/barbershop-spec.md)** | Product rules — states, policies, roles |
+| **[`../modules/barbershop/features-and-pricing.md`](../modules/barbershop/features-and-pricing.md)** | Feature catalog, pricing & feature gates |
+| **[`../modules/barbershop/spec.md`](../modules/barbershop/spec.md)** | Product rules — states, policies, roles |
 | **[`../product/engineering-modules.md`](../product/engineering-modules.md)** | Backend modules & APIs |
-| **[`../design/ui-specification.md`](../design/ui-specification.md)** | IA + all screen specs |
+| **[`../modules/barbershop/ui.md`](../modules/barbershop/ui.md)** | IA + all screen specs |
 | **`phase1-plan.md`** | Execution contract — timeline & gates |
 | **`initial-brd.md`** | Business strategy & pricing narrative |
 | **[`../archive/fb-pos-brd-phase2.md`](../archive/fb-pos-brd-phase2.md)** | Phase 2 F&B — **parked**, do not implement |

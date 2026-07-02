@@ -1,7 +1,7 @@
-# Feature Modules — Phase 1 Build & Design Spec
+# Feature Modules — Miki · Phase 1 Build & Design Spec
 
-**Product:** Barbershop booking, queue & POS (see [`barbershop-spec.md`](barbershop-spec.md))  
-**Screens:** [`../design/ui-specification.md`](../design/ui-specification.md)  
+**Platform:** Miki · **Module:** Barbershop booking, queue & POS (see [`../modules/barbershop/spec.md`](../modules/barbershop/spec.md))  
+**Screens:** [`../modules/barbershop/ui.md`](../modules/barbershop/ui.md)  
 **Authority:** [`../planning/phase1-plan.md`](../planning/phase1-plan.md) · [`../planning/initial-brd.md`](../planning/initial-brd.md)
 
 > **Changelog:** Generic walk-in-only queue superseded by barbershop booking calendar + shared POS. MyInvois **removed from barbershop v1** (receipt SMS only).
@@ -129,8 +129,8 @@ Enforce Ocelot / Mantis / Patriot tiers, 14-day trial → Lite exit ramp, plan l
 | :--- | :--- | :--- |
 | Trial | 14-day full Ocelot | 4 barbers, unlimited bookings |
 | Ocelot Lite | RM0 (post-trial only) | 1 barber, 25 online bookings/mo, basic offline |
-| Ocelot | RM109/mo | 4 barbers, unlimited bookings, full calendar |
-| Mantis | RM199/mo | 8 barbers, 2 locations, HitPay + reconcile |
+| Ocelot | RM109/mo | 4 barbers, unlimited bookings, full calendar, **HitPay unlimited** |
+| Mantis | RM199/mo | 8 barbers, 2 locations, **reconcile dashboard** + commission |
 | Patriot | RM349/mo | Multi-branch HQ, unlimited barbers |
 
 ### Features
@@ -394,7 +394,7 @@ Ring up services, record payment method, close sale.
 | Cash | `CASH` | RM0 | Staff confirms |
 | Other DuitNow | `EXTERNAL_QR` | RM0 | Staff confirms manually |
 
-### Phase 1B adds (HitPay — Mantis+)
+### Phase 1B adds (HitPay — Lite cap · Ocelot+ unlimited)
 | Method | Code | Customer fee | Merchant fee |
 | :--- | :--- | :--- | :--- |
 | HitPay QR | `HITPAY_QR` | 2% of subtotal | RM0 |
@@ -601,7 +601,7 @@ HitPay integration: prefilled DuitNow QR + card tap on phone. Customer pays **su
 ### Features
 | ID | Feature |
 | :--- | :--- |
-| PR-01 | Mantis plan (RM199/mo incl. HitPay) |
+| PR-01 | **Lite:** HitPay with **RM5k/mo** `service_subtotal` cap · **Ocelot+:** unlimited · reconcile UI **Mantis+** only |
 | PR-02 | Create HitPay session for transaction (subtotal + fee breakdown) |
 | PR-03 | Webhook from HitPay → mark paid → complete transaction |
 | PR-04 | Card tap flow on same fee rules as QR |

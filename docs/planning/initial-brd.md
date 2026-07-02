@@ -1,11 +1,11 @@
-# Business Proposal & Strategic Roadmap: Payments-Native Queue OS for Malaysian Service SMEs
+# Business Proposal & Strategic Roadmap: Miki — Payments-Native Queue OS for Malaysian Service SMEs
 
 > **Active track:** Path A (bootstrap). Phase 1 execution: see [`phase1-plan.md`](phase1-plan.md).  
 > F&B requirements in [`../archive/fb-pos-brd-phase2.md`](../archive/fb-pos-brd-phase2.md) are **parked until Phase 2** (50+ paying merchants gate).
 
 ## 1. Executive Summary
 
-This document outlines the business strategy, product positioning, and financial projections for a bootstrapped Point of Sale (POS) platform built for the Malaysian market.
+This document outlines the business strategy, product positioning, and financial projections for **Miki** — a bootstrapped queue and POS platform built for the Malaysian market.
 
 Built by a two-person founding team (Business/UI and Technical Development), the platform uses a **Bring Your Own Device (BYOD)** model to eliminate hardware lock-in and manual onboarding. Rather than competing head-on with incumbents like StoreHub on feature breadth, we launch as **the payments-native, LHDN-ready queue OS for service SMEs** — barbers, salons, clinics, and pop-ups — then expand into single-counter F&B and multi-branch franchises.
 
@@ -40,7 +40,7 @@ Built by a two-person founding team (Business/UI and Technical Development), the
 
 ## 3. Product & Pricing Strategy
 
-> **Barbershop packages (Phase 1):** Full feature matrix in [`../product/features-and-packages.md`](../product/features-and-packages.md).
+> **Barbershop packages (Phase 1):** Full feature matrix in [`../modules/barbershop/features-and-pricing.md`](../modules/barbershop/features-and-pricing.md).
 
 ### Launch tiers — Ocelot / Mantis / Patriot
 
@@ -69,14 +69,14 @@ Built by a two-person founding team (Business/UI and Technical Development), the
 
 | Bundle | Included |
 | :--- | :--- |
-| **Ocelot Lite** | QR booking (25/mo), walk-in POS, 1 barber, receipt link, cash/own DuitNow — trial exit |
-| **Ocelot** | + 4 barbers, unlimited bookings, calendar, caps, pick barber, reports, CSV, full offline |
-| **Mantis** | + HitPay QR/card, auto-reconcile, 8 barbers, 2 locations, priority WhatsApp |
+| **Ocelot Lite** | QR booking (25/mo), walk-in POS, 1 barber, receipt, cash/own DuitNow, **HitPay capped RM5k/mo** — trial exit |
+| **Ocelot** | + 4 barbers, unlimited bookings, calendar, caps, pick barber, reports, CSV, full offline, **HitPay unlimited** |
+| **Mantis** | + reconcile dashboard, 8 barbers, 2 locations, commission, priority WhatsApp |
 | **Patriot** | + multi-branch HQ, unlimited barbers, SLA |
 
 **Not in v1:** SMS, e-invoice (except Patriot track later), loyalty.
 
-See [`../product/features-and-packages.md`](../product/features-and-packages.md) for the full comparison table.
+See [`../modules/barbershop/features-and-pricing.md`](../modules/barbershop/features-and-pricing.md) for the full comparison table.
 
 ### Payment & Revenue Architecture
 
@@ -208,7 +208,7 @@ Organised salons and busy clinics adopt fastest. Solo barbers on low volume may 
 
 ### Pricing Narrative & Merchant-Facing Copy
 
-> **Full feature matrix:** [`../product/features-and-packages.md`](../product/features-and-packages.md)
+> **Full feature matrix:** [`../modules/barbershop/features-and-pricing.md`](../modules/barbershop/features-and-pricing.md)
 
 #### Internal Pricing Logic
 

@@ -1,8 +1,8 @@
-# Financial SSOT — Costing, Pricing, Forecasts & Cashflow
+# Financial SSOT — Miki · Costing, Pricing, Forecasts & Cashflow
 
-**Single source of truth** for barbershop POS financial planning.  
+**Single source of truth** for Miki financial planning (barbershop Phase 1).  
 **Supersedes:** Scattered §5 figures in [`../planning/initial-brd.md`](../planning/initial-brd.md) for **operational planning** (strategy narrative stays there).  
-**Related:** [`../product/features-and-packages.md`](../product/features-and-packages.md) · [`../product/barbershop-spec.md`](../product/barbershop-spec.md)
+**Related:** [`../modules/barbershop/features-and-pricing.md`](../modules/barbershop/features-and-pricing.md) · [`../modules/barbershop/spec.md`](../modules/barbershop/spec.md)
 
 **Version:** 2.1 · **Date:** June 2026 · **Update when:** pricing, infra stack, HitPay terms, or forecast assumptions change.
 
@@ -37,7 +37,8 @@
 | P-03 | Patriot monthly | RM349 | vs StoreHub Pro RM471 |
 | P-04 | Founding Ocelot (locked) | RM89/mo | First 50 shops/city; ~8% of Ocelot payers |
 | P-05 | Ocelot Lite | RM0 | Post-trial exit only — not signup tier |
-| P-06 | HitPay platform take | 0.80% of service subtotal | Customer pays 2% surcharge; Mantis+ only |
+| P-06 | HitPay platform take | 0.80% of service subtotal | Customer pays 2% surcharge; **Lite capped** · **Ocelot+ unlimited** rail |
+| P-13 | Lite HitPay GMV cap | RM5,000/mo | Service subtotal through Miki rail; block new HitPay checkouts over cap |
 | P-07 | HitPay partner share | ~1.20% of service subtotal | Of customer 2% fee; confirm with HitPay |
 | P-08 | Annual prepay | 10 months paid = 12 months | 17% discount |
 | P-09 | Extra barber add-on | RM19/mo | 9th+ chair |
@@ -186,7 +187,7 @@ OPEX_month = sum(OPEX-01..05)
 | **Arsenal** | Custom (~RM500+) | Enterprise |
 | **Add-ons** | RM19–99/mo | Recurring |
 
-Full feature gates: [`../product/features-and-packages.md`](../product/features-and-packages.md).
+Full feature gates: [`../modules/barbershop/features-and-pricing.md`](../modules/barbershop/features-and-pricing.md).
 
 ### 2.2 Revenue streams
 
@@ -527,8 +528,8 @@ Opening_cash
 | Topic | SSOT | Detail elsewhere |
 | :--- | :--- | :--- |
 | **Financial planning** | **This file** | — |
-| Pricing features | [`../product/features-and-packages.md`](../product/features-and-packages.md) | — |
-| Product rules | [`../product/barbershop-spec.md`](../product/barbershop-spec.md) | — |
+| Pricing features | [`../modules/barbershop/features-and-pricing.md`](../modules/barbershop/features-and-pricing.md) | — |
+| Product rules | [`../modules/barbershop/spec.md`](../modules/barbershop/spec.md) | — |
 | Strategy narrative | [`../planning/initial-brd.md`](../planning/initial-brd.md) | Historical projections |
 | Execution timeline | [`../planning/phase1-plan.md`](../planning/phase1-plan.md) | — |
 

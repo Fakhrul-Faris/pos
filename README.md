@@ -1,6 +1,8 @@
-# POS — Barbershop Queue & Booking
+# Miki
 
-**Phase 1:** 3-barber shop, 1 shared POS, customer booking web (no account).
+**Queue, booking, and checkout for Malaysian service shops.**
+
+Phase 1 ships the **barbershop module**: customer QR booking, shared counter POS, owner web — BYOD, no hardware bundle.
 
 ## Start here
 
@@ -8,18 +10,25 @@ Full doc map: **[`docs/README.md`](docs/README.md)**
 
 | Document | Use |
 | :--- | :--- |
-| [**docs/product/barbershop-spec.md**](docs/product/barbershop-spec.md) | **Product rules** — states, policies, roles |
-| [**docs/product/features-and-packages.md**](docs/product/features-and-packages.md) | Feature catalog + Ocelot / Mantis / Patriot pricing |
-| [**docs/design/ui-specification.md**](docs/design/ui-specification.md) | IA + all screen specs (Customer, POS, Owner) |
+| [**docs/modules/barbershop/README.md**](docs/modules/barbershop/README.md) | **Barbershop module hub** — start here for Phase 1 |
+| [**docs/modules/barbershop/spec.md**](docs/modules/barbershop/spec.md) | Product rules — states, policies, roles |
+| [**docs/modules/barbershop/pricing-funnel.md**](docs/modules/barbershop/pricing-funnel.md) | Trial → Lite → paid explained |
+| [**docs/modules/barbershop/features-and-pricing.md**](docs/modules/barbershop/features-and-pricing.md) | Feature catalog + Ocelot / Mantis / Patriot pricing |
+| [**docs/modules/barbershop/marketing.md**](docs/modules/barbershop/marketing.md) | Barbershop marketing page copy |
+| [**docs/modules/barbershop/ui.md**](docs/modules/barbershop/ui.md) | IA + all screen specs (Customer, POS, Owner) |
+| [**docs/platform/README.md**](docs/platform/README.md) | Universal platform (tokens, pricing model, payment rails) |
 | [**docs/product/engineering-modules.md**](docs/product/engineering-modules.md) | Backend modules & APIs |
 | [**docs/planning/phase1-plan.md**](docs/planning/phase1-plan.md) | Timeline & milestones |
-| [**docs/planning/initial-brd.md**](docs/planning/initial-brd.md) | Business strategy |
-| [**docs/financial/ssot.md**](docs/financial/ssot.md) | **SSOT:** costing, forecasts, SaaS metrics, cashflow |
+| [**docs/financial/ssot.md**](docs/financial/ssot.md) | Costing, forecasts, SaaS metrics |
 
 ## Surfaces
 
-| Surface | Who | Doc section |
+| Surface | Who | Document |
 | :--- | :--- | :--- |
-| Customer web | Customer phone | UI spec · Part 1 (C-xx) |
-| POS | Barber / manager (1 machine) | UI spec · Part 2 (P-xx) |
-| Owner web | Owner | UI spec · Part 3 (O-xx) |
+| Customer web | Customer phone | [`ui.md`](docs/modules/barbershop/ui.md) Part 1 (C-xx) |
+| Counter POS | Barber / manager (shared device) | [`ui.md`](docs/modules/barbershop/ui.md) Part 2 (P-xx) |
+| Owner web | Owner | [`ui.md`](docs/modules/barbershop/ui.md) Part 3 (O-xx) |
+
+## Plan tiers (not the product name)
+
+**Ocelot** · **Mantis** · **Patriot** · **Arsenal** — subscription packages. **Miki** is the company and platform.
