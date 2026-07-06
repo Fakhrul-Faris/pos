@@ -14,6 +14,7 @@
 | [**pricing-model.md**](pricing-model.md) | Trial → Lite → paid **mechanics** (no vertical RM prices) |
 | [**payment-rails.md**](payment-rails.md) | HitPay aggregator model, C′ rail philosophy, ledger, payouts *(internal)* |
 | [**design-system/**](design-system/) | Design tokens SSOT — primitives, semantic tokens, Tailwind/Penpot |
+| [**admin-portal.md**](admin-portal.md) | Platform admin (internal) — A-xx screens, roles, Penpot index |
 
 ---
 

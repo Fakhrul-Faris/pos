@@ -1,0 +1,50 @@
+.wrap {
+  margin-top: 0;
+}
+
+.label {
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.value {
+  display: flex;
+  min-width: 5.5rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.suffix {
+  font-size: 0.8125rem;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.stepBtn {
+  display: flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  color: #1c1c1c;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.stepBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}

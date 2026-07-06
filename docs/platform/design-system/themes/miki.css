@@ -1,0 +1,309 @@
+/*
+ * Miki Design System — HeroUI v3 Theme
+ *
+ * Maps Miki's design tokens (tokens.json) to HeroUI CSS variables.
+ * Source of truth: docs/platform/design-system/tokens.json
+ *
+ * Usage:
+ *   @import "tailwindcss";
+ *   @import "@heroui/styles";
+ *   @import "./themes/miki.css" layer(theme);
+ *
+ *   <html data-theme="miki">        (light)
+ *   <html data-theme="miki-dark">   (dark)
+ */
+
+@layer base {
+
+  /* ------------------------------------------------------------------ */
+  /*  MIKI LIGHT                                                        */
+  /* ------------------------------------------------------------------ */
+  [data-theme="miki"] {
+    color-scheme: light;
+
+    /* ── Primitives (stable across light/dark) ────────────────────── */
+    --white: oklch(100% 0 0);
+    --black: oklch(0% 0 0);
+    --snow: oklch(0.991 0 0);
+    --eclipse: oklch(0.20 0 0);                /* tokens.json: neutral.ink #1C1C1C */
+
+    /* ── Spacing & Layout ─────────────────────────────────────────── */
+    --spacing: 0.25rem;                         /* 4px base — tokens.json: spacing.1 */
+    --border-width: 1px;
+    --field-border-width: 1px;
+    --disabled-opacity: 0.5;
+    --ring-offset-width: 2px;
+    --cursor-interactive: pointer;
+    --cursor-disabled: not-allowed;
+
+    /* ── Radius ───────────────────────────────────────────────────── */
+    --radius: 0.5rem;                           /* 8px — tokens.json: radius.md */
+    --field-radius: calc(var(--radius) * 1.5);  /* 12px — tokens.json: radius.lg */
+
+    /* ── Base Colors ──────────────────────────────────────────────── */
+    --background: oklch(0.98 0.002 90);         /* tokens.json: neutral.surface #F9F9F8 — warm off-white */
+    --foreground: var(--eclipse);               /* tokens.json: neutral.ink #1C1C1C */
+
+    /* ── Surface (cards, accordions, non-overlay) ─────────────────── */
+    --surface: var(--white);                    /* tokens.json: semantic.background.elevated */
+    --surface-foreground: var(--foreground);
+
+    --surface-secondary: oklch(0.97 0.003 85);  /* tokens.json: neutral.100 #F6F5F4 */
+    --surface-secondary-foreground: var(--foreground);
+
+    --surface-tertiary: oklch(0.89 0.006 80);   /* tokens.json: neutral.200 #DFDCD9 */
+    --surface-tertiary-foreground: var(--foreground);
+
+    /* ── Overlay (modals, popovers, tooltips) ─────────────────────── */
+    --overlay: var(--white);
+    --overlay-foreground: var(--foreground);
+
+    /* ── Muted ────────────────────────────────────────────────────── */
+    --muted: oklch(0.50 0 0);                   /* tokens.json: neutral.muted #6B6B6B */
+
+    /* ── Scrollbar ────────────────────────────────────────────────── */
+    --scrollbar-thumb: color-mix(in oklch, var(--foreground) 12%, transparent);
+    --scrollbar-track: transparent;
+    --scrollbar-gutter: auto;
+    --scrollbar-width: thin;
+    --scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    --scrollbar: var(--scrollbar-thumb);
+
+    /* ── Default (neutral interactive surfaces) ───────────────────── */
+    --default: oklch(0.97 0.003 85);            /* tokens.json: neutral.100 #F6F5F4 */
+    --default-foreground: var(--eclipse);
+
+    /* ── Accent (brand green — primary actions) ───────────────────── */
+    --accent: oklch(0.76 0.155 160);            /* tokens.json: green.500 #38CE87 — brand primary */
+    --accent-foreground: var(--eclipse);         /* Dark text on green for WCAG AA contrast */
+
+    /* ── Form Fields ──────────────────────────────────────────────── */
+    --field-background: var(--white);
+    --field-foreground: var(--eclipse);
+    --field-placeholder: var(--muted);
+    --field-border: oklch(0.90 0.004 85 / 26%); /* tokens.json: neutral.border #0000001A */
+
+    /* ── Status Colors ────────────────────────────────────────────── */
+    --success: oklch(0.49 0.14 150);            /* tokens.json: status.success #14832B */
+    --success-foreground: var(--snow);
+
+    --warning: oklch(0.72 0.18 55);             /* tokens.json: status.warning #FF6D00 */
+    --warning-foreground: var(--eclipse);
+
+    --danger: oklch(0.60 0.22 25);              /* tokens.json: status.error #F64932 */
+    --danger-foreground: var(--snow);
+
+    /* ── Component Colors ─────────────────────────────────────────── */
+    --segment: var(--white);
+    --segment-foreground: var(--foreground);
+
+    /* ── Border & Separator ───────────────────────────────────────── */
+    --border: oklch(0.90 0.004 85 / 26%);       /* tokens.json: neutral.border — 10% alpha */
+    --separator: oklch(0.92 0.003 85);
+
+    /* ── Focus & Link ─────────────────────────────────────────────── */
+    --focus: var(--accent);
+    --link: oklch(0.69 0.14 160);               /* tokens.json: green.600 #2FB876 */
+
+    /* ── Backdrop ─────────────────────────────────────────────────── */
+    --backdrop: rgba(0, 0, 0, 0.4);
+
+    /* ── Inverse ──────────────────────────────────────────────────── */
+    --background-inverse: var(--foreground);
+
+    /* ── Field Focus ──────────────────────────────────────────────── */
+    --field-focus: var(--field-background);
+
+    /* ── Soft Foregrounds (status text on soft backgrounds) ────────── */
+    --accent-soft-foreground: oklch(0.49 0.10 160);   /* tokens.json: green.700 #1A7A4C */
+    --danger-soft-foreground: var(--danger);
+    --warning-soft-foreground: var(--warning);
+    --success-soft-foreground: var(--success);
+
+    /* ── Shadows (Notion-flat aesthetic — minimal) ────────────────── */
+    --surface-shadow:
+      0 1px 2px 0 rgba(0, 0, 0, 0.03);          /* tokens.json: shadow.sm */
+    --overlay-shadow:
+      0 4px 18px 0 rgba(0, 0, 0, 0.04),
+      0 12px 32px 0 rgba(0, 0, 0, 0.06);         /* tokens.json: shadow.md + shadow.lg blend */
+    --field-shadow:
+      0 1px 2px 0 rgba(0, 0, 0, 0.03);
+
+    /* ── Skeleton ─────────────────────────────────────────────────── */
+    --skeleton-animation: shimmer;
+
+    /* ── Tooltip ──────────────────────────────────────────────────── */
+    --tooltip-delay: 800ms;
+    --tooltip-close-delay: 300ms;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  MIKI DARK                                                         */
+  /* ------------------------------------------------------------------ */
+  [data-theme="miki-dark"] {
+    color-scheme: dark;
+
+    /* ── Primitives ───────────────────────────────────────────────── */
+    --white: oklch(100% 0 0);
+    --black: oklch(0% 0 0);
+    --snow: oklch(0.991 0 0);
+    --eclipse: oklch(0.20 0 0);
+
+    /* ── Spacing (same as light) ──────────────────────────────────── */
+    --spacing: 0.25rem;
+    --border-width: 1px;
+    --field-border-width: 1px;
+    --disabled-opacity: 0.5;
+    --ring-offset-width: 2px;
+    --cursor-interactive: pointer;
+    --cursor-disabled: not-allowed;
+
+    /* ── Radius (same as light) ───────────────────────────────────── */
+    --radius: 0.5rem;
+    --field-radius: calc(var(--radius) * 1.5);
+
+    /* ── Base Colors ──────────────────────────────────────────────── */
+    --background: oklch(0.16 0.005 90);          /* Warm dark — not pure black */
+    --foreground: var(--snow);
+
+    /* ── Surface ──────────────────────────────────────────────────── */
+    --surface: oklch(0.22 0.006 85);             /* Slightly elevated dark */
+    --surface-foreground: var(--foreground);
+
+    --surface-secondary: oklch(0.26 0.005 85);
+    --surface-secondary-foreground: var(--foreground);
+
+    --surface-tertiary: oklch(0.30 0.004 85);
+    --surface-tertiary-foreground: var(--foreground);
+
+    /* ── Overlay ──────────────────────────────────────────────────── */
+    --overlay: oklch(0.24 0.006 85);
+    --overlay-foreground: var(--foreground);
+
+    /* ── Muted ────────────────────────────────────────────────────── */
+    --muted: oklch(0.65 0.010 85);
+
+    /* ── Scrollbar ────────────────────────────────────────────────── */
+    --scrollbar-thumb: color-mix(in oklch, var(--foreground) 12%, transparent);
+    --scrollbar-track: transparent;
+    --scrollbar-gutter: auto;
+    --scrollbar-width: thin;
+    --scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    --scrollbar: var(--scrollbar-thumb);
+
+    /* ── Default ──────────────────────────────────────────────────── */
+    --default: oklch(0.28 0.005 85);
+    --default-foreground: var(--snow);
+
+    /* ── Accent (brand green — slightly brighter in dark) ─────────── */
+    --accent: oklch(0.76 0.155 160);             /* Same brand green — bright enough on dark bg */
+    --accent-foreground: var(--eclipse);          /* Dark text on green */
+
+    /* ── Form Fields ──────────────────────────────────────────────── */
+    --field-background: oklch(0.22 0.006 85);
+    --field-foreground: var(--foreground);
+    --field-placeholder: var(--muted);
+    --field-border: oklch(0.32 0.005 85);
+
+    /* ── Status Colors ────────────────────────────────────────────── */
+    --success: oklch(0.65 0.16 150);             /* Brighter green for dark bg readability */
+    --success-foreground: var(--eclipse);
+
+    --warning: oklch(0.78 0.16 60);
+    --warning-foreground: var(--eclipse);
+
+    --danger: oklch(0.65 0.20 25);
+    --danger-foreground: var(--snow);
+
+    /* ── Component Colors ─────────────────────────────────────────── */
+    --segment: oklch(0.34 0.008 85);
+    --segment-foreground: var(--foreground);
+
+    /* ── Border & Separator ───────────────────────────────────────── */
+    --border: oklch(0.30 0.005 85);
+    --separator: oklch(0.26 0.005 85);
+
+    /* ── Focus & Link ─────────────────────────────────────────────── */
+    --focus: var(--accent);
+    --link: oklch(0.76 0.155 160);               /* Brand green as link in dark mode */
+
+    /* ── Backdrop ─────────────────────────────────────────────────── */
+    --backdrop: rgba(0, 0, 0, 0.6);
+
+    /* ── Inverse ──────────────────────────────────────────────────── */
+    --background-inverse: var(--foreground);
+
+    /* ── Field Focus ──────────────────────────────────────────────── */
+    --field-focus: var(--field-background);
+
+    /* ── Soft Foregrounds ─────────────────────────────────────────── */
+    --accent-soft-foreground: oklch(0.81 0.12 160);  /* green.400 brighter for dark */
+    --danger-soft-foreground: var(--danger);
+    --warning-soft-foreground: var(--warning);
+    --success-soft-foreground: var(--success);
+
+    /* ── Shadows (subdued in dark mode) ───────────────────────────── */
+    --surface-shadow: 0 0 0 0 transparent inset;
+    --overlay-shadow: 0 0 1px 0 rgba(255, 255, 255, 0.08) inset;
+    --field-shadow: 0 0 0 0 transparent inset;
+
+    /* ── Skeleton ─────────────────────────────────────────────────── */
+    --skeleton-animation: shimmer;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────── */
+/*  MIKI TYPOGRAPHY — applied to both themes                          */
+/* ──────────────────────────────────────────────────────────────────── */
+
+[data-theme="miki"],
+[data-theme="miki-dark"] {
+  --font-sans: "IBM Plex Sans", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* ──────────────────────────────────────────────────────────────────── */
+/*  MIKI COMPONENT OVERRIDES — BEM class customizations               */
+/* ──────────────────────────────────────────────────────────────────── */
+
+@layer components {
+
+  /* Buttons: medium weight, 8px radius, tighter padding */
+  [data-theme="miki"] .button,
+  [data-theme="miki-dark"] .button {
+    @apply font-medium tracking-normal;
+  }
+
+  /* Cards: Notion-flat — border instead of shadow, warm tinted bg option */
+  [data-theme="miki"] .card,
+  [data-theme="miki-dark"] .card {
+    @apply shadow-none;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────── */
+/*  MIKI EXTENDED TOKENS — custom Tailwind theme extensions           */
+/*  Available as Tailwind classes: bg-miki-brand, text-miki-ink, etc. */
+/* ──────────────────────────────────────────────────────────────────── */
+
+@theme inline {
+  /* Brand green scale */
+  --color-miki-brand: oklch(0.76 0.155 160);           /* green.500 */
+  --color-miki-brand-hover: oklch(0.69 0.14 160);      /* green.600 */
+  --color-miki-brand-muted: oklch(0.975 0.018 165);    /* green.100 */
+  --color-miki-brand-soft: oklch(0.965 0.025 165);     /* green.200 */
+  --color-miki-brand-deep: oklch(0.49 0.10 160);       /* green.700 */
+
+  /* Warm neutral scale */
+  --color-miki-ink: oklch(0.20 0 0);                   /* neutral.ink */
+  --color-miki-muted: oklch(0.50 0 0);                 /* neutral.muted */
+  --color-miki-warm-white: oklch(0.98 0.002 90);       /* neutral.surface */
+  --color-miki-warm-100: oklch(0.97 0.003 85);         /* neutral.100 */
+  --color-miki-warm-200: oklch(0.89 0.006 80);         /* neutral.200 */
+  --color-miki-warm-300: oklch(0.69 0.012 75);         /* neutral.300 */
+
+  /* Promo banner (inverse surface) */
+  --color-miki-promo-bg: oklch(0.20 0 0);              /* component.promo-banner.bg */
+  --color-miki-promo-text: oklch(100% 0 0);            /* component.promo-banner.text */
+  --color-miki-promo-accent: oklch(0.76 0.155 160);    /* component.promo-banner.accent */
+}

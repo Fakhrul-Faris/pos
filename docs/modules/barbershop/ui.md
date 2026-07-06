@@ -3,6 +3,7 @@
 **Platform:** Miki · **Module:** Barbershop  
 **Module hub:** [`README.md`](README.md)  
 **Product spec:** [`spec.md`](spec.md)  
+**Motion prototype:** [`../../design/motion-prototype.md`](../../design/motion-prototype.md)  
 **Engineering modules:** [`../../product/engineering-modules.md`](../../product/engineering-modules.md)
 
 This document combines information architecture and all screen specifications for the three surfaces: Customer web, Shared POS, and Owner web.
@@ -140,11 +141,14 @@ Detail: [`#part-1--customer-web`](#part-1--customer-web), [`#part-2--pos-shared-
 | Field | Detail |
 | :--- | :--- |
 | **Entry** | From C-01-01 Book |
-| **Purpose** | Pick planned services + party size |
-| **Components** | Category list, service cards (name, price, duration), party size stepper (1–6) |
-| **Actions** | Next → C-06 barber/time |
-| **Rules** | Total duration hint: “~45 min for 2 people” |
+| **Purpose** | Pick planned services per person + party size |
+| **Components** | Party size stepper (1–6), **per-person tabs** when party > 1, category list, service cards (name, price, duration), optional guest name per tab |
+| **Actions** | Next → C-06 barber/time (disabled until all members have ≥1 service) |
+| **Rules** | Total duration hint: “~75 min for 3 people”; one booking · one queue # |
+| **Penpot** | `CW — Select Services`, `CW — Services Per Person` |
 | **States** | Empty menu (shop misconfigured) |
+
+**Party > 1 flow:** Customer switches tabs (Person 1, 2, 3…) and picks services for each. Does **not** pick barber per person — see [`spec.md`](spec.md) §2a.
 
 ---
 
@@ -168,9 +172,11 @@ Detail: [`#part-1--customer-web`](#part-1--customer-web), [`#part-2--pos-shared-
 ### C-06-03 Pick time slot
 | Field | Detail |
 | :--- | :--- |
-| **Components** | Grid of slots (respect duration+buffer), greyed = taken / walk-in-only |
+| **Components** | Grid of slots (respect duration+buffer), greyed = taken / walk-in-only / **too short for party** |
+| **Party rule** | Slots shorter than **sum of member durations** are greyed; hint: “Party needs 75 min” |
 | **Actions** | Select slot → C-06-04 |
 | **Empty** | “Fully booked — try another barber or date” |
+| **Penpot** | `CW — Pick Date & Time` (party slot hint) |
 
 ### C-06-04 Your details
 | Field | Detail |
@@ -183,13 +189,16 @@ Detail: [`#part-1--customer-web`](#part-1--customer-web), [`#part-2--pos-shared-
 | Field | Detail |
 | :--- | :--- |
 | **Components** | Summary: services, party size, barber, date/time, est. duration, total price |
-| **Actions** | Confirm booking → C-06-06 |
-| **Logic** | Server atomic slot lock; race → “Slot just taken” |
+| **Party** | **Per-person line items** (name · services · price) + party total; “one arrival time” |
+| **Actions** | Confirm booking → C-06-06 (morph button — see motion prototype) |
+| **Logic** | Server atomic slot lock for **full party duration**; race → “Slot just taken” |
+| **Penpot** | `CW — Review Booking`, `CW — Review Party` |
 
 ### C-06-06 Confirmation
 | Field | Detail |
 | :--- | :--- |
-| **Components** | **Queue #42**, barber, datetime, “Save this page” prompt |
+| **Components** | **Queue #42** (number barrel roll), barber, datetime, “Save this page” prompt |
+| **Party** | “Party of 3” · single #42 for whole group |
 | **Components** | Copy link button, bookmark instruction |
 | **No SMS v1** | URL contains `booking_token` |
 | **Actions** | View status → C-06-08 |
@@ -207,10 +216,12 @@ Detail: [`#part-1--customer-web`](#part-1--customer-web), [`#part-2--pos-shared-
 | **Entry** | Confirmation URL or retrieve flow |
 | **Components** | Status chip, queue #, barber name, planned services, slot time |
 | **Components** | “Now serving: #40” (shop), your #42 |
+| **Party** | Per-member progress rows (waiting / in chair / done); “2 of 3 in chair” |
 | **States** | BOOKED, ARRIVED, IN_SERVICE, PAID, NO_SHOW |
 | **NO_SHOW** | Message + “Book again” → C-01-01 |
 | **PAID** | Link to C-08 receipt |
 | **Note** | No push — user refreshes or keeps page open |
+| **Penpot** | `CW — Booking Status`, `CW — Party Status` |
 
 ---
 
@@ -242,18 +253,18 @@ Detail: [`#part-1--customer-web`](#part-1--customer-web), [`#part-2--pos-shared-
 
 ```
 C-01-01 Landing
-    → C-05-01 Services (+ party size)
-    → C-06-01 Barber? (flag)
+    → C-05-01 Services (+ party size, per-person tabs if party > 1)
+    → C-06-01 Barber? (flag) — one barber for whole party
     → C-06-02 Date
-    → C-06-03 Time
-    → C-06-04 Details
-    → C-06-05 Review
+    → C-06-03 Time (party duration blocks slot)
+    → C-06-04 Details (nickname + phone; optional per-guest names)
+    → C-06-05 Review (per-person line items if party)
     → C-06-06 Confirmed (# + URL)
-    → C-06-08 Status (lifecycle)
+    → C-06-08 Status (lifecycle; party progress if party)
     → C-08-01 Receipt (when paid)
 ```
 
-**Phase 1A screen count:** 14 core + 4 state variants ≈ **18 frames**
+**Phase 1A screen count:** 14 core + party variants + 4 state variants ≈ **22 frames**
 
 ---
 
@@ -318,6 +329,28 @@ C-01-01 Landing
 | **Shows** | #, nickname, phone (tap to call), planned services, barber, time, status |
 | **Actions** | **Mark arrived** · **No-show** · **Cancel** · **Reassign barber** (if not IN_SERVICE) |
 | **Actions** | **Add service** → P-06-04 · **Start cut** · **Complete** → P-07 |
+| **Party** | See P-06-07 / P-06-08 for multi-member bookings |
+
+### P-06-07 Party check-in
+| Field | Detail |
+| :--- | :--- |
+| **Entry** | Tap party booking on today board (#42 · Party of 3) |
+| **Purpose** | Confirm who actually arrived before assigning chairs |
+| **Components** | Member list with **Here / No-show** toggle per person; “Booked 3 · adjust before assigning” |
+| **Rules** | No-shows excluded from bill; one queue # retained for arrived members |
+| **Actions** | Confirm arrival → P-06-08 Assign chairs |
+| **Penpot** | `POS — Party Check-in` |
+
+### P-06-08 Party assign & parallel cuts
+| Field | Detail |
+| :--- | :--- |
+| **Purpose** | Split party across barbers; run cuts in parallel |
+| **Components** | Chair view (Ali / Siti / Ben), busy banner (“Ali finishing #40”), per-member **Start / Complete** |
+| **Rules** | One active cut per barber; members may be in chair simultaneously; **Start all ready** shortcut |
+| **Mid-flow** | Can mark waiting guest no-show before payment |
+| **Actions** | All arrived members complete → P-07-01 (party line items) |
+| **Penpot** | `POS — Party Assign` |
+| **Motion** | [`motion-prototype.md`](../../design/motion-prototype.md) · `PosPartyAssign.tsx` |
 
 ### P-06-04 Add / change services (add-on)
 | Field | Detail |
@@ -348,20 +381,26 @@ C-01-01 Landing
 ### P-07-01 Payment screen
 | Field | Detail |
 | :--- | :--- |
-| **Entry** | After **Complete** on booking |
+| **Entry** | After **Complete** on booking (solo or all party members done) |
 | **Shows** | Actual services, subtotal, linked booking # |
+| **Party** | Line items: **name · service · barber · price** per arrived member; no-shows omitted |
 | **Methods** | **[HitPay QR]** (highlight) · **[HitPay card]** · Cash · Own DuitNow |
 | **Phase 1A** | Cash + Own DuitNow only |
 | **Phase 1B** | HitPay — show subtotal + 2% service fee + total |
-| **Actions** | Complete payment → P-08 |
+| **Actions** | Complete payment → P-08 (morph button on confirm — motion prototype) |
+| **Penpot** | `POS — Payment (P-07-01)`, `POS — Party Payment` |
 
 ### P-07-02 HitPay (Phase 1B)
 | Field | Detail |
 | :--- | :--- |
-| **Components** | Line items RM40.00 · Service fee (2%) RM0.80 · **Total RM40.80** |
-| **QR mode** | Large QR, polling spinner |
-| **Card mode** | Tap to pay on phone |
-| **On paid** | Auto P-08 + show receipt link / counter QR |
+| **Components** | Line items · Subtotal · Service fee (2%) · **Total** |
+| **Example (solo)** | RM 55.00 + RM 1.10 fee = **RM 56.10** paid by customer |
+| **Example (party)** | 2 of 3 arrived: RM 80.00 + RM 1.60 = **RM 81.60** |
+| **QR mode** | Large QR, polling spinner, “Waiting for payment…” |
+| **Card mode** | Tap card on HitPay terminal; “Hold device near terminal…” |
+| **On paid** | Auto P-08 + receipt link / counter QR |
+| **Penpot** | `POS — HitPay (P-07-02)`, `POS — HitPay · Card`, `POS — HitPay · Party` |
+| **Rules** | Merchant receives full subtotal; 2% borne by customer ([`spec.md`](spec.md) §8) |
 
 ---
 
@@ -371,8 +410,10 @@ C-01-01 Landing
 | Field | Detail |
 | :--- | :--- |
 | **Components** | Total paid, method, receipt link QR for customer to scan |
+| **Motion** | Receipt printer slide + confetti on success ([`ReceiptPrinter.tsx`](../../../prototype/motion/src/components/ReceiptPrinter.tsx)) |
 | **Actions** | Show receipt QR · New walk-in · Done |
 | **Backend** | Link to C-08-01 (no SMS v1) |
+| **Penpot** | `POS — Payment Success (P-08-01)` |
 
 ---
 
@@ -396,7 +437,7 @@ C-01-01 Landing
 
 ---
 
-## POS flow (happy path)
+## POS flow (happy path — solo)
 
 ```
 P-01-02 Switch barber (Ali)
@@ -408,7 +449,18 @@ P-01-02 Switch barber (Ali)
   → P-08-01 Receipt link / counter QR shown
 ```
 
-**Phase 1A POS frames:** ~16 + offline/error variants ≈ **20 frames**
+## POS flow (happy path — party)
+
+```
+P-06-01 Tap #42 · Party of 3
+  → P-06-07 Who arrived? (2 Here, 1 No-show)
+  → P-06-08 Assign chairs · parallel Start/Complete per member
+  → P-07-01 Collect payment (2 line items, RM 80)
+  → P-07-02 HitPay QR or Card (RM 81.60 incl. 2%) OR Cash/DuitNow (RM 80 exact)
+  → P-08-01 Receipt + counter QR
+```
+
+**Phase 1A POS frames:** ~20 + party + HitPay variants ≈ **26 frames**
 
 ---
 
@@ -481,11 +533,17 @@ Photo optional; active toggle.
 | Field | Detail |
 | :--- | :--- |
 | **Flags** | Allow customer pick barber (ON/OFF) |
+| **Flags** | **Party bookings** (ON/OFF) — one queue #, per-person services, sum-of-durations slot block |
 | **Flags** | Auto no-show minutes (default 15) |
 | **Flags** | Early arrival grace (10) |
+| **Penpot** | `MP — Booking Rules` |
 
 ### O-06-05 QR codes
-Print shop QR (customer landing), optional per-barber marketing QR.
+| Field | Detail |
+| :--- | :--- |
+| **Purpose** | Print shop QR (customer landing), counter receipt QR |
+| **Components** | Shop QR card + Print · Counter retrieve QR + Print |
+| **Penpot** | `MP — QR Codes` |
 
 ---
 
@@ -495,7 +553,11 @@ Print shop QR (customer landing), optional per-barber marketing QR.
 Today: bookings, walk-ins, revenue, no-shows.
 
 ### O-09-02 Per-barber revenue
-Table: barber, cuts, gross, avg ticket.
+| Field | Detail |
+| :--- | :--- |
+| **Components** | Table: barber, cuts, gross, avg ticket |
+| **Actions** | Export CSV → O-09-03 |
+| **Penpot** | `MP — Reports` |
 
 ### O-09-03 Export
 CSV date range.
@@ -514,7 +576,103 @@ Link login to barber profile for POS switcher (optional password per barber for 
 
 ## Owner screen count
 
-~**14 frames** for Phase 1A setup + calendar + reports.
+~**17 frames** for Phase 1A setup + calendar + reports + booking rules + QR.
+
+---
+
+## Penpot frame index (barbershop)
+
+**Draft page:** `‎ ‎ ‎ Customer Web App` — flow validation, frozen  
+**Hi-fi page:** `Customer Web · Hi-Fi` — **motion prototype skin** (matches `prototype/motion/` BookingFlow), component strip (`DS — Components`)
+
+**Visual system (motion prototype):**
+
+| Token | Value | Notes |
+| :--- | :--- | :--- |
+| Phone bg | `#F9F9F8` | Warm off-white |
+| Screen card | white · `rounded-16` · border 6% | Single card — no header/CTA strips |
+| Card padding | **24px** | Inner content width **294px** |
+| Progress | 5 × **6px** segment bars · 24px gap below | Above card; active = `#38CE87` |
+| Primary CTA | `#38CE87` · `rounded-12` · 52px · ink text | Matches MorphButton idle |
+| Selected card | green 10% fill · green 50% border | Services, barbers, slots |
+| Typography | Instrument Sans headlines · IBM Plex body | Kicker `#1A7A4C` |
+
+**Hi-fi grid (Customer Web · Hi-Fi):**
+
+Spacing matches coded prototype (`BookingFlow.tsx`): **24px** card padding · **294px** content · **16px** section gap · **12px** radius on cards/buttons · **16px** radius on screen card.
+
+**Layout (v2 — rebuilt Jul 2026):**
+
+```
+Phone frame (flex column · pad 24 · gap 24)
+├── Progress bars        fill × fix 6px
+├── Screen card          fill × fix 580px (flow) or hug (status)
+│   ├── header / content   gap 12 · pad 24
+│   ├── CTA spacer         fill (pushes button down inside card)
+│   └── Button             fill × fix 52px
+└── Frame spacer           fill (absorbs viewport — no white void inside card)
+```
+
+- **Screen card** is **580px** on booking-flow screens (matches `min-h-[580px]` in `BookingFlow.tsx`); status/edge screens hug content (~420px).
+- **Service cards** 76px · stepper 52px · person tabs 40px · explicit `resize()` on all interactive rows.
+- All flex children appended via `appendChild` then `layoutChild` — never set `layoutChild` before append.
+- POS / Merchant / Admin: **sidebar 240px fix** + **main fill**; panel cards explicit width×height; body **flex row** for two-column layouts.
+
+| Row | y | Frames |
+| :--- | :--- | :--- |
+| Components | 0 (left col) | `DS — Components` |
+| Happy path · entry | 0 | Landing, Select Services, Services Per Person |
+| Happy path · schedule | 900 | Pick Barber, Date & Time, Your Details |
+| Happy path · confirm | 1800 | Review Booking, Review Party, Confirmed |
+| Status / receipt | 2700 | Booking Status, Party Status, Receipt |
+| **Edge states** | **3600** | Retrieve, Booking Not Found, Shop Closed, Shop Offline |
+| **Edge states · cont.** | **4500** | Slot Taken, No-show, Payment Pending |
+
+**Hi-fi annotations:** Motion behaviour documented in [`motion-prototype.md`](../../design/motion-prototype.md) and coded in `prototype/motion/` — Penpot hi-fi uses static frames only (no Motion Note chips; cleaner handoff).
+
+**POS · Hi-Fi grid** (1280×800 · draft `‎ ‎ ‎ POS` frozen):
+
+| Row | y | Frames |
+| :--- | :--- | :--- |
+| Core | 0 | Shop Login, Today Board, Today Board · Party #42 |
+| Party flow | 880 | Party Check-in, Party Assign, Party Payment |
+| Payment | 1760 | Payment (P-07-01), Payment Success, HitPay QR |
+| HitPay variants | 2640 | HitPay · Card, HitPay · Party, HitPay · Timeout |
+
+**Merchant · Hi-Fi grid** (1440×900 · draft `‎ ‎ ‎ Merchant Portal` frozen):
+
+| Row | y | Frames |
+| :--- | :--- | :--- |
+| Auth + core | 0 | Login, Calendar, Services |
+| Settings · capacity | 960 | Walk-in Blocks, Booking Rules, QR Codes |
+| People · onboarding | 1920 | Reports, Barbers, Onboarding Wizard |
+
+Layout: **flex row** shell — sidebar 240px (fix) + main (fill) · page header + white cards · motion prototype tokens.
+
+Draft `MP — *` frames not yet in hi-fi (add when needed): Shell Layout, Billing, Customers, Service Edit drawer, Plan Picker.
+
+Draft grid (unchanged):
+
+| Row | y | Frames |
+| :--- | :--- | :--- |
+| Happy path · book | 0 | Landing, Select Services, Pick Barber, Date & Time, Retrieve |
+| Happy path · confirm | 900 | Details, Review, Confirmed, Status, Receipt |
+| Party variants | 1800 | Services Per Person, Review Party, Party Status, Booking Not Found |
+| Error / edge | 2700 | Shop Closed, Offline, Slot Taken, No-show, Payment Pending |
+
+| Page | Key frames |
+| :--- | :--- |
+| **Customer Web · Hi-Fi** | `CW-Hi — *` (see hi-fi grid) |
+| **POS · Hi-Fi** | `POS-Hi — *` — 1280×800 · motion prototype skin (see below) |
+| **Merchant · Hi-Fi** | `MP-Hi — *` — 1440×900 · owner web · flex sidebar shell (see below) |
+| **Admin · Hi-Fi** | `AP-Hi — *` — 1440×900 · platform internal · [`admin-portal.md`](../../platform/admin-portal.md) |
+| **Customer Web App** (draft) | CW — * (see draft grid) |
+| **POS** | Today Board, **Today Board · Party #42**, Party Check-in, Party Assign, Party Payment, HitPay (P-07-02), HitPay · Card, HitPay · Party, **HitPay · Timeout** |
+| **Merchant Portal** | Shell Layout, Calendar, **Walk-in Blocks**, Services, Booking Rules, QR Codes, Reports |
+| **Admin Portal** (platform) | `AP — Dashboard`, `AP — Merchant Detail`, `AP — Subscriptions` · hi-fi: **Admin · Hi-Fi** |
+| **Motion** | Number Barrel, Morph Button, Receipt, Card Expand, Party Flow, Springs SSOT |
+
+Coded reference: [`motion-prototype.md`](../../design/motion-prototype.md)
 
 ---
 

@@ -9,6 +9,7 @@
 | [**marketing-copy.md**](marketing-copy.md) | Hub + all verticals marketing copy |
 | [**web-structure.md**](web-structure.md) | Sitemap, routing, locked decisions |
 | [**penpot-setup.md**](penpot-setup.md) | Penpot MCP + library sync |
+| [**motion-prototype.md**](motion-prototype.md) | Coded motion gallery — developer reference (`prototype/motion/`) |
 | [**references/notion-design-library.md**](references/notion-design-library.md) | Notion design research |
 | [**references/notion-design-tokens.json**](references/notion-design-tokens.json) | Extracted Notion tokens (reference only) |
 

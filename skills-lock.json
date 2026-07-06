@@ -157,6 +157,12 @@
       "skillPath": "skills/find-skills/SKILL.md",
       "computedHash": "781bd6d3f9b19f8c9af6b53d8d0e4876d0183841b565db34ca7092ffa412d111"
     },
+    "fluid-design": {
+      "source": "kemiljk/fluid-design",
+      "sourceType": "github",
+      "skillPath": "skills/fluid-design/SKILL.md",
+      "computedHash": "9fbb041609abd23e2d7ac9071b20e7f9e5bc2e5cf680f087cf3806a38ec62914"
+    },
     "free-tools": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",

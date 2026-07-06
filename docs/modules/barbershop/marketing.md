@@ -52,16 +52,16 @@ Online slots hold your calendar. Walk-ins fill what's left — automatically. Th
 
 ### How many people left?
 
-Every shop with a queue hears this question on repeat — because most POS tools were never built to track who's actually waiting. Miki was.
+Three chairs. Four barbers. One scribbled list on the counter — and you're still cutting. Walk-ins on paper. Bookings in WhatsApp. Nobody looking at the same board.
 
-**The double queue**
-Online slots get swallowed by walk-ins — or walk-ins wait forever because the calendar looks full. You need both, on the same Saturday, without either one lying to the other.
+**The paper queue**
+#14 crossed out. #17 written twice. Someone went for a smoke and lost their spot. A customer asks *"Boss, how many people left?"* — you look at the paper, look at the chairs, and hope you're right. They don't wait to find out.
 
-**The hardware tax**
-You don't need a RM2,000 terminal bundle gathering dust. You need software that runs on the tablet you already own.
+**WhatsApp from every direction**
+"Can I come at 2?" lands in your chat. Same question in your barber's chat. "I'm outside already" — but his chair is still busy. Walk-ins keep walking in. You're guessing capacity across five phones and one notepad. Overbook and your barbers burn out. Underbook and chairs sit empty.
 
-**The forced checkout**
-Cash works. Your bank QR works. Checkout shouldn't stop just because the customer didn't pay through someone else's system.
+**Split night**
+Lights off. Cash on the counter. Bank transfers on three screens. You're going down the paper list — who cut who, which beard trims got added, what each barber is owed. One number doesn't match. Now it's not closing time. It's negotiation time.
 
 ---
 

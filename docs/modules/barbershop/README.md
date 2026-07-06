@@ -38,6 +38,7 @@ BARBERSHOP MODULE (this folder)
 | [**pricing-funnel.md**](pricing-funnel.md) | Product, marketing, finance | Trial → Lite → paid in plain language (barbershop numbers) |
 | [**features-and-pricing.md**](features-and-pricing.md) | Product, design, eng | Feature catalog + Ocelot/Mantis/Patriot matrix + RM prices |
 | [**ui.md**](ui.md) | Design, frontend | IA + all screens (C-xx, P-xx, O-xx) |
+| [**motion-prototype.md**](../../design/motion-prototype.md) | Design, frontend | Coded motion demos + party flow reference |
 | [**marketing.md**](marketing.md) | Marketing, Penpot | Canonical `/barbershop` landing copy |
 | [**financial.md**](financial.md) | Finance, founders | Barbershop pricing assumptions (links to company SSOT) |
 
