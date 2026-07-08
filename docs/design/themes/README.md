@@ -6,6 +6,18 @@
 
 ---
 
+## Theme spec documents
+
+| Theme | File | Status |
+| :--- | :--- | :--- |
+| **Visitors** | [`visitors-design.md`](visitors-design.md) | **Active** — POS + merchant portal (`apps/`) |
+| **Mercury** | [`mercury-design.md`](mercury-design.md) | Reference — precise money surfaces |
+| **Jeton** | [`jeton-design.md`](jeton-design.md) | Reference — landing / fintech editorial |
+
+**Brand assets:** [`../assets/brand/`](../assets/brand/) · **Motion clips:** [`../references/motion/`](../references/motion/)
+
+---
+
 ## Your references → what to borrow
 
 | Reference | File | Borrow for Miki |

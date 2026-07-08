@@ -46,6 +46,7 @@ docs/
 ├── product/
 │   └── engineering-modules.md     Backend modules (eng-owned)
 ├── design/
+│   ├── copy-style.md              Copy voice & replication guide
 │   ├── marketing-copy.md          Hub + all verticals marketing
 │   ├── web-structure.md           Sitemap, routing
 │   ├── penpot-setup.md            Penpot MCP + library

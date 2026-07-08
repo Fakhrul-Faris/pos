@@ -29,6 +29,18 @@ Full doc map: **[`docs/README.md`](docs/README.md)**
 | Counter POS | Barber / manager (shared device) | [`ui.md`](docs/modules/barbershop/ui.md) Part 2 (P-xx) |
 | Owner web | Owner | [`ui.md`](docs/modules/barbershop/ui.md) Part 3 (O-xx) |
 
+## Apps & prototypes
+
+Interactive UI lives in the **Next.js monorepo** ([`apps/README.md`](apps/README.md)):
+
+```bash
+npm install
+npm run dev:pos      # Staff POS → :3002
+npm run dev:portal   # Merchant portal → :3001
+```
+
+Legacy Vite prototypes: [`prototype/README.md`](prototype/README.md)
+
 ## Plan tiers (not the product name)
 
 **Ocelot** · **Mantis** · **Patriot** · **Arsenal** — subscription packages. **Miki** is the company and platform.

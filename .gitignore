@@ -4,6 +4,17 @@
 .idea/
 .vscode/
 
+# dependencies
+node_modules/
+
+# build / cache
+.tmp/
+*.tsbuildinfo
+apps/*/.next/
+apps/*/out/
+apps/*/.next
+prototype/*/dist/
+
 # MCP secrets — never commit Penpot keys
 .cursor/mcp.json
 .env

@@ -4,9 +4,9 @@
 **Status:** v3 — canonical scroll copy for Penpot & build  
 **Product:** Miki — queue, booking, and checkout for service shops  
 **Module hub:** [`README.md`](README.md)  
-**Sources:** [`../../design/marketing-copy.md`](../../design/marketing-copy.md) §1 · [`../../design/web-structure.md`](../../design/web-structure.md) · [`spec.md`](spec.md)
+**Sources:** [`../../design/copy-style.md`](../../design/copy-style.md) · [`../../design/marketing-copy.md`](../../design/marketing-copy.md) §1 · [`../../design/web-structure.md`](../../design/web-structure.md) · [`spec.md`](spec.md)
 
-**Voice:** Short-punch headers, no hedging, no restaurant/kitchen comparisons. "Chair" is the recurring symbol — hero, problem, features, close.
+**Voice:** [`../../design/copy-style.md`](../../design/copy-style.md) — Operational Empathy. Vertical page: barber/chair language OK. One beat per block; no feature paragraphs.
 
 **Naming:** Barbershop-specific (barber, cut, chair, queue). Roles, not personal names.
 

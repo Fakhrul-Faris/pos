@@ -1,0 +1,15 @@
+{
+  "name": "miki",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:portal": "npm run dev -w @miki/merchant-portal",
+    "dev:pos": "npm run dev -w @miki/staff-pos",
+    "build:portal": "npm run build -w @miki/merchant-portal",
+    "build:pos": "npm run build -w @miki/staff-pos",
+    "build": "npm run build:portal && npm run build:pos"
+  }
+}

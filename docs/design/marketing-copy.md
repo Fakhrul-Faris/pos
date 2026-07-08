@@ -2,10 +2,11 @@
 
 **Status:** Draft v3.0 — Miki naming locked  
 **Use for:** Homepage variants, vertical landing pages, signup routing, Penpot wireframes  
+**Copy style (canonical):** [`copy-style.md`](copy-style.md) — Operational Empathy / Plain Relief  
 **Pricing detail (barbershop):** [`web-structure.md`](web-structure.md)  
 **Sitemap & routing:** [`web-structure.md`](web-structure.md)
 
-**Voice (all verticals):** Confident like Ramp. Transparent like Wise. Warm like Wimp Decaf. Direct, editorial — one *italic* beat per headline. Malaysian shop owners. No enterprise jargon. No payment partner names.
+**Voice (all verticals):** See [`copy-style.md`](copy-style.md). Short operational empathy — pain before product, one beat per block, platform on hub / vertical on vertical pages. Malaysian shop owners. No enterprise jargon. No payment partner names.
 
 ---
 
