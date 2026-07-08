@@ -1,5 +1,6 @@
 import type { ReactNode, ButtonHTMLAttributes } from 'react'
 import { Btn } from './Btn'
+import { Reveal, RevealHeadline } from './Reveal'
 
 type ButtonVariant = 'primary' | 'ghost' | 'outline'
 
@@ -80,9 +81,11 @@ export function ArrowLink({
 
 export function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <p className="text-caption text-muted uppercase tracking-[0.12em] mb-4">
-      {children}
-    </p>
+    <Reveal y={14} duration={0.6}>
+      <p className="text-caption text-muted uppercase tracking-[0.12em] mb-4">
+        {children}
+      </p>
+    </Reveal>
   )
 }
 
@@ -97,11 +100,16 @@ export function ItalicHeadline({
   after?: string
   className?: string
 }) {
+  const segments = [
+    ...(before ? [{ text: before }] : []),
+    { text: italic, className: 'italic-beat' },
+    ...(after ? [{ text: after }] : []),
+  ]
+
   return (
-    <h2 className={`text-heading-lg text-ink ${className}`.trim()}>
-      {before}
-      <span className="italic-beat"> {italic}</span>
-      {after}
-    </h2>
+    <RevealHeadline
+      segments={segments}
+      className={`text-heading-lg text-ink ${className}`.trim()}
+    />
   )
 }

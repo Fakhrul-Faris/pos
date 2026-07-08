@@ -1,5 +1,6 @@
 import { useId, useState } from 'react'
 import { motion } from 'motion/react'
+import { RevealGroup, RevealHeadline, RevealItem } from './Reveal'
 
 const spring = {
   type: 'spring' as const,
@@ -37,7 +38,7 @@ function FaqItem({
   return (
     <motion.li
       layout
-      className="faq-accordion-item bg-paper hover:bg-linen/60 relative cursor-pointer overflow-hidden px-4"
+      className="faq-accordion-item bg-paper hover:bg-linen/60 relative cursor-pointer overflow-hidden px-4 list-none"
       style={{ marginBlock: 0, borderRadius: 0 }}
     >
       <button
@@ -84,22 +85,23 @@ export function FAQ() {
   return (
     <section id="faq" className="py-[var(--section-gap)] bg-linen/50">
       <div className="container-page max-w-lg">
-        <h2 className="text-heading text-ink m-0 mb-10">FAQ</h2>
+        <RevealHeadline
+          segments={[{ text: 'FAQ' }]}
+          className="text-heading text-ink m-0 mb-10"
+        />
 
-        <motion.ul
-          layout
-          className="faq-accordion m-0 p-0 list-none w-full overflow-clip rounded-3xl border border-black/8 bg-paper shadow-[var(--shadow-card)]"
-        >
-          {items.map((item, i) => (
-            <FaqItem
-              key={item.q}
-              id={`${baseId}-${i}`}
-              item={item}
-              isOpen={open === i}
-              onToggle={() => setOpen(open === i ? null : i)}
-            />
-          ))}
-        </motion.ul>
+        <RevealGroup className="faq-accordion m-0 p-0 list-none w-full overflow-clip rounded-3xl border border-black/8 bg-paper shadow-[var(--shadow-card)]" stagger={0.1} delay={0.1}>
+            {items.map((item, i) => (
+              <RevealItem key={item.q}>
+                <FaqItem
+                  id={`${baseId}-${i}`}
+                  item={item}
+                  isOpen={open === i}
+                  onToggle={() => setOpen(open === i ? null : i)}
+                />
+              </RevealItem>
+            ))}
+          </RevealGroup>
       </div>
     </section>
   )

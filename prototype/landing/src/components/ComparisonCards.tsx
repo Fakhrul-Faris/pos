@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { RevealGroup, RevealItem, RevealSlide } from './Reveal'
 import type { ReactNode } from 'react'
 
 type ComparisonRow = {
@@ -70,24 +70,20 @@ function ComparisonRowItem({
 export function ComparisonCards() {
   return (
     <div className="relative w-full pt-4">
+      <RevealSlide from="down" delay={0.05} distance={24} blur={false} duration={0.7}>
+        <span
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-0 w-0.5 rounded-full h-16 md:h-20 bg-signal reveal-line-draw"
+          style={{ boxShadow: '0 4px 16px rgba(56, 206, 135, 0.35)' }}
+        />
+      </RevealSlide>
       <span
         aria-hidden
-        className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-0 w-0.5 rounded-full h-16 md:h-20 bg-signal"
-        style={{ boxShadow: '0 4px 16px rgba(56, 206, 135, 0.35)' }}
-      />
-      <span
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 -translate-x-1/2 w-0.5 rounded-full top-16 md:top-20 bottom-0 bg-signal"
-        style={{ boxShadow: '0 4px 16px rgba(56, 206, 135, 0.35)' }}
+        className="pointer-events-none absolute left-1/2 -translate-x-1/2 w-0.5 rounded-full top-16 md:top-20 bottom-0 bg-signal/40"
       />
 
       <div className="grid md:grid-cols-2 gap-6 md:gap-8 w-full relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-        >
+        <RevealSlide from="left" delay={0.1}>
           <div className="h-full rounded-[32px] md:rounded-[40px] bg-paper p-8 md:p-10 flex flex-col gap-7 border border-black/10 shadow-card">
             <p className="text-heading-sm text-ink m-0">
               <span className="text-signal">Miki</span>
@@ -96,40 +92,37 @@ export function ComparisonCards() {
               The Miki way
             </p>
             <div className="h-px w-full bg-black/10" />
-            <div className="flex flex-col gap-6">
+            <RevealGroup className="flex flex-col gap-6" stagger={0.09} delay={0.2}>
               {rows.map((row) => (
-                <ComparisonRowItem
-                  key={row.mikiWay}
-                  icon={row.mikiIcon}
-                  label={row.mikiWay}
-                  tone="positive"
-                />
+                <RevealItem key={row.mikiWay}>
+                  <ComparisonRowItem
+                    icon={row.mikiIcon}
+                    label={row.mikiWay}
+                    tone="positive"
+                  />
+                </RevealItem>
               ))}
-            </div>
+            </RevealGroup>
           </div>
-        </motion.div>
+        </RevealSlide>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.08 }}
-        >
+        <RevealSlide from="right" delay={0.18}>
           <div className="h-full rounded-[32px] md:rounded-[40px] bg-[#ebebeb] p-8 md:p-10 flex flex-col gap-7 border border-black/10">
             <h3 className="text-heading-sm text-ink/80 m-0">The old way</h3>
             <div className="h-px w-full bg-black/15" />
-            <div className="flex flex-col gap-6">
+            <RevealGroup className="flex flex-col gap-6" stagger={0.09} delay={0.28}>
               {rows.map((row) => (
-                <ComparisonRowItem
-                  key={row.oldWay}
-                  icon={row.oldIcon}
-                  label={row.oldWay}
-                  tone="muted"
-                />
+                <RevealItem key={row.oldWay}>
+                  <ComparisonRowItem
+                    icon={row.oldIcon}
+                    label={row.oldWay}
+                    tone="muted"
+                  />
+                </RevealItem>
               ))}
-            </div>
+            </RevealGroup>
           </div>
-        </motion.div>
+        </RevealSlide>
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { RevealGroup, RevealItem } from './Reveal'
 import type { ReactNode } from 'react'
 
 type BentoCell = {
@@ -49,14 +49,11 @@ const layoutClass: Record<BentoCell['layout'], string> = {
 
 export function PaymentsBento() {
   return (
-    <div className="payments-bento-grid">
-      {cells.map((cell, i) => (
-        <motion.article
+    <RevealGroup className="payments-bento-grid" stagger={0.11} delay={0.05}>
+      {cells.map((cell) => (
+        <RevealItem
           key={cell.id}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.45, delay: i * 0.06 }}
+          y={40}
           className={`payments-bento-card ${layoutClass[cell.layout]}`}
         >
           <div className="payments-bento-visual" aria-hidden>
@@ -66,9 +63,9 @@ export function PaymentsBento() {
             <h3 className="payments-bento-label">{cell.label}</h3>
             <p className="payments-bento-line">{cell.line}</p>
           </div>
-        </motion.article>
+        </RevealItem>
       ))}
-    </div>
+    </RevealGroup>
   )
 }
 

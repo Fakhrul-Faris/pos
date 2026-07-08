@@ -1,4 +1,5 @@
 import { Ticker } from './Ticker'
+import { Reveal } from './Reveal'
 
 const trustItems = [
   'Trusted by shop owners across Malaysia',
@@ -9,9 +10,9 @@ const trustItems = [
 export function TrustStrip() {
   return (
     <div className="o-trust-strip">
-      <div className="container-page">
+      <Reveal y={16} blur={false} duration={0.7} className="container-page">
         <Ticker items={trustItems} aria-label="Trust indicators" />
-      </div>
+      </Reveal>
     </div>
   )
 }

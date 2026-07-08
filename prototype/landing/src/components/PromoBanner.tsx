@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
+import { REVEAL_EASE } from './Reveal'
 
 const STORAGE_KEY = 'miki-promo-dismissed'
 
 export function PromoBanner() {
   const [visible, setVisible] = useState(false)
+  const reduced = useReducedMotion()
 
   useEffect(() => {
     setVisible(localStorage.getItem(STORAGE_KEY) !== '1')
@@ -17,9 +20,12 @@ export function PromoBanner() {
   if (!visible) return null
 
   return (
-    <div
+    <motion.div
       id="navbar-banner"
-      className="bg-promo-bg text-paper text-body-sm tracking-[0.03em]"
+      className="bg-promo-bg text-paper text-body-sm tracking-[0.03em] overflow-hidden"
+      initial={reduced ? false : { height: 0, opacity: 0 }}
+      animate={{ height: 'auto', opacity: 1 }}
+      transition={{ duration: 0.55, ease: REVEAL_EASE }}
     >
       <div className="container-page flex items-center justify-between gap-4 py-3">
         <p className="m-0 text-center flex-1">
@@ -37,6 +43,6 @@ export function PromoBanner() {
           ✕
         </button>
       </div>
-    </div>
+    </motion.div>
   )
 }

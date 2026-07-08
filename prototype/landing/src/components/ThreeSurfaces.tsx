@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { Reveal, RevealGroup, RevealHeadline, RevealItem, RevealScale } from './Reveal'
 
 type SurfaceKey = 'customer' | 'counter' | 'owner'
 
@@ -44,16 +45,24 @@ export function ThreeSurfaces() {
     <section id="how-it-works" className="py-[var(--section-gap)] bg-linen/50">
       <div className="container-page">
         <div className="text-center max-w-[640px] mx-auto">
-          <h2 className="text-heading-lg text-ink m-0">
-            Bring <span className="text-muted">your</span> device.
-          </h2>
-          <p className="text-body-lg text-muted mt-4 mb-0">
-            No terminal to buy, no hardware bundle to wait on.
-            <br className="hidden sm:block" /> Miki runs on iPhone and Android.
-          </p>
+          <RevealHeadline
+            segments={[
+              { text: 'Bring' },
+              { text: 'your', className: 'text-muted' },
+              { text: 'device.' },
+            ]}
+            className="text-heading-lg text-ink m-0"
+          />
+          <Reveal delay={0.25} y={20}>
+            <p className="text-body-lg text-muted mt-4 mb-0">
+              No terminal to buy, no hardware bundle to wait on.
+              <br className="hidden sm:block" /> Miki runs on iPhone and Android.
+            </p>
+          </Reveal>
         </div>
 
-        <div className="mt-12 relative overflow-hidden rounded-[24px] aspect-[4/3] sm:aspect-[16/9] lg:aspect-[2/1] bg-ink">
+        <RevealScale delay={0.12} scale={0.94} y={56} className="mt-12">
+          <div className="relative overflow-hidden rounded-[24px] aspect-[4/3] sm:aspect-[16/9] lg:aspect-[2/1] bg-ink">
           <AnimatePresence initial={false}>
             <motion.img
               key={current.key}
@@ -81,12 +90,17 @@ export function ThreeSurfaces() {
           <div
             role="tablist"
             aria-label="Choose a surface"
-            aria-orientation="vertical"
-            className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 flex flex-col items-start gap-3 max-w-[85%] sm:max-w-[340px]"
+            className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 max-w-[85%] sm:max-w-[340px]"
+          >
+          <RevealGroup
+            className="flex flex-col items-start gap-3"
+            stagger={0.12}
+            delay={0.35}
           >
             {surfaces.map((s) => {
               const isActive = s.key === active
               return (
+                <RevealItem key={s.key} x={-20}>
                 <motion.button
                   key={s.key}
                   type="button"
@@ -142,10 +156,13 @@ export function ThreeSurfaces() {
                     </motion.span>
                   )}
                 </motion.button>
+                </RevealItem>
               )
             })}
+          </RevealGroup>
           </div>
-        </div>
+          </div>
+        </RevealScale>
       </div>
     </section>
   )

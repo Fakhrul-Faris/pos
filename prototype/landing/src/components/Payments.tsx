@@ -1,4 +1,5 @@
 import { ItalicHeadline } from './ui'
+import { Reveal } from './Reveal'
 import { PaymentsBento } from './PaymentsBento'
 
 export function Payments() {
@@ -10,9 +11,11 @@ export function Payments() {
           italic="Your way."
           className="w-full text-center"
         />
-        <p className="text-body text-muted mt-4 mb-10 w-full text-center">
-          Accept cash, cards, or QR codes. We never hold your checkout hostage.
-        </p>
+        <Reveal delay={0.25} y={20}>
+          <p className="text-body text-muted mt-4 mb-10 w-full text-center">
+            Accept cash, cards, or QR codes. We never hold your checkout hostage.
+          </p>
+        </Reveal>
 
         <PaymentsBento />
       </div>

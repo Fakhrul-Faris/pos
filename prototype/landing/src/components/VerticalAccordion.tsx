@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { REVEAL_EASE, VIEWPORT } from './Reveal'
 import {
   verticalBySlug,
   verticalCategories,
@@ -19,6 +20,7 @@ type VerticalAccordionCardProps = {
   isActive: boolean
   onHover: () => void
   onSelect: () => void
+  index: number
 }
 
 function VerticalAccordionCard({
@@ -26,6 +28,7 @@ function VerticalAccordionCard({
   isActive,
   onHover,
   onSelect,
+  index,
 }: VerticalAccordionCardProps) {
   const reduceMotion = useReducedMotion()
 
@@ -37,8 +40,20 @@ function VerticalAccordionCard({
       className={`vertical-accordion-card vertical-accordion-card--${category.theme}${
         isActive ? ' is-active' : ''
       }`}
+      initial={reduceMotion ? false : { opacity: 0, y: 44, filter: 'blur(8px)' }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, filter: 'blur(0px)' }}
+      viewport={VIEWPORT}
       animate={{ flex: isActive ? 4.2 : 1 }}
-      transition={reduceMotion ? { duration: 0 } : spring}
+      transition={
+        reduceMotion
+          ? { duration: 0 }
+          : {
+              flex: spring,
+              opacity: { duration: 0.75, delay: index * 0.08, ease: REVEAL_EASE },
+              y: { duration: 0.75, delay: index * 0.08, ease: REVEAL_EASE },
+              filter: { duration: 0.75, delay: index * 0.08, ease: REVEAL_EASE },
+            }
+      }
       onMouseEnter={onHover}
       onFocus={onHover}
       onClick={onSelect}
@@ -130,9 +145,10 @@ export function VerticalAccordion() {
       className="vertical-accordion"
       onMouseLeave={() => setActiveId(null)}
     >
-      {verticalCategories.map((category) => (
+      {verticalCategories.map((category, index) => (
         <VerticalAccordionCard
           key={category.id}
+          index={index}
           category={category}
           isActive={activeId === category.id}
           onHover={() => setActiveId(category.id)}

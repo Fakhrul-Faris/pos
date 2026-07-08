@@ -1,3 +1,5 @@
+import { Reveal, RevealGroup, RevealHeadline, RevealItem } from './Reveal'
+
 const legalLinks = [
   { label: 'Privacy Policy', href: '#' },
   { label: 'Terms', href: '#' },
@@ -80,8 +82,8 @@ const socialLinks = [
 
 const ctaPoints = [
   'Walk-ins, bookings, and checkout on one screen.',
-  'Your tablet — not a terminal bundle.',
-  'Cash, DuitNow, or integrated QR — your rules.',
+  'Your tablet, not a terminal bundle.',
+  'Cash, DuitNow, or integrated QR. Your rules.',
 ]
 
 export function Footer() {
@@ -90,63 +92,78 @@ export function Footer() {
       <div className="o-footer-cta-wrap">
         <section className="o-footer-cta-section" aria-labelledby="cta">
           <div className="o-footer-cta-inner container-page">
-            <div className="c-footer-cta__copy">
-              <span className="c-footer-cta__eyebrow">You run the shop</span>
-              <h2 className="c-footer-cta__title" id="cta">
-                Miki runs <span className="italic-beat">the counter.</span>
-              </h2>
-              <ul className="c-footer-cta__points">
-                {ctaPoints.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </div>
+            <RevealGroup className="c-footer-cta__copy" stagger={0.14}>
+              <RevealItem>
+                <span className="c-footer-cta__eyebrow">You run the shop</span>
+              </RevealItem>
+              <RevealHeadline
+                segments={[
+                  { text: 'Miki runs' },
+                  { text: 'the counter.', className: 'italic-beat' },
+                ]}
+                className="c-footer-cta__title"
+                id="cta"
+                delay={0.2}
+              />
+              <RevealItem>
+                <ul className="c-footer-cta__points">
+                  {ctaPoints.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </RevealItem>
+            </RevealGroup>
 
-            <div className="c-footer-cta__actions">
-              <a href="#verticals" className="c-footer-btn c-footer-btn--primary">
-                <span>Start your 14-day trial</span>
-                <span aria-hidden="true">Start your 14-day trial</span>
-              </a>
-              <a href="#signin" className="c-footer-btn">
-                <span>Sign in</span>
-                <span aria-hidden="true">Sign in</span>
-              </a>
-            </div>
+            <Reveal delay={0.45} y={24}>
+              <div className="c-footer-cta__actions">
+                <a href="#verticals" className="c-footer-btn c-footer-btn--primary">
+                  <span>Start your 14-day trial</span>
+                  <span aria-hidden="true">Start your 14-day trial</span>
+                </a>
+                <a href="#signin" className="c-footer-btn">
+                  <span>Sign in</span>
+                  <span aria-hidden="true">Sign in</span>
+                </a>
+              </div>
+            </Reveal>
           </div>
         </section>
       </div>
 
       <div className="o-footer__shell">
-        <div className="c-footer-nav">
-          <div className="c-footer-nav__brand">
+        <RevealGroup className="c-footer-nav" stagger={0.08} delay={0.05}>
+          <RevealItem className="c-footer-nav__brand">
             <a href="#" className="c-footer-nav__logo" aria-label="Miki home">
               <img src="/brand/miki-logo.png" alt="" className="c-footer-nav__logo-img" />
             </a>
             <p className="c-footer-nav__tagline">
               Queue, booking, and checkout for service shops.
             </p>
-          </div>
+          </RevealItem>
 
-          <nav className="c-footer-nav__primary" aria-label="Footer navigation">
-            <ul>
-              {footerNav.map((section) => (
-                <li key={section.title}>
-                  <span className="c-footer-nav__primary-section-title">
-                    {section.title}
-                  </span>
-                  <ul>
-                    {section.links.map((link) => (
-                      <li key={link.label}>
-                        <a href={link.href}>{link.label}</a>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <RevealItem className="c-footer-nav__primary">
+            <nav aria-label="Footer navigation">
+              <ul className="c-footer-nav__columns">
+                {footerNav.map((section) => (
+                  <li key={section.title}>
+                    <span className="c-footer-nav__primary-section-title">
+                      {section.title}
+                    </span>
+                    <ul>
+                      {section.links.map((link) => (
+                        <li key={link.label}>
+                          <a href={link.href}>{link.label}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </RevealItem>
 
-          <nav className="c-footer-nav__social" aria-label="Social media links">
+          <RevealItem className="c-footer-nav__social">
+          <nav aria-label="Social media links">
             {socialLinks.map((social) => (
               <a
                 key={social.label}
@@ -161,8 +178,10 @@ export function Footer() {
               </a>
             ))}
           </nav>
+          </RevealItem>
 
-          <nav className="c-footer-nav__secondary" aria-label="Footer legal">
+          <RevealItem className="c-footer-nav__secondary">
+          <nav aria-label="Footer legal">
             <ul>
               {legalLinks.map((link) => (
                 <li key={link.label}>
@@ -177,7 +196,8 @@ export function Footer() {
               ))}
             </ul>
           </nav>
-        </div>
+          </RevealItem>
+        </RevealGroup>
       </div>
     </footer>
   )
@@ -186,11 +206,18 @@ export function Footer() {
 export function WaitlistStub() {
   return (
     <section id="waitlist" className="py-16 border-t border-black/5">
-      <div className="container-page max-w-md mx-auto text-center">
-        <h2 className="text-heading-sm text-ink m-0 mb-2">Join the waitlist</h2>
-        <p className="text-body text-muted m-0 mb-6">
-          Same platform. Different workflows. We&apos;ll email when yours launches.
-        </p>
+      <RevealGroup className="container-page max-w-md mx-auto text-center" stagger={0.12}>
+        <RevealHeadline
+          segments={[{ text: 'Join the waitlist' }]}
+          as="h2"
+          className="text-heading-sm text-ink m-0 mb-2"
+        />
+        <RevealItem>
+          <p className="text-body text-muted m-0 mb-6">
+            Same platform. Different workflows. We&apos;ll email when yours launches.
+          </p>
+        </RevealItem>
+        <RevealItem>
         <form
           className="flex flex-col gap-3"
           onSubmit={(e) => e.preventDefault()}
@@ -212,7 +239,8 @@ export function WaitlistStub() {
             Notify me
           </button>
         </form>
-      </div>
+        </RevealItem>
+      </RevealGroup>
     </section>
   )
 }
