@@ -1,9 +1,14 @@
-import { verticals, verticalHref } from '../data/verticals'
+import {
+  verticalBySlug,
+  verticalCategories,
+  verticalHref,
+} from '../data/verticals'
 
 export type NavMenuItem = {
   title: string
   description: string
   href: string
+  live?: boolean
 }
 
 export type NavMenuColumn = {
@@ -11,76 +16,77 @@ export type NavMenuColumn = {
   items: NavMenuItem[]
 }
 
+export type NavBusinessCategory = {
+  id: string
+  title: string
+  tagline: string
+  comingSoon?: boolean
+  items: NavMenuItem[]
+}
+
 export const productMenu: NavMenuColumn[] = [
   {
-    heading: 'Guides',
+    heading: 'Product',
     items: [
       {
-        title: 'How it works',
-        description: 'QR to paid receipt in one afternoon',
-        href: '#how-it-works',
-      },
-      {
-        title: 'Three surfaces',
-        description: 'Customer, counter, and owner web',
-        href: '#how-it-works',
-      },
-      {
-        title: 'Setup checklist',
-        description: 'Services, staff, hours, print QR',
-        href: '#features',
-      },
-    ],
-  },
-  {
-    heading: 'Tools',
-    items: [
-      {
-        title: 'Features',
-        description: 'Book, queue, pay, report, sync',
-        href: '#features',
-      },
-      {
-        title: 'Compare StoreHub',
-        description: 'Built for service shops, not retail',
+        title: 'One screen',
+        description: 'Bookings, queue, and checkout together',
         href: '#compare',
       },
       {
+        title: 'How it works',
+        description: 'Customer, counter, and owner on your device',
+        href: '#how-it-works',
+      },
+      {
         title: 'Payments',
-        description: 'Cash, DuitNow, integrated QR',
+        description: 'Cash, cards, or QR — your choice',
         href: '#payments',
       },
     ],
   },
   {
-    heading: 'Businesses',
-    items: verticals.map((vertical) => ({
-      title: vertical.title,
-        description: vertical.live ? 'Live' : 'Soon · join waitlist',
-      href: verticalHref(vertical.slug),
-    })),
+    heading: 'Explore',
+    items: [
+      {
+        title: 'Your business',
+        description: 'Barbershop, salon, and clinic workflows',
+        href: '#verticals',
+      },
+      {
+        title: 'FAQ',
+        description: 'Hardware, setup, and no contracts',
+        href: '#faq',
+      },
+      {
+        title: 'Start free',
+        description: '14 days free · No card required',
+        href: '#cta',
+      },
+    ],
   },
 ]
 
-export const businessesMenu: NavMenuColumn[] = [
-  {
-    heading: 'Available now',
-    items: verticals
-      .filter((vertical) => vertical.live)
-      .map((vertical) => ({
-        title: vertical.title,
-        description: vertical.oneLiner,
-        href: verticalHref(vertical.slug),
-      })),
-  },
-  {
-    heading: 'Coming soon',
-    items: verticals
-      .filter((vertical) => !vertical.live)
-      .map((vertical) => ({
-        title: vertical.title,
-        description: vertical.oneLiner,
-        href: verticalHref(vertical.slug),
-      })),
-  },
-]
+export const businessCategoriesMenu: NavBusinessCategory[] = verticalCategories.map(
+  (category) => ({
+    id: category.id,
+    title: category.title,
+    tagline: category.tagline,
+    comingSoon:
+      category.slugs.length === 0 ||
+      ('comingSoon' in category && Boolean(category.comingSoon)),
+    items: category.slugs.flatMap((slug) => {
+      const vertical = verticalBySlug(slug)
+      if (!vertical) return []
+
+      return [
+        {
+          title: vertical.title,
+          description: vertical.oneLiner,
+          href: verticalHref(slug),
+          live: vertical.live,
+        },
+      ]
+    }),
+  }),
+)

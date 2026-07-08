@@ -90,13 +90,15 @@ export function ItalicHeadline({
   before,
   italic,
   after,
+  className = '',
 }: {
   before: string
   italic: string
   after?: string
+  className?: string
 }) {
   return (
-    <h2 className="text-heading-lg text-ink">
+    <h2 className={`text-heading-lg text-ink ${className}`.trim()}>
       {before}
       <span className="italic-beat"> {italic}</span>
       {after}

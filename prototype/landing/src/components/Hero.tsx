@@ -29,21 +29,27 @@ export function Hero() {
             className="flex max-w-[640px] flex-col items-center"
           >
             <h1 className="hero-display text-pure-white m-0 mb-6">
-              Running a shop is{' '}
-              <span className="italic-beat">hard enough.</span>
+              Run your shop.{' '}
+              <span className="italic-beat">Not the chaos.</span>
             </h1>
             <p className="text-body-lg text-ivory m-0 mb-10 max-w-[520px] leading-[1.35] font-normal">
-              You shouldn&apos;t need three apps, two phones, and a tired owner
-              just to get through Saturday. Miki puts the counter back on one
-              screen.
+              Walk-ins, bookings, and checkout on one screen.
             </p>
 
-            <div id="verticals" className="flex flex-col items-center gap-4">
-              <Btn variant="hero" onClick={() => setPickerOpen(true)}>
-                Pick your business
-              </Btn>
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <Btn variant="hero" onClick={() => setPickerOpen(true)}>
+                  Start free
+                </Btn>
+                <a
+                  href="#how-it-works"
+                  className="text-body-sm text-ivory/80 no-underline hover:text-pure-white transition-colors"
+                >
+                  See how it works
+                </a>
+              </div>
               <p className="text-caption text-ash-text m-0 tracking-[0.01em]">
-                14 days free · No card · No hardware bundle
+                14 days free · No card required · Cancel anytime
               </p>
             </div>
           </motion.div>

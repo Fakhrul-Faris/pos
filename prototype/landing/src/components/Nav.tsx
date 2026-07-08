@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValueEvent, useScroll } from 'motion/react'
-import { NavDropdownPanel, NavDropdownTrigger } from './NavDropdown'
+import { NavBusinessesPanel, NavDropdownPanel, NavDropdownTrigger } from './NavDropdown'
 import { Btn } from './Btn'
-import { businessesMenu, productMenu } from './nav-menu-data'
+import { businessCategoriesMenu, productMenu } from './nav-menu-data'
 
 const spring = {
   type: 'spring' as const,
@@ -79,9 +79,12 @@ export function Nav({ variant: _variant = 'default' }: { variant?: NavVariant })
           className="nav-glass flex items-center gap-1 pl-5 pr-2 py-1.5"
           aria-label="Main"
         >
-          <a href="#" className="flex items-center gap-2 no-underline shrink-0 mr-3 text-ink">
-            <span className="w-2 h-2 rounded-full bg-signal" />
-            <span className="text-body font-medium tracking-[0.005em]">Miki</span>
+          <a href="#" className="flex items-center no-underline shrink-0 mr-3 text-ink">
+            <img
+              src="/brand/miki-logo.png"
+              alt="Miki"
+              className="h-6 w-auto"
+            />
           </a>
 
           <div className="flex flex-1 items-center justify-center gap-0.5">
@@ -132,9 +135,9 @@ export function Nav({ variant: _variant = 'default' }: { variant?: NavVariant })
             columns={productMenu}
             onClose={() => setActiveMenu(null)}
           />
-          <NavDropdownPanel
+          <NavBusinessesPanel
             active={activeMenu === 'businesses'}
-            columns={businessesMenu}
+            categories={businessCategoriesMenu}
             onClose={() => setActiveMenu(null)}
           />
         </div>

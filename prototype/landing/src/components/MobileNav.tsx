@@ -44,7 +44,7 @@ export function MobileNav() {
         data-active={open}
       >
         <div className="nav-popup-panel p-2 flex flex-col gap-1">
-          <a href="#features" className="nav-popup-item" onClick={() => setOpen(false)}>
+          <a href="#compare" className="nav-popup-item" onClick={() => setOpen(false)}>
             <span className="nav-popup-item-title">Product</span>
           </a>
           <a href="#verticals" className="nav-popup-item" onClick={() => setOpen(false)}>

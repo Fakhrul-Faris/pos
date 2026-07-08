@@ -10,24 +10,16 @@ const spring = {
 
 const items = [
   {
-    q: 'Need hardware from Miki?',
-    a: 'No. Your tablet. We sell software.',
+    q: 'Do I need to buy specific hardware?',
+    a: 'No. Miki runs on your own phone or tablet. Open the counter in your browser — log in and go.',
   },
   {
-    q: 'Credit card to start?',
-    a: 'No. 14-day trial on the full plan.',
+    q: 'How long does it take to set up?',
+    a: 'Minutes. Create an account, add your services, and you are ready to take walk-ins and bookings.',
   },
   {
-    q: 'Only for one type of shop?',
-    a: 'Barbershops are live. More verticals shipping. Same platform.',
-  },
-  {
-    q: 'Can I use my own DuitNow QR?',
-    a: 'Yes. Always. We never block checkout.',
-  },
-  {
-    q: 'Do you take a cut of every sale?',
-    a: 'Only on optional integrated payments. Cash and your DuitNow: RM0.',
+    q: 'Is there a contract or hardware bundle?',
+    a: 'Never. Miki is free for 14 days, requires no credit card, and works with the gear you already own.',
   },
 ]
 

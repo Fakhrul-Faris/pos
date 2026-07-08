@@ -1,44 +1,71 @@
 export const verticals = [
   {
     slug: 'barbershop',
-    title: 'Barbershop & salon',
+    title: 'Barbershop',
     badge: 'Live',
     live: true,
-    oneLiner: 'Chairs, queues, bookings',
+    oneLiner:
+      'Manage chairs, split commissions by barber, and take walk-ins without the wait.',
     bg: 'bg-mint/40',
     accent: 'text-emerald',
   },
   {
-    slug: 'clinic',
-    title: 'Clinic & aesthetic',
-    badge: 'Soon',
-    live: false,
-    oneLiner: 'Appointments without the bloat',
+    slug: 'salon',
+    title: 'Salon & Spa',
+    badge: 'Live',
+    live: true,
+    oneLiner:
+      'Track stylists, manage room bookings, and checkout clients in seconds.',
     bg: 'bg-cobalt/10',
     accent: 'text-cobalt',
   },
   {
-    slug: 'cafe',
-    title: 'F&B & café',
+    slug: 'clinic',
+    title: 'Aesthetics & Clinic',
     badge: 'Soon',
     live: false,
-    oneLiner: 'Counter and table, not franchise HQ',
+    oneLiner:
+      'Handle patient flow, staff scheduling, and seamless package upsells.',
     bg: 'bg-coral/10',
     accent: 'text-coral',
-  },
-  {
-    slug: 'retail',
-    title: 'Retail & pop-up',
-    badge: 'Soon',
-    live: false,
-    oneLiner: 'Catalogue and checkout, not a warehouse',
-    bg: 'bg-citrus/60',
-    accent: 'text-signal',
   },
 ] as const
 
 export type Vertical = (typeof verticals)[number]
 
+export const verticalCategories = [
+  {
+    id: 'beauty',
+    title: 'Beauty',
+    tagline: 'Every chair, always working.',
+    theme: 'beauty',
+    slugs: ['barbershop', 'salon', 'clinic'] as const,
+  },
+  {
+    id: 'fnb',
+    title: 'Food & Beverage',
+    tagline: 'Every order, one screen.',
+    theme: 'fnb',
+    slugs: [] as const,
+    comingSoon: true,
+  },
+  {
+    id: 'retail',
+    title: 'Retail',
+    tagline: 'Every sale, counted.',
+    theme: 'retail',
+    slugs: [] as const,
+    comingSoon: true,
+  },
+] as const
+
+export type VerticalCategory = (typeof verticalCategories)[number]
+
 export function verticalHref(slug: string) {
+  if (slug === 'salon') return '/barbershop'
   return `/${slug}`
+}
+
+export function verticalBySlug(slug: string) {
+  return verticals.find((v) => v.slug === slug)
 }

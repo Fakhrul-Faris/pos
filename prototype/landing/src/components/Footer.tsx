@@ -10,19 +10,17 @@ const footerNav = [
   {
     title: 'Product',
     links: [
-      { label: 'Overview', href: '#features' },
-      { label: 'Features', href: '#features' },
-      { label: 'Compare', href: '#compare' },
+      { label: 'Overview', href: '#compare' },
+      { label: 'How it works', href: '#how-it-works' },
       { label: 'Payments', href: '#payments' },
     ],
   },
   {
-    title: 'Education',
+    title: 'Explore',
     links: [
-      { label: 'How it works', href: '#how-it-works' },
-      { label: 'Outcomes', href: '#outcomes' },
-      { label: 'Verticals', href: '#verticals' },
+      { label: 'Your business', href: '#verticals' },
       { label: 'FAQ', href: '#faq' },
+      { label: 'Waitlist', href: '#waitlist' },
     ],
   },
   {
@@ -31,7 +29,6 @@ const footerNav = [
       { label: 'About', href: '#' },
       { label: 'Careers', href: '#' },
       { label: 'Contact', href: 'mailto:hello@miki.my' },
-      { label: 'Waitlist', href: '#waitlist' },
     ],
   },
 ]
@@ -81,36 +78,34 @@ const socialLinks = [
   },
 ]
 
-function MikiMark() {
-  return (
-    <div className="c-footer-cta__logo" aria-hidden>
-      <div className="footer-miki-mark">
-        <span className="footer-miki-mark__dot" />
-        <span className="footer-miki-mark__label">M</span>
-      </div>
-    </div>
-  )
-}
+const ctaPoints = [
+  'Walk-ins, bookings, and checkout on one screen.',
+  'Your tablet — not a terminal bundle.',
+  'Cash, DuitNow, or integrated QR — your rules.',
+]
 
 export function Footer() {
   return (
     <footer className="o-footer">
-      <div className="o-footer__content">
-        <div className="o-footer__cta">
-          <div className="c-footer-cta">
-            <div className="c-footer-cta__header">
-              <span className="c-footer-cta__eyebrow">Queue, booking, checkout</span>
+      <div className="o-footer-cta-wrap">
+        <section className="o-footer-cta-section" aria-labelledby="cta">
+          <div className="o-footer-cta-inner container-page">
+            <div className="c-footer-cta__copy">
+              <span className="c-footer-cta__eyebrow">You run the shop</span>
               <h2 className="c-footer-cta__title" id="cta">
-                For service shops that want a calmer counter
+                Miki runs <span className="italic-beat">the counter.</span>
               </h2>
+              <ul className="c-footer-cta__points">
+                {ctaPoints.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
             </div>
 
-            <MikiMark />
-
             <div className="c-footer-cta__actions">
-              <a href="#verticals" className="c-footer-btn">
-                <span>Pick your business</span>
-                <span aria-hidden="true">Pick your business</span>
+              <a href="#verticals" className="c-footer-btn c-footer-btn--primary">
+                <span>Start your 14-day trial</span>
+                <span aria-hidden="true">Start your 14-day trial</span>
               </a>
               <a href="#signin" className="c-footer-btn">
                 <span>Sign in</span>
@@ -118,75 +113,70 @@ export function Footer() {
               </a>
             </div>
           </div>
-        </div>
+        </section>
+      </div>
 
-        <div className="o-footer__nav">
-          <div className="c-footer-nav">
-            <nav className="c-footer-nav__secondary" aria-label="Footer legal">
-              <ul>
-                {legalLinks.map((link) => (
-                  <li key={link.label}>
-                    {link.label === 'Cookies' ? (
-                      <button type="button" className="c-footer-nav__text-btn">
-                        {link.label}
-                      </button>
-                    ) : (
-                      <a href={link.href}>{link.label}</a>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <nav className="c-footer-nav__primary" aria-label="Footer navigation">
-              <ul>
-                {footerNav.map((section) => (
-                  <li key={section.title}>
-                    <span className="c-footer-nav__primary-section-title">
-                      {section.title}
-                    </span>
-                    <ul>
-                      {section.links.map((link) => (
-                        <li key={link.label}>
-                          <a href={link.href}>{link.label}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <nav className="c-footer-nav__social" aria-label="Social media links">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  className="c-footer-btn c-footer-btn--social"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.label}
-                >
-                  <span>{social.icon}</span>
-                  <span aria-hidden="true">{social.icon}</span>
-                </a>
-              ))}
-            </nav>
-
-            <div className="c-footer-nav__legal">
-              <p className="c-footer-nav__legal-eyebrow">
-                Built for Malaysian service shops · Est 2025
-              </p>
-              <p className="c-footer-nav__legal-tagline">Queue calm.</p>
-              <p className="c-footer-nav__legal-body">
-                Miki Sdn Bhd
-                <br />
-                Kuala Lumpur, Malaysia
-                <br />
-                <a href="mailto:hello@miki.my">hello@miki.my</a>
-              </p>
-            </div>
+      <div className="o-footer__shell">
+        <div className="c-footer-nav">
+          <div className="c-footer-nav__brand">
+            <a href="#" className="c-footer-nav__logo" aria-label="Miki home">
+              <img src="/brand/miki-logo.png" alt="" className="c-footer-nav__logo-img" />
+            </a>
+            <p className="c-footer-nav__tagline">
+              Queue, booking, and checkout for service shops.
+            </p>
           </div>
+
+          <nav className="c-footer-nav__primary" aria-label="Footer navigation">
+            <ul>
+              {footerNav.map((section) => (
+                <li key={section.title}>
+                  <span className="c-footer-nav__primary-section-title">
+                    {section.title}
+                  </span>
+                  <ul>
+                    {section.links.map((link) => (
+                      <li key={link.label}>
+                        <a href={link.href}>{link.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav className="c-footer-nav__social" aria-label="Social media links">
+            {socialLinks.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                className="c-footer-btn c-footer-btn--social"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.label}
+              >
+                <span>{social.icon}</span>
+                <span aria-hidden="true">{social.icon}</span>
+              </a>
+            ))}
+          </nav>
+
+          <nav className="c-footer-nav__secondary" aria-label="Footer legal">
+            <ul>
+              {legalLinks.map((link) => (
+                <li key={link.label}>
+                  {link.label === 'Cookies' ? (
+                    <button type="button" className="c-footer-nav__text-btn">
+                      {link.label}
+                    </button>
+                  ) : (
+                    <a href={link.href}>{link.label}</a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </div>
     </footer>

@@ -63,7 +63,7 @@ export function HeroBusinessPicker({ open, onOpenChange }: HeroBusinessPickerPro
             >
               <div className="hero-business-modal__header">
                 <h2 id={titleId} className="hero-business-modal__title">
-                  What kind of shop do you run?
+                  What kind of shop are you running?
                 </h2>
                 <button
                   type="button"
@@ -76,7 +76,7 @@ export function HeroBusinessPicker({ open, onOpenChange }: HeroBusinessPickerPro
               </div>
 
               <p className="hero-business-modal__sub">
-                Pick the closest match. We&apos;ll show you what matters.
+                Not sure? Pick the closest match. You can change it later.
               </p>
 
               <ul className="hero-business-modal__list">

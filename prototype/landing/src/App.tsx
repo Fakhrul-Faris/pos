@@ -2,11 +2,9 @@ import { PromoBanner } from './components/PromoBanner'
 import { Hero } from './components/Hero'
 import { TrustStrip } from './components/TrustStrip'
 import { ProblemSection } from './components/ProblemSection'
-import { FeaturesSection } from './components/FeaturesSection'
 import { ThreeSurfaces } from './components/ThreeSurfaces'
-import { WhyNotPos } from './components/WhyNotPos'
 import { Payments } from './components/Payments'
-import { Outcomes } from './components/Outcomes'
+import { VerticalPicker } from './components/VerticalPicker'
 import { FAQ } from './components/FAQ'
 import { Footer, WaitlistStub } from './components/Footer'
 
@@ -19,11 +17,9 @@ export default function App() {
           <Hero />
           <TrustStrip />
           <ProblemSection />
-          <FeaturesSection />
           <ThreeSurfaces />
-          <WhyNotPos />
           <Payments />
-          <Outcomes />
+          <VerticalPicker />
           <FAQ />
           <WaitlistStub />
         </main>
