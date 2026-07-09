@@ -1,13 +1,19 @@
 'use client'
 
 import {
+  Children,
+  cloneElement,
   createContext,
+  isValidElement,
   useCallback,
   useContext,
   useEffect,
   useState,
+  type MouseEvent,
+  type ReactElement,
   type ReactNode,
 } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { useReducedMotionSafe } from '../../hooks/use-reduced-motion-safe'
 
@@ -59,6 +65,16 @@ interface ExpandableScreenProps {
   lockScroll?: boolean
 }
 
+function useMounted() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  return mounted
+}
+
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false)
 
@@ -84,15 +100,16 @@ export function ExpandableScreen({
   lockScroll = true,
 }: ExpandableScreenProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded)
-  const [morphRequested, setMorphRequested] = useState(true)
+  const [morphRequested, setMorphRequested] = useState(false)
+  const mounted = useMounted()
   const isMobile = useIsMobile()
   const reducedMotion = useReducedMotionSafe()
-  const canMorph = !isMobile && !reducedMotion
+  const canMorph = mounted && !isMobile && !reducedMotion
   const morphEnabled = canMorph && morphRequested
 
   const expand = useCallback(
     (options?: ExpandOptions) => {
-      setMorphRequested(options?.morph ?? false)
+      setMorphRequested(options?.morph === true)
       setIsExpanded(true)
       onExpandChange?.(true)
     },
@@ -101,6 +118,7 @@ export function ExpandableScreen({
 
   const collapse = useCallback(() => {
     setIsExpanded(false)
+    setMorphRequested(false)
     onExpandChange?.(false)
   }, [onExpandChange])
 
@@ -143,29 +161,32 @@ export function ExpandableScreenTrigger({
   const { isExpanded, expand, layoutId, triggerRadius, canMorph } =
     useExpandableScreen()
 
+  if (isExpanded) return null
+
+  const handleOpen = () => expand({ morph: true })
+
+  let trigger = children
+  if (isValidElement(children)) {
+    const child = children as ReactElement<{ onClick?: (event: MouseEvent) => void }>
+    trigger = cloneElement(child, {
+      onClick: (event: MouseEvent) => {
+        child.props.onClick?.(event)
+        if (!event.defaultPrevented) handleOpen()
+      },
+    })
+  }
+
   return (
-    <AnimatePresence>
-      {!isExpanded && (
-        <motion.div className={`inline-block relative ${className}`.trim()}>
-          {canMorph && (
-            <motion.div
-              style={{ borderRadius: triggerRadius }}
-              layout
-              layoutId={layoutId}
-              className="absolute inset-0 transform-gpu will-change-transform bg-signal"
-            />
-          )}
-          <motion.div
-            initial={false}
-            layout={false}
-            onClick={() => expand({ morph: true })}
-            className="relative cursor-pointer"
-          >
-            {children}
-          </motion.div>
-        </motion.div>
+    <span className={`inline-flex relative ${className}`.trim()}>
+      {canMorph && (
+        <motion.span
+          style={{ borderRadius: triggerRadius }}
+          layoutId={layoutId}
+          className="absolute inset-0 block transform-gpu will-change-transform bg-signal"
+        />
       )}
-    </AnimatePresence>
+      <span className="relative inline-flex">{trigger}</span>
+    </span>
   )
 }
 
@@ -190,11 +211,19 @@ export function ExpandableScreenContent({
     animationDuration,
     morphEnabled,
   } = useExpandableScreen()
+  const [portalReady, setPortalReady] = useState(false)
 
-  return (
-    <AnimatePresence>
+  useEffect(() => {
+    setPortalReady(true)
+  }, [])
+
+  if (!portalReady) return null
+
+  return createPortal(
+    <AnimatePresence mode="wait">
       {isExpanded && (
         <motion.div
+          key="signup-overlay"
           className="fixed inset-0 z-[200]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -205,19 +234,22 @@ export function ExpandableScreenContent({
             <button
               type="button"
               aria-label="Close"
-              className="absolute inset-0 z-0 bg-carbon/60 backdrop-blur-sm border-0 cursor-default"
-              onClick={collapse}
+              className="absolute inset-0 z-0 border-0 bg-carbon/60 backdrop-blur-sm cursor-default"
+              onClick={() => collapse()}
             />
           )}
 
           <motion.div
             layoutId={morphEnabled ? layoutId : undefined}
             transition={{ duration: animationDuration, ease: [0.22, 1, 0.36, 1] }}
-            initial={morphEnabled ? false : { opacity: 0, y: 16, scale: 0.98 }}
-            animate={morphEnabled ? undefined : { opacity: 1, y: 0, scale: 1 }}
-            exit={morphEnabled ? undefined : { opacity: 0, y: 12, scale: 0.98 }}
+            {...(morphEnabled
+              ? {}
+              : {
+                  initial: { opacity: 0, y: 16, scale: 0.98 },
+                  animate: { opacity: 1, y: 0, scale: 1 },
+                  exit: { opacity: 0, y: 12, scale: 0.98 },
+                })}
             style={{ borderRadius: morphEnabled ? contentRadius : 0 }}
-            layout
             className={`absolute inset-0 z-10 flex h-full w-full overflow-y-auto transform-gpu will-change-transform ${className}`.trim()}
           >
             <motion.div
@@ -230,24 +262,22 @@ export function ExpandableScreenContent({
             </motion.div>
 
             {showCloseButton && (
-              <motion.button
+              <button
                 type="button"
-                onClick={collapse}
+                onClick={() => collapse()}
                 className={
                   closeButtonClassName ||
                   'absolute right-5 top-5 z-30 flex h-10 w-10 items-center justify-center rounded-full border-0 bg-paper/10 text-paper text-xl leading-none cursor-pointer transition-colors hover:bg-paper/20'
                 }
                 aria-label="Close"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.15 }}
               >
                 ×
-              </motion.button>
+              </button>
             )}
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   )
 }
