@@ -226,6 +226,8 @@ Primary revenue in Phase 1A is **SaaS**, not payment fees.
 
 ## 10. GTM (Phase 1)
 
+> **Full strategy:** [`gtm-strategy.md`](gtm-strategy.md) — underdog playbook (Figma / Notion / Cal.com), viral loop spec, automation stack, 12-month plan.
+
 | Channel | Action |
 | :--- | :--- |
 | Direct | TikTok/IG — barber/salon content; App Store ASO |
@@ -233,7 +235,7 @@ Primary revenue in Phase 1A is **SaaS**, not payment fees.
 | Pilot | 3–5 salons in one city; hands-on onboarding |
 | **Not in Phase 1** | Accountant channel, franchise BD, mall bundles |
 
-**Pitch:** *"Booking QR + POS barbershop — dari RM109/bulan. Murah dari StoreHub. Tak perlu beli mesin."*
+**Pitch:** *"Booking QR + queue barbershop — RM109/bulan harga tetap. Bukan Fresha yang potong komisen. DuitNow & walk-in, satu kaunter."*
 
 ---
 

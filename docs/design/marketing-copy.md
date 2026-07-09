@@ -312,19 +312,17 @@ Each vertical section includes: hero · problem · three surfaces · features ·
 
 ---
 
-## Compare vs StoreHub
+## Compare — `/compare`
 
-**Headline:** Chairs, not *tables.*
+> **Canonical copy:** [`../modules/barbershop/compare.md`](../modules/barbershop/compare.md) — Fresha primary, StoreHub secondary.
 
-| | Us | StoreHub |
-| :--- | :--- | :--- |
-| Built for | Barbers, queue-first shops | F&B & retail first |
-| Entry price | **RM109/mo** | RM122/mo |
-| Booking + walk-in queue | Built in from day one | Bolt-on |
-| BYOD | Your iPad | Often bundled |
-| Own DuitNow | Always RM0 | — |
+**Headline:** Flat subscription. Your queue works. Your money stays yours.
 
-**Fair note:** StoreHub wins at restaurants. We win where the queue is the product.
+**Primary table (Miki vs Fresha):** walk-in queue · flat RM109 · no marketplace commission · DuitNow · 14-day trial.
+
+**Secondary (Miki vs StoreHub):** chairs not tables · BYOD · wrong-tool for F&B.
+
+**Fair note:** Fresha wins at booking polish + marketplace. Miki wins where the queue is the product and fees should be predictable.
 
 ---
 

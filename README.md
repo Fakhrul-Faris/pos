@@ -35,6 +35,7 @@ Interactive UI lives in the **Next.js monorepo** ([`apps/README.md`](apps/README
 
 ```bash
 npm install
+npm run dev:landing  # Landing → :3000
 npm run dev:pos      # Staff POS → :3002
 npm run dev:portal   # Merchant portal → :3001
 ```

@@ -16,4 +16,6 @@ Source recordings used when building [`motion-prototype.md`](../../motion-protot
 | `Swipe interaction motion.mp4` | Swipe gestures |
 | `Clideo Editor.mp4` | Composite edit reference |
 
+Local `.mov` screen recordings may live in this folder but are gitignored — keep mp4 clips committed as the shared reference set.
+
 Coded demos: [`prototype/motion/`](../../../prototype/motion/)

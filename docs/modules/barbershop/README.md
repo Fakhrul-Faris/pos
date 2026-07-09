@@ -40,6 +40,7 @@ BARBERSHOP MODULE (this folder)
 | [**ui.md**](ui.md) | Design, frontend | IA + all screens (C-xx, P-xx, O-xx) |
 | [**motion-prototype.md**](../../design/motion-prototype.md) | Design, frontend | Coded motion demos + party flow reference |
 | [**marketing.md**](marketing.md) | Marketing, Penpot | Canonical `/barbershop` landing copy |
+| [**compare.md**](compare.md) | Marketing, Penpot, SEO | Canonical `/compare` — Miki vs Fresha (+ StoreHub footnote) |
 | [**financial.md**](financial.md) | Finance, founders | Barbershop pricing assumptions (links to company SSOT) |
 
 ---
@@ -80,7 +81,7 @@ BARBERSHOP MODULE (this folder)
 | :--- | :--- |
 | **Product** | This README → `spec.md` → `pricing-funnel.md` |
 | **Design** | This README → `spec.md` → `ui.md` → [`../../platform/design-system/`](../../platform/design-system/) |
-| **Marketing** | `marketing.md` → `pricing-funnel.md` |
+| **Marketing** | `marketing.md` → `compare.md` → `pricing-funnel.md` |
 | **Finance** | `financial.md` → `features-and-pricing.md` Part 2 |
 | **Engineering** | `spec.md` → `ui.md` → [`../../product/engineering-modules.md`](../../product/engineering-modules.md) |
 

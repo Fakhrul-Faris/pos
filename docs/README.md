@@ -13,12 +13,15 @@
 | Trial → Lite → paid (barbershop) | [`modules/barbershop/pricing-funnel.md`](modules/barbershop/pricing-funnel.md) |
 | Features, packages & pricing tiers | [`modules/barbershop/features-and-pricing.md`](modules/barbershop/features-and-pricing.md) |
 | Marketing copy & landing page | [`modules/barbershop/marketing.md`](modules/barbershop/marketing.md) |
+| Comparison page (vs Fresha) | [`modules/barbershop/compare.md`](modules/barbershop/compare.md) |
 | Design or build a barbershop screen | [`modules/barbershop/ui.md`](modules/barbershop/ui.md) |
 | Universal platform (all verticals) | [`platform/README.md`](platform/README.md) |
 | Pricing model (no RM prices) | [`platform/pricing-model.md`](platform/pricing-model.md) |
 | Design tokens | [`platform/design-system/tokens.json`](platform/design-system/tokens.json) |
 | Backend modules & APIs | [`product/engineering-modules.md`](product/engineering-modules.md) |
 | Plan timeline & milestones | [`planning/phase1-plan.md`](planning/phase1-plan.md) |
+| GTM strategy (bootstrapped, viral loop) | [`planning/gtm-strategy.md`](planning/gtm-strategy.md) |
+| AI / AEO marketing strategy | [`planning/aeo-strategy.md`](planning/aeo-strategy.md) |
 | Financial forecasts & cashflow | [`financial/ssot.md`](financial/ssot.md) |
 
 ## Folder structure

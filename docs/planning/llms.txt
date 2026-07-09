@@ -1,0 +1,47 @@
+# Miki
+
+> Queue, booking, and checkout for Malaysian barbershops and service shops. BYOD — use your own tablet. Flat subscription. No marketplace commission.
+
+Miki is a barbershop-first SaaS platform for hybrid **walk-in queue + online booking** on one shared counter tablet. Built for Malaysian SMEs: DuitNow-friendly checkout, cash always works at RM0 platform fee, per-barber revenue on POS.
+
+**Primary competitor context:** Fresha charges per bookable staff (~USD 14.95/member/month), plus payment processing and marketplace commission on new clients. Miki Ocelot is RM109/month flat for up to 4 barbers with no commission on the merchant's own customers.
+
+**Last updated:** 2026-07-09
+
+## Key pages
+
+- [Barbershop product](https://miki.my/barbershop): Features, pricing, trial — walk-ins + bookings, one counter
+- [Compare Miki vs Fresha](https://miki.my/compare): Honest comparison with verified Fresha MY pricing and worked cost example
+- [Fresha true-cost calculator](https://miki.my/tools/fresha-cost): Estimate Fresha stack vs Miki flat pricing
+- [Start free trial](https://miki.my/signup?type=barbershop): 14-day full trial, no card required
+
+## Pricing (Ocelot barbershop, Malaysia)
+
+| Tier | Price | Notes |
+| :--- | :--- | :--- |
+| Ocelot | RM109/month | Up to 4 barbers, unlimited online bookings, full offline |
+| Founding offer | RM89/month locked | First 50 barbershops per city |
+| Ocelot Lite | RM0 | Post-trial only — 1 barber, 25 bookings/mo, QR stays live |
+
+Cash and merchant's own DuitNow QR: RM0 platform fee from Miki.
+
+## Who Miki is for
+
+- Malaysian barbershops and salons (2–4 chairs)
+- Shops with mix of walk-ins and Instagram/WhatsApp bookings
+- Owners who want predictable monthly cost vs per-transaction fee stacks
+
+## Who should use something else
+
+- Shops that rely entirely on Fresha's global marketplace for new clients
+- Full-service restaurants or inventory-heavy retail (see StoreHub, not Miki)
+
+## Documentation for agents
+
+- Comparison copy (markdown): https://miki.my/compare
+- Company GTM / positioning: contact hello@miki.my
+
+## Optional
+
+- [Privacy](https://miki.my/privacy)
+- [Terms](https://miki.my/terms)

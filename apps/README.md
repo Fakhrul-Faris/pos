@@ -1,18 +1,19 @@
 # Miki Apps — Next.js Monorepo
 
-Production-oriented home for **merchant portal** and **staff POS** prototypes, migrated from `prototype/`.
+Production-oriented home for **landing**, **merchant portal**, and **staff POS**, migrated from `prototype/`.
 
 ## Structure
 
 ```
 apps/
+  landing/           Marketing hub (/) — port 3000
   merchant-portal/   Owner web (O-xx) — port 3001
   staff-pos/         Counter POS (P-xx) — port 3002
 packages/
   ui/                Shared Visitors design tokens (@miki/ui)
 ```
 
-Legacy Vite prototypes remain in `prototype/` for reference until removed.
+Legacy Vite prototypes remain in `prototype/` for motion reference and archived POS/portal only.
 
 ## Run
 
@@ -20,6 +21,10 @@ From repo root:
 
 ```bash
 npm install
+
+# Landing
+npm run dev:landing
+# → http://localhost:3000
 
 # Merchant portal
 npm run dev:portal
@@ -33,7 +38,8 @@ npm run dev:pos
 ## Build
 
 ```bash
-npm run build          # both apps
+npm run build          # all apps
+npm run build:landing  # landing only
 npm run build:portal   # portal only
 npm run build:pos      # POS only
 ```
@@ -43,7 +49,7 @@ npm run build:pos      # POS only
 - **Next.js 15** (App Router)
 - **React 19**
 - **TypeScript**
-- **Tailwind CSS v4** via `@miki/ui` shared tokens
+- **Tailwind CSS v4** via `@miki/ui` shared tokens (portal + POS); landing uses local tokens
 
 ## Notes
 

@@ -22,10 +22,10 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Scope
 
-Hub homepage (`/`) — promo banner, hero, business picker, three surfaces, payments, vertical picker, FAQ, waitlist stub, footer.
+Hub homepage (`/`) — hero, signup screen, three surfaces, payments, vertical picker, FAQ, waitlist stub, footer.
 
 Copy: [`docs/design/marketing-copy.md`](../../docs/design/marketing-copy.md) · Structure: [`docs/design/web-structure.md`](../../docs/design/web-structure.md)
 
 ## Migration note
 
-Migrated from `prototype/landing` (Vite) to this Next.js app for consistency with `@miki/merchant-portal` and `@miki/staff-pos`.
+Migrated from `prototype/landing` (removed) to this Next.js app for consistency with `@miki/merchant-portal` and `@miki/staff-pos`.

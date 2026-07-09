@@ -20,3 +20,6 @@ prototype/*/dist/
 .env
 .env.*
 !.env.example
+
+# Large local screen recordings (mp4 references stay in repo)
+docs/design/references/motion/*.mov

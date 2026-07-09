@@ -131,7 +131,7 @@ Direct, warm, zero enterprise jargon. Write for a barber-owner who already distr
 /pricing              Vertical-aware pricing
 /features             Product deep-dive
 /how-it-works         3-surface journey
-/compare              vs StoreHub
+/compare              vs Fresha (primary) · vs StoreHub
 /signup               Business type picker → Owner Web or waitlist
 /privacy              Stub
 /terms                Stub
@@ -260,7 +260,7 @@ flowchart TD
 
 > Plans from **RM109/mo**. 14-day full trial. No card to start.
 
-`[See pricing]` · `[Compare with StoreHub]`
+`[See pricing]` · `[Compare with Fresha]`
 
 #### Section: FAQ (home — 3 items)
 
@@ -349,22 +349,17 @@ flowchart TD
 
 ---
 
-### `/compare` — vs StoreHub
+### `/compare` — vs Fresha (primary) · vs StoreHub (secondary)
 
-**Headline:** Built for chairs, not tables.
+> **Canonical copy:** [`../modules/barbershop/compare.md`](../modules/barbershop/compare.md)
 
-| | **Us** | **StoreHub** |
-| :--- | :--- | :--- |
-| Built for | Barbers, salons, service shops | F&B & retail first |
-| Entry price | **RM109/mo** | RM122/mo (Starter) |
-| Hardware | BYOD — use your iPad | Often bundled |
-| Online booking + walk-in queue | Native hybrid | Add-on / bolt-on |
-| Customer booking | QR web, no app | Varies |
-| Own DuitNow at checkout | Always free | — |
-| Integrated payments | Optional (Growth plan) | Integrated |
-| Self-serve signup | Yes, minutes | Sales-assisted tiers |
+**Headline:** Flat subscription. Your queue works. Your money stays yours.
 
-*Fair note:* StoreHub is strong for restaurants and inventory-heavy retail. We're not trying to replace that — we're built for shops where the queue is the product.
+**Primary table:** Miki vs Fresha — walk-in queue, flat RM109, no marketplace commission, DuitNow-native.
+
+**Secondary block (below fold):** Miki vs StoreHub — chairs not tables; wrong-tool framing for F&B POS.
+
+**Fair note:** Fresha wins on booking polish and marketplace discovery. Miki wins on Saturday walk-ins, predictable cost, and Malaysia-native payments.
 
 `[Start free trial]`
 
@@ -386,7 +381,7 @@ Stub pages. Standard SaaS structure. PDPA mention for Malaysian merchants.
 | Miki wordmark | Nav + footer |
 | Vertical picker cards | Badge: Available now / Coming soon |
 | Pricing table | Tab per vertical; Wise-style fee transparency |
-| Comparison table | Us vs StoreHub |
+| Comparison table | Us vs Fresha (primary) · vs StoreHub (secondary) — see [`compare.md`](../modules/barbershop/compare.md) |
 | Device mockup trio | Phone · tablet · laptop |
 | Trust strip | Placeholder logos |
 | FAQ accordion | 6–8 items (expand from home's 3) |
@@ -406,7 +401,8 @@ Stub pages. Standard SaaS structure. PDPA mention for Malaysian merchants.
 | How many barbers can I add? | Ocelot: 4 · Mantis: 8 · Patriot: unlimited. |
 | Does it work offline? | POS queues actions locally and syncs when back online. |
 | Is this only for barbershops? | Barbershops launch first. Clinics, F&B, and retail are on the roadmap — join the waitlist. |
-| How is this different from StoreHub? | See our [comparison page](/compare). Short answer: we're queue-first for service shops, not table-first for restaurants. |
+| How is this different from Fresha? | See our [comparison page](/compare). Short answer: flat subscription, walk-in queue built in, DuitNow-native, no marketplace commission. |
+| How is this different from StoreHub? | StoreHub is F&B/retail POS. We're queue-first for barbers. See [/compare#storehub](/compare#storehub). |
 
 ---
 
