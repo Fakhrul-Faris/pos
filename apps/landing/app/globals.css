@@ -1,62 +1,100 @@
 @import "tailwindcss";
 
+/* Perk type system — OTSono with Cabinet Grotesk + Switzer fallback */
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cabinet Grotesk";
+  src: url("/fonts/CabinetGrotesk-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
-  /* Miki signal green (Jeton orange slot) */
-  --color-signal: #38ce87;
-  --color-signal-tint: #2fb876;
-  --color-ink: #1c1c1c;
-  --color-paper: #ffffff;
-  --color-carbon: #000000;
-  --color-ash: #ababab;
-  --color-sand: #e7dcdb;
-  --color-linen: #f0faf5;
-  --color-citrus: #f5ffbb;
-  --color-mint: #bcffbb;
-  --color-coral: #fb2d54;
-  --color-cobalt: #477ee9;
-  --color-emerald: #34c771;
-  --color-muted: #6b6b6b;
-  --color-promo-bg: #1c1c1c;
-
-  /* Mercury dark hero (Miki green as sole chromatic) */
-  --color-onyx: #171721;
-  --color-graphite: #1e1e2a;
-  --color-obsidian: #272735;
-  --color-ivory: #ededf3;
-  --color-ash-text: #c3c3cc;
-  --color-mist: #e2e3ed;
+  /* Perk — canonical tokens */
+  --color-electric-lime: #beff50;
+  --color-off-black-ink: #14140f;
+  --color-off-white-canvas: #f5f5eb;
   --color-pure-white: #ffffff;
+  --color-ash: #d2d2c8;
+  --color-graphite: #6e6e64;
+  --color-deep-charcoal: #30302a;
+  --color-stone: #919183;
+  --color-smoke: #b9b9b7;
 
-  --font-display: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  /* Legacy aliases (used across components) */
+  --color-signal: var(--color-electric-lime);
+  --color-signal-tint: #a8e640;
+  --color-ink: var(--color-off-black-ink);
+  --color-paper: var(--color-pure-white);
+  --color-carbon: var(--color-off-black-ink);
+  --color-sand: var(--color-off-white-canvas);
+  --color-linen: var(--color-off-white-canvas);
+  --color-citrus: var(--color-electric-lime);
+  --color-mint: color-mix(in srgb, var(--color-electric-lime) 35%, var(--color-off-white-canvas));
+  --color-coral: var(--color-stone);
+  --color-cobalt: var(--color-stone);
+  --color-emerald: var(--color-electric-lime);
+  --color-muted: var(--color-graphite);
+  --color-promo-bg: var(--color-off-black-ink);
+  --color-onyx: var(--color-off-black-ink);
+  --color-obsidian: var(--color-deep-charcoal);
+  --color-ivory: var(--color-off-white-canvas);
+  --color-ash-text: var(--color-stone);
+  --color-mist: var(--color-smoke);
 
+  /* Typography families */
+  --font-otsono: "OTSono", "Cabinet Grotesk", "Switzer", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cabinet Grotesk", "Switzer", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Switzer", ui-sans-serif, system-ui, sans-serif;
+
+  /* Perk type scale */
+  --text-eyebrow: 10px;
   --text-caption: 12px;
   --text-body-sm: 14px;
   --text-body: 16px;
   --text-body-lg: 18px;
-  --text-subheading: 23px;
-  --text-heading-sm: 33px;
-  --text-heading: 44px;
-  --text-heading-lg: 72px;
-  --text-display: clamp(48px, 8vw, 106px);
+  --text-subheading: 22px;
+  --text-heading-sm: 28px;
+  --text-heading: 28px;
+  --text-heading-lg: 60px;
+  --text-display: clamp(48px, 8vw, 90px);
 
-  --shadow-card: rgba(0, 0, 0, 0.05) 0px -4px 16px 0px;
-  --shadow-glass: rgba(56, 206, 135, 0.1) 0px 8px 24px 0px,
-    rgba(56, 206, 135, 0.05) 0px 2px 8px 0px;
+  /* Perk: no elevation shadows */
+  --shadow-card: none;
+  --shadow-glass: none;
 
-  --radius-card: 16px;
-  --radius-button: 12px;
-  --radius-nav: 84px;
+  /* Perk radii */
+  --radius-card: 28px;
+  --radius-button: 28px;
+  --radius-inner: 18px;
+  --radius-nav: 9999px;
   --radius-pill: 9999px;
-  --radius-mercury-pill: 32px;
+  --radius-mercury-pill: 28px;
 
   --page-max: 1200px;
   --section-gap: 80px;
   --navbar-banner-height: 48px;
+
+  --animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+
+  @keyframes scroll {
+    to {
+      transform: translate(calc(-50% - 0.5rem));
+    }
+  }
 }
 
 @layer base {
   html {
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     scroll-behavior: smooth;
   }
@@ -66,9 +104,25 @@
     min-height: 100dvh;
     background: var(--color-paper);
     color: var(--color-ink);
+    font-family: var(--font-body);
     font-weight: 400;
     font-size: var(--text-body);
     line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .text-display,
+  .text-heading-lg,
+  .text-heading,
+  .text-heading-sm,
+  .text-subheading,
+  .btn {
+    font-family: var(--font-display);
   }
 
   ::selection {
@@ -86,59 +140,67 @@
 
   .text-display {
     font-size: var(--text-display);
-    line-height: 1;
-    letter-spacing: 0.01em;
+    line-height: 0.89;
+    letter-spacing: -0.03em;
     font-weight: 500;
   }
 
   .text-heading-lg {
-    font-size: clamp(40px, 5vw, 72px);
+    font-size: clamp(40px, 5vw, var(--text-heading-lg));
     line-height: 1;
-    letter-spacing: 0.01em;
+    letter-spacing: -0.03em;
     font-weight: 500;
   }
 
   .text-heading {
-    font-size: clamp(32px, 4vw, 44px);
-    line-height: 1.2;
-    letter-spacing: 0.01em;
+    font-size: var(--text-heading);
+    line-height: 1.14;
+    letter-spacing: -0.02em;
     font-weight: 500;
   }
 
   .text-heading-sm {
-    font-size: clamp(24px, 3vw, 33px);
-    line-height: 1.2;
-    letter-spacing: 0.01em;
+    font-size: var(--text-heading-sm);
+    line-height: 1.14;
+    letter-spacing: -0.02em;
     font-weight: 500;
   }
 
   .text-subheading {
-    font-size: clamp(18px, 2vw, 23px);
-    line-height: 1.2;
-    letter-spacing: 0.01em;
+    font-size: var(--text-subheading);
+    line-height: 1.18;
+    letter-spacing: normal;
     font-weight: 500;
   }
 
   .text-body-sm {
     font-size: var(--text-body-sm);
-    line-height: 1.4;
-    letter-spacing: 0.03em;
+    line-height: 1.29;
+    letter-spacing: normal;
   }
 
   .text-caption {
     font-size: var(--text-caption);
-    line-height: 1.5;
-    letter-spacing: 0.03em;
+    line-height: 1.33;
+    letter-spacing: 0.1em;
+  }
+
+  .text-eyebrow {
+    font-size: var(--text-eyebrow);
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
   }
 
   .card-lift {
     background: var(--color-paper);
     border-radius: var(--radius-card);
-    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-ash);
   }
 
   .card-tint {
-    background: rgba(56, 206, 135, 0.05);
+    background: var(--color-off-white-canvas);
     border-radius: var(--radius-card);
   }
 
@@ -226,6 +288,11 @@
     will-change: transform;
   }
 
+  .c-ticker.is-offscreen .c-ticker__track {
+    animation-play-state: paused;
+    will-change: auto;
+  }
+
   .c-ticker__group {
     display: flex;
     align-items: center;
@@ -296,25 +363,25 @@
     background-image:
       linear-gradient(
         180deg,
-        rgba(23, 23, 33, 0.4) 0%,
-        rgba(23, 23, 33, 0.75) 45%,
-        rgba(23, 23, 33, 0.92) 100%
+        color-mix(in srgb, var(--color-off-black-ink) 40%, transparent) 0%,
+        color-mix(in srgb, var(--color-off-black-ink) 75%, transparent) 45%,
+        color-mix(in srgb, var(--color-off-black-ink) 92%, transparent) 100%
       ),
       radial-gradient(
         ellipse 80% 50% at 50% 100%,
-        rgba(56, 206, 135, 0.12) 0%,
+        color-mix(in srgb, var(--color-electric-lime) 12%, transparent) 0%,
         transparent 60%
       ),
       radial-gradient(
         ellipse 60% 40% at 20% 30%,
-        rgba(71, 126, 233, 0.08) 0%,
+        color-mix(in srgb, var(--color-electric-lime) 8%, transparent) 0%,
         transparent 50%
       ),
       linear-gradient(
         165deg,
-        #1a1a28 0%,
-        #171721 40%,
-        #12121a 100%
+        var(--color-deep-charcoal) 0%,
+        var(--color-off-black-ink) 40%,
+        #0f0f0c 100%
       );
   }
 
@@ -410,7 +477,7 @@
   }
 
   .hero-tile--mint {
-    background: linear-gradient(150deg, #bcffbb 0%, #38ce87 100%);
+    background: linear-gradient(150deg, var(--color-off-white-canvas) 0%, var(--color-electric-lime) 100%);
   }
 
   .hero-tile--citrus {
@@ -422,7 +489,7 @@
   }
 
   .hero-tile--dark {
-    background: linear-gradient(160deg, #272735 0%, #171721 100%);
+    background: linear-gradient(160deg, var(--color-deep-charcoal) 0%, var(--color-off-black-ink) 100%);
     color: var(--color-ivory);
   }
 
@@ -589,7 +656,7 @@
     gap: 12px;
     padding: 14px 16px;
     border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 16px;
+    border-radius: var(--radius-card);
     background: #fff;
     text-align: left;
     cursor: pointer;
@@ -600,8 +667,8 @@
   }
 
   .hero-business-modal__option:hover {
-    border-color: rgba(56, 206, 135, 0.35);
-    background: rgba(56, 206, 135, 0.04);
+    border-color: color-mix(in srgb, var(--color-electric-lime) 35%, transparent);
+    background: color-mix(in srgb, var(--color-electric-lime) 4%, transparent);
     transform: translateY(-1px);
   }
 
@@ -687,7 +754,7 @@
   .feature-visual-panel {
     min-height: 320px;
     background: var(--color-paper);
-    border-radius: 16px;
+    border-radius: var(--radius-card);
     border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow:
       0 24px 48px rgba(0, 0, 0, 0.06),
@@ -835,7 +902,7 @@
   }
 
   .nav-popup-category.is-active {
-    box-shadow: inset 0 0 0 1px rgba(56, 206, 135, 0.2);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-electric-lime) 20%, transparent);
   }
 
   .nav-popup-category__title {
@@ -876,7 +943,7 @@
     padding: 12px;
     margin: 0 4px 4px;
     border-radius: 12px;
-    background: rgba(56, 206, 135, 0.06);
+    background: color-mix(in srgb, var(--color-electric-lime) 6%, transparent);
   }
 
   .nav-popup-empty__title {
@@ -956,7 +1023,7 @@
     font-weight: 500;
     line-height: 1;
     background: var(--color-signal);
-    color: var(--color-pure-white);
+    color: var(--color-ink);
     transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -985,7 +1052,7 @@
 
   .btn:hover,
   .btn:focus-visible {
-    color: #000000;
+    color: var(--color-ink);
   }
 
   .btn__label {
@@ -995,16 +1062,16 @@
 
   .btn--nav {
     padding: 8px 16px;
-    border-radius: 12px;
+    border-radius: var(--radius-button);
     font-size: var(--text-body-sm);
-    letter-spacing: 0.005em;
+    letter-spacing: normal;
   }
 
   .btn--hero {
     padding: 14px 32px;
-    border-radius: 32px;
+    border-radius: var(--radius-button);
     font-size: var(--text-body);
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .btn--default {
@@ -1117,9 +1184,9 @@
   }
 
   .why-miki-nav-item.is-active {
-    background: rgba(56, 206, 135, 0.12);
+    background: color-mix(in srgb, var(--color-electric-lime) 12%, transparent);
     color: var(--color-ink);
-    box-shadow: inset 0 0 0 1px rgba(56, 206, 135, 0.22);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-electric-lime) 22%, transparent);
   }
 
   .why-miki-card__content {
@@ -1156,12 +1223,12 @@
   .why-miki-card__visual-placeholder {
     width: 100%;
     aspect-ratio: 16 / 10;
-    border-radius: 16px;
+    border-radius: var(--radius-card);
     border: 1px dashed rgba(0, 0, 0, 0.12);
     background:
       radial-gradient(
         ellipse 70% 60% at 50% 40%,
-        rgba(56, 206, 135, 0.08) 0%,
+        color-mix(in srgb, var(--color-electric-lime) 8%, transparent) 0%,
         transparent 60%
       ),
       linear-gradient(160deg, #f6f6f6 0%, #ececec 100%);
@@ -1255,12 +1322,12 @@
     background:
       radial-gradient(
         ellipse 70% 55% at 85% 40%,
-        rgba(56, 206, 135, 0.18) 0%,
+        color-mix(in srgb, var(--color-electric-lime) 18%, transparent) 0%,
         transparent 55%
       ),
       radial-gradient(
         ellipse 50% 45% at 15% 75%,
-        rgba(56, 206, 135, 0.1) 0%,
+        color-mix(in srgb, var(--color-electric-lime) 10%, transparent) 0%,
         transparent 50%
       ),
       linear-gradient(165deg, #eefaf4 0%, #f0faf5 45%, #e8f9f0 100%);
@@ -1311,8 +1378,8 @@
     margin-inline: 0.04em;
     border-radius: 0.4em;
     color: color-mix(in srgb, var(--color-ink) 20%, transparent);
-    background: rgba(56, 206, 135, 0.06);
-    border: 1px solid rgba(56, 206, 135, 0.1);
+    background: color-mix(in srgb, var(--color-electric-lime) 6%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-electric-lime) 10%, transparent);
     transition:
       color 0.3s ease,
       background-color 0.3s ease,
@@ -1323,15 +1390,15 @@
 
   .hl-chip-token.is-lit {
     color: var(--color-ink);
-    background: rgba(56, 206, 135, 0.14);
-    border-color: rgba(56, 206, 135, 0.28);
+    background: color-mix(in srgb, var(--color-electric-lime) 14%, transparent);
+    border-color: color-mix(in srgb, var(--color-electric-lime) 28%, transparent);
   }
 
   .hl-chip-token.is-active {
     color: var(--color-ink);
-    background: rgba(56, 206, 135, 0.32);
+    background: color-mix(in srgb, var(--color-electric-lime) 32%, transparent);
     border-color: var(--color-signal);
-    box-shadow: 0 12px 32px rgba(56, 206, 135, 0.22);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--color-electric-lime) 22%, transparent);
     transform: scale(1.04);
   }
 
@@ -1430,8 +1497,8 @@
   }
 
   .scroll-mock-row--active {
-    background: rgba(56, 206, 135, 0.15);
-    border: 1px solid rgba(56, 206, 135, 0.25);
+    background: color-mix(in srgb, var(--color-electric-lime) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-electric-lime) 25%, transparent);
     color: var(--color-ivory);
   }
 
@@ -1542,7 +1609,7 @@
     inset-inline: 0;
     height: 52px;
     border-radius: 10px;
-    border: 1px solid rgba(56, 206, 135, 0.25);
+    border: 1px solid color-mix(in srgb, var(--color-electric-lime) 25%, transparent);
     background: linear-gradient(145deg, #f0faf5 0%, #dff5ea 100%);
     display: flex;
     align-items: center;
@@ -1550,7 +1617,7 @@
     font-size: 13px;
     font-weight: 600;
     color: var(--color-ink);
-    box-shadow: 0 8px 20px rgba(56, 206, 135, 0.12);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--color-electric-lime) 12%, transparent);
   }
 
   .payments-bento-cash__receipt {
@@ -1599,7 +1666,7 @@
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    border: 2px solid rgba(56, 206, 135, 0.35);
+    border: 2px solid color-mix(in srgb, var(--color-electric-lime) 35%, transparent);
     animation: payments-tap-pulse 2.4s ease-out infinite;
   }
 
@@ -1614,7 +1681,7 @@
   .payments-bento-card-tap__device {
     width: 132px;
     height: 96px;
-    border-radius: 16px;
+    border-radius: var(--radius-card);
     border: 1px solid rgba(0, 0, 0, 0.08);
     background: #1c1c1c;
     padding: 10px;
@@ -1624,7 +1691,7 @@
   .payments-bento-card-tap__screen {
     height: 100%;
     border-radius: 10px;
-    background: linear-gradient(160deg, #272735 0%, #171721 100%);
+    background: linear-gradient(160deg, var(--color-deep-charcoal) 0%, var(--color-off-black-ink) 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1652,9 +1719,9 @@
     width: 88px;
     height: 56px;
     border-radius: 10px;
-    background: linear-gradient(135deg, #477ee9 0%, #2f5fc4 100%);
+    background: linear-gradient(135deg, var(--color-deep-charcoal) 0%, var(--color-off-black-ink) 100%);
     transform: translateY(-50%) rotate(-8deg);
-    box-shadow: 0 12px 24px rgba(71, 126, 233, 0.28);
+    border: 1px solid var(--color-ash);
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -1709,7 +1776,7 @@
   .payments-bento-qr__badge {
     padding: 4px 10px;
     border-radius: 999px;
-    background: rgba(56, 206, 135, 0.12);
+    background: color-mix(in srgb, var(--color-electric-lime) 12%, transparent);
     color: var(--color-ink);
     font-size: 11px;
     font-weight: 500;
@@ -1728,7 +1795,7 @@
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    border: 2px solid rgba(56, 206, 135, 0.2);
+    border: 2px solid color-mix(in srgb, var(--color-electric-lime) 20%, transparent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1749,7 +1816,7 @@
     justify-content: center;
     font-size: 14px;
     font-weight: 700;
-    box-shadow: 0 6px 16px rgba(56, 206, 135, 0.35);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--color-electric-lime) 35%, transparent);
   }
 
   @keyframes payments-tap-pulse {
@@ -2627,8 +2694,1518 @@
     }
 
     .hl-chip-token {
-      background: rgba(56, 206, 135, 0.15);
+      background: color-mix(in srgb, var(--color-electric-lime) 15%, transparent);
     }
+  }
+}
+
+/* ── Barbershop: full-bleed hero + inset content card ── */
+.barbershop-page {
+  --barbershop-inset: clamp(12px, 1.8vw, 20px);
+  --barbershop-radius: 28px;
+  --barbershop-stack-radius: 28px;
+  position: relative;
+  background: var(--color-off-black-ink);
+}
+
+.barbershop-page > #navbar-banner {
+  position: relative;
+  z-index: 60;
+}
+
+.barbershop-stack {
+  position: relative;
+  margin-top: -4.75rem;
+}
+
+.barbershop-hero-layer {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.barbershop-nav-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.barbershop-nav-wrap.is-sampling,
+.barbershop-nav-wrap.is-sampling * {
+  pointer-events: none !important;
+}
+
+.barbershop-nav-wrap .nav-glass,
+.barbershop-nav-wrap .nav-popup {
+  pointer-events: auto;
+}
+
+.barbershop-nav-wrap .barbershop-nav-desktop,
+.barbershop-nav-wrap .barbershop-nav-mobile {
+  position: relative;
+  left: auto;
+  right: auto;
+  top: auto;
+  transform: none;
+  min-width: 0;
+  width: 100%;
+}
+
+.barbershop-nav-desktop {
+  display: none;
+  padding: 14px 16px 0;
+}
+
+.barbershop-nav-mobile {
+  display: block;
+  padding: 10px 12px 0;
+}
+
+@media (min-width: 768px) {
+  .barbershop-nav-desktop {
+    display: block;
+  }
+
+  .barbershop-nav-mobile {
+    display: none;
+  }
+}
+
+.barbershop-nav-desktop .nav-glass,
+.barbershop-nav-mobile .nav-glass {
+  width: 100%;
+  max-width: 920px;
+  margin-inline: auto;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.barbershop-nav-wrap[data-bg='light'] .nav-glass {
+  background: color-mix(in srgb, var(--color-off-black-ink) 78%, transparent);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 28px -12px rgba(20, 20, 15, 0.45);
+}
+
+.barbershop-nav-desktop .nav-link,
+.barbershop-nav-mobile .nav-link,
+.barbershop-nav-desktop .nav-glass a,
+.barbershop-nav-mobile .nav-glass a {
+  color: var(--color-ivory);
+}
+
+.barbershop-nav-desktop .nav-link:hover,
+.barbershop-nav-mobile .nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.barbershop-nav-desktop .nav-glass img {
+  filter: brightness(0) invert(1);
+}
+
+.barbershop-nav-wrap[data-bg='light'] .nav-popup-panel {
+  background: color-mix(in srgb, var(--color-off-black-ink) 92%, transparent);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 40px -20px rgba(20, 20, 15, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.barbershop-nav-wrap[data-bg='light'] .nav-popup-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.barbershop-nav-wrap[data-bg='light'] .nav-popup-item-title {
+  color: var(--color-ivory);
+}
+
+.barbershop-hero {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--color-paper);
+}
+
+.barbershop-hero__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 70% 55% at 50% 110%,
+      color-mix(in srgb, var(--color-electric-lime) 22%, transparent) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 15% 20%,
+      color-mix(in srgb, var(--color-electric-lime) 8%, transparent) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      165deg,
+      var(--color-deep-charcoal) 0%,
+      var(--color-off-black-ink) 42%,
+      #0f0f0c 100%
+    );
+}
+
+.barbershop-hero__bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.035) 0,
+    rgba(255, 255, 255, 0.035) 1px,
+    transparent 1px,
+    transparent 48px
+  );
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 85%);
+  pointer-events: none;
+}
+
+.barbershop-hero__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 7rem 24px 5rem;
+}
+
+.barbershop-hero__trust {
+  width: 100%;
+  margin-top: 2.5rem;
+}
+
+.barbershop-hero__trust .c-ticker {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 0;
+}
+
+.barbershop-hero__trust .c-ticker__item {
+  font-size: clamp(13px, 1.6vw, 15px);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
+}
+
+.barbershop-hero__trust .c-ticker__sep {
+  color: color-mix(in srgb, var(--color-electric-lime) 55%, transparent);
+}
+
+.barbershop-hero__trust .c-ticker__track {
+  animation-duration: 28s;
+}
+
+.barbershop-hero__pill {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 1.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-size: var(--text-eyebrow);
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ivory);
+}
+
+/* Cult-style loading carousel — barbershop features */
+.loading-carousel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 56rem;
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: var(--color-deep-charcoal);
+  color: var(--color-pure-white);
+  box-shadow:
+    0 1px 1px 0 rgba(0, 0, 0, 0.05),
+    0 1px 1px 0 rgba(255, 252, 240, 0.08) inset,
+    0 0 0 1px hsla(0, 0%, 100%, 0.08) inset,
+    0 0 1px 0 rgba(28, 27, 26, 0.5);
+}
+
+.loading-carousel__stage {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-carousel__stage--video {
+  aspect-ratio: 16 / 9;
+}
+
+.loading-carousel__stage--square {
+  aspect-ratio: 1 / 1;
+}
+
+.loading-carousel__stage--wide {
+  aspect-ratio: 2 / 1;
+}
+
+.loading-carousel__slide {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-off-black-ink);
+}
+
+.loading-carousel__image {
+  object-fit: cover;
+  object-position: center;
+}
+
+.loading-carousel__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      transparent 20%,
+      color-mix(in srgb, var(--color-off-black-ink) 78%, transparent) 72%,
+      var(--color-off-black-ink) 100%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 50% 100%,
+      color-mix(in srgb, var(--color-electric-lime) 16%, transparent),
+      transparent 60%
+    );
+  pointer-events: none;
+}
+
+.loading-carousel__overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  min-width: 0;
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+
+.loading-carousel__overlay--top {
+  top: 0;
+}
+
+.loading-carousel__overlay--bottom {
+  bottom: 0;
+}
+
+.loading-carousel__overlay-text {
+  margin: 0;
+  max-width: none;
+  width: 100%;
+  font-size: clamp(1.25rem, 3.2vw, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  color: var(--color-pure-white);
+}
+
+.loading-carousel__overlay-body {
+  margin: 0.65rem 0 0;
+  max-width: none;
+  width: 100%;
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--color-ivory) 78%, transparent);
+}
+
+.loading-carousel__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 4px 1.25rem;
+  background: transparent;
+}
+
+.loading-carousel__indicators {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.loading-carousel__indicator {
+  flex: 1;
+  margin: 0;
+  padding: 0.35rem 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.loading-carousel__indicator-track {
+  position: relative;
+  display: block;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-ivory) 18%, transparent);
+}
+
+.loading-carousel__indicator-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--color-ivory) 72%, transparent);
+  transform-origin: left center;
+}
+
+.loading-carousel__indicator-fill.is-active {
+  background: var(--color-electric-lime);
+}
+
+.loading-carousel__indicator-fill.is-complete {
+  background: color-mix(in srgb, var(--color-ivory) 55%, transparent);
+}
+
+.loading-carousel__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.loading-carousel__title {
+  margin: 0;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  color: var(--color-pure-white);
+}
+
+.loading-carousel__body {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
+}
+
+@media (min-width: 768px) {
+  .loading-carousel__overlay {
+    padding: 1.75rem 2rem 2rem;
+  }
+
+  .loading-carousel__footer {
+    padding: 4px 1.75rem;
+  }
+}
+
+/* Content card only — inset from viewport edges, stacks over full-bleed hero */
+.barbershop-stack-content {
+  position: relative;
+  z-index: 10;
+  margin: -2.75rem var(--barbershop-inset) var(--barbershop-inset);
+  border-radius: var(--barbershop-stack-radius);
+  background: var(--color-paper);
+  border: 1px solid var(--color-ash);
+  /* visible so sticky scroll stories inside main can pin */
+  overflow: visible;
+}
+
+.barbershop-stack-content > :first-child {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+/* ── Barbershop compare — Saddle-style dark table ── */
+.barbershop-compare {
+  padding: var(--section-gap) 0;
+  background: var(--color-off-black-ink);
+  color: var(--color-pure-white);
+}
+
+.barbershop-compare__card {
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid color-mix(in srgb, var(--color-electric-lime) 28%, transparent);
+  background: color-mix(in srgb, var(--color-deep-charcoal) 88%, #1a1a14);
+}
+
+.barbershop-compare__head,
+.barbershop-compare__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr) minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.barbershop-compare__head {
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ivory) 12%, transparent);
+  background: color-mix(in srgb, var(--color-deep-charcoal) 70%, transparent);
+}
+
+.barbershop-compare__feature-label,
+.barbershop-compare__col-label {
+  margin: 0;
+  font-size: var(--text-caption);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.barbershop-compare__feature-label {
+  color: color-mix(in srgb, var(--color-ivory) 55%, transparent);
+}
+
+.barbershop-compare__col-label--miki {
+  color: var(--color-electric-lime);
+  text-align: center;
+}
+
+.barbershop-compare__col-label--typical {
+  color: color-mix(in srgb, var(--color-ivory) 55%, transparent);
+  text-align: center;
+}
+
+.barbershop-compare__rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.barbershop-compare__row {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ivory) 8%, transparent);
+}
+
+.barbershop-compare__row-wrap:last-child .barbershop-compare__row {
+  border-bottom: 0;
+}
+
+.barbershop-compare__feature {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.35;
+  font-weight: 500;
+  color: var(--color-pure-white);
+}
+
+.barbershop-compare__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  text-align: center;
+  min-height: 1.75rem;
+}
+
+.barbershop-compare__mobile-label {
+  display: none;
+}
+
+.barbershop-compare__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.barbershop-compare__mark--yes-miki {
+  color: var(--color-electric-lime);
+}
+
+.barbershop-compare__mark--yes-typical {
+  color: color-mix(in srgb, var(--color-ivory) 55%, transparent);
+}
+
+.barbershop-compare__mark--no {
+  color: color-mix(in srgb, var(--color-ivory) 32%, transparent);
+}
+
+.barbershop-compare__text {
+  font-size: var(--text-body-sm);
+  line-height: 1.3;
+  color: color-mix(in srgb, var(--color-ivory) 62%, transparent);
+}
+
+@media (max-width: 639px) {
+  .barbershop-compare__head {
+    display: none;
+  }
+
+  .barbershop-compare__row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1.15rem 1.15rem 1.25rem;
+  }
+
+  .barbershop-compare__cell {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.55rem 0.75rem;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--color-ivory) 5%, transparent);
+  }
+
+  .barbershop-compare__mobile-label {
+    display: inline;
+    font-size: var(--text-caption);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-ivory) 50%, transparent);
+  }
+
+  .barbershop-compare__text {
+    text-align: right;
+  }
+}
+
+@media (min-width: 768px) {
+  .barbershop-compare__head,
+  .barbershop-compare__row {
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
+  }
+
+  .barbershop-compare__head {
+    padding-top: 1.35rem;
+    padding-bottom: 1.35rem;
+  }
+
+  .barbershop-compare__row {
+    padding-top: 1.15rem;
+    padding-bottom: 1.15rem;
+  }
+}
+
+/* ── Barbershop testimonials — single-row marquee ── */
+.barbershop-testimonials {
+  padding: var(--section-gap) 0;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-linen) 55%, var(--color-paper));
+  border-block: 1px solid var(--color-ash);
+}
+
+.barbershop-testimonials__scroller {
+  margin-top: 0;
+}
+
+.barbershop-testimonial-scroller {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+.barbershop-testimonial-scroller__track {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  padding: 0.25rem 1rem 0.5rem;
+  margin: 0;
+  list-style: none;
+}
+
+.barbershop-testimonial-scroller__track.is-static {
+  width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+  mask-image: none;
+}
+
+.barbershop-testimonial-scroller__track.is-animated {
+  animation: scroll var(--animation-duration, 70s)
+    var(--animation-direction, forwards) linear infinite;
+}
+
+.barbershop-testimonial-scroller__track.is-pause-on-hover:hover {
+  animation-play-state: paused;
+}
+
+.barbershop-testimonial-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: min(340px, 82vw);
+  min-height: 220px;
+  flex-shrink: 0;
+  padding: 1.35rem 1.35rem 1.25rem;
+  border-radius: 28px;
+  border: 1px solid var(--color-ash);
+  background: var(--color-paper);
+}
+
+.barbershop-testimonial-card__quote {
+  margin: 0;
+}
+
+.barbershop-testimonial-card__quote p {
+  margin: 0;
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+
+.barbershop-testimonial-card__author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.barbershop-testimonial-card__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background: var(--color-electric-lime);
+  color: var(--color-ink);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.barbershop-testimonial-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.barbershop-testimonial-card__name {
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.barbershop-testimonial-card__title {
+  font-size: var(--text-caption);
+  color: var(--color-muted);
+}
+
+@media (min-width: 768px) {
+  .barbershop-testimonial-card {
+    width: 400px;
+    min-height: 240px;
+    padding: 1.6rem 1.6rem 1.4rem;
+  }
+
+  .barbershop-testimonial-scroller__track {
+    gap: 1.25rem;
+    padding-inline: 1.5rem;
+  }
+}
+
+/* ── Barbershop FAQ — Billow-style centered accordion ── */
+.barbershop-faq {
+  padding: var(--section-gap) 0;
+  background: var(--color-paper);
+}
+
+.barbershop-faq__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.85rem;
+  margin-bottom: 2.5rem;
+}
+
+.barbershop-faq__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem 0.35rem 0.4rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--color-electric-lime) 45%, var(--color-ash));
+  background: color-mix(in srgb, var(--color-linen) 70%, var(--color-paper));
+  font-size: var(--text-caption);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-ink);
+}
+
+.barbershop-faq__badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 9999px;
+  background: var(--color-electric-lime);
+  color: var(--color-ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.barbershop-faq__title {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.barbershop-faq__subtitle {
+  margin: 0;
+  max-width: 36ch;
+  font-size: var(--text-body-lg);
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+.barbershop-faq__list {
+  width: 100%;
+  overflow: clip;
+  border-radius: 17px;
+  border: 1px solid var(--color-ash);
+  background: var(--color-paper);
+}
+
+.barbershop-faq__item + .barbershop-faq__item {
+  border-top: 1px solid var(--color-ash);
+}
+
+.barbershop-faq__trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.75rem;
+  padding: 1rem 1.1rem;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+}
+
+.barbershop-faq__trigger:hover {
+  background: color-mix(in srgb, var(--color-linen) 55%, transparent);
+}
+
+.barbershop-faq__trigger:focus-visible {
+  outline: 2px solid var(--color-electric-lime);
+  outline-offset: -2px;
+}
+
+.barbershop-faq__question {
+  font-size: var(--text-body);
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+
+.barbershop-faq__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 0.55rem;
+  background: color-mix(in srgb, var(--color-electric-lime) 28%, var(--color-linen));
+  color: var(--color-ink);
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.barbershop-faq__answer {
+  margin: 0;
+  padding: 0 3.25rem 1.15rem 1.1rem;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+@media (min-width: 768px) {
+  .barbershop-faq__header {
+    margin-bottom: 3rem;
+    gap: 1rem;
+  }
+
+  .barbershop-faq__trigger {
+    min-height: 4.25rem;
+    padding: 1.15rem 1.35rem;
+  }
+
+  .barbershop-faq__answer {
+    padding: 0 4rem 1.25rem 1.35rem;
+  }
+}
+
+/* ── Barbershop how-it-works — ISO-style bento ── */
+.barbershop-how {
+  padding: var(--section-gap) 0;
+  background: var(--color-paper);
+}
+
+.barbershop-how__bento {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+
+.barbershop-how__cell {
+  min-width: 0;
+}
+
+.barbershop-how__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2.5rem;
+  height: 100%;
+  min-height: 220px;
+  padding: 1.5rem 1.5rem 1.65rem;
+  border-radius: 22px;
+}
+
+.barbershop-how__step {
+  font-size: var(--text-caption);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.barbershop-how__title {
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+.barbershop-how__body {
+  margin: 0;
+  max-width: 28ch;
+  font-size: var(--text-body);
+  line-height: 1.45;
+  opacity: 0.78;
+}
+
+.barbershop-how__cell--neutral .barbershop-how__card {
+  background: color-mix(in srgb, var(--color-linen) 82%, var(--color-ash));
+  color: var(--color-ink);
+}
+
+.barbershop-how__cell--lime .barbershop-how__card {
+  background: var(--color-electric-lime);
+  color: var(--color-ink);
+}
+
+.barbershop-how__cell--lime .barbershop-how__body {
+  opacity: 0.72;
+}
+
+.barbershop-how__cell--ink .barbershop-how__card {
+  background: var(--color-off-black-ink);
+  color: var(--color-pure-white);
+}
+
+.barbershop-how__cell--ink .barbershop-how__step {
+  color: var(--color-electric-lime);
+  opacity: 1;
+}
+
+.barbershop-how__cell--ink .barbershop-how__body {
+  color: color-mix(in srgb, var(--color-ivory) 78%, transparent);
+  opacity: 1;
+}
+
+@media (min-width: 768px) {
+  .barbershop-how__bento {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(280px, auto));
+    gap: 1.15rem;
+  }
+
+  .barbershop-how__cell--wide:nth-child(1) {
+    grid-column: span 7;
+  }
+
+  .barbershop-how__cell--narrow:nth-child(2) {
+    grid-column: span 5;
+  }
+
+  .barbershop-how__cell--narrow:nth-child(3) {
+    grid-column: span 5;
+  }
+
+  .barbershop-how__cell--wide:nth-child(4) {
+    grid-column: span 7;
+  }
+
+  .barbershop-how__card {
+    min-height: 100%;
+    padding: 2rem 2.25rem;
+    gap: 3.5rem;
+  }
+}
+
+/* ── Barbershop pricing — Ycode-style cards ── */
+.barbershop-pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 56px;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .barbershop-pricing-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+.barbershop-pricing-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+}
+
+.barbershop-pricing-card > * {
+  width: 100%;
+}
+
+.barbershop-pricing-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 32px;
+  min-height: 168px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  color: var(--color-pure-white);
+  background:
+    radial-gradient(
+      ellipse 80% 70% at 20% 0%,
+      rgba(255, 255, 255, 0.12) 0%,
+      transparent 55%
+    ),
+    linear-gradient(165deg, #1a1a1a 0%, #0a0a0a 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.barbershop-pricing-panel--featured {
+  background:
+    radial-gradient(
+      ellipse 90% 80% at 15% -10%,
+      color-mix(in srgb, var(--color-electric-lime) 28%, transparent) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 70% 60% at 90% 120%,
+      rgba(255, 255, 255, 0.08) 0%,
+      transparent 45%
+    ),
+    linear-gradient(165deg, #1a1a1a 0%, #0a0a0a 100%);
+}
+
+.barbershop-pricing-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+.barbershop-pricing-badge {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 2;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.barbershop-pricing-name {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 500;
+  color: var(--color-pure-white);
+}
+
+.barbershop-pricing-tagline {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.barbershop-pricing-price-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.barbershop-pricing-price {
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 500;
+  color: var(--color-pure-white);
+}
+
+.barbershop-pricing-period {
+  font-size: 16px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1px;
+}
+
+.barbershop-pricing-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 100px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-size: 14px;
+  font-weight: 400;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.barbershop-pricing-cta:hover {
+  background: var(--color-deep-charcoal);
+}
+
+.barbershop-pricing-cta--featured {
+  background: var(--color-signal);
+  color: var(--color-ink);
+}
+
+.barbershop-pricing-cta--featured:hover {
+  background: var(--color-signal-tint);
+}
+
+.barbershop-pricing-features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.barbershop-pricing-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-ink);
+}
+
+.barbershop-pricing-check {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--color-ink);
+}
+
+.barbershop-pricing-note {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+/* ── Barbershop problem — scroll story ── */
+.barbershop-problem {
+  position: relative;
+  height: 480vh;
+  border-bottom: 1px solid var(--color-ash);
+}
+
+.barbershop-problem--static {
+  height: auto;
+  padding-block: var(--section-gap);
+}
+
+.barbershop-problem__sticky {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.barbershop-problem__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  width: 100%;
+  align-items: stretch;
+  height: min(64dvh, 520px);
+}
+
+@media (min-width: 900px) {
+  .barbershop-problem__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 40px;
+  }
+}
+
+.barbershop-problem__copy {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  display: flex;
+  align-items: center;
+}
+
+.barbershop-problem__copy--static {
+  height: auto;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.barbershop-problem-line {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.2vw, 40px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  max-width: 18ch;
+  width: fit-content;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.barbershop-problem-line.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.barbershop-problem-line__text {
+  display: block;
+}
+
+.barbershop-problem-line__mark {
+  display: block;
+  height: 0.42em;
+  margin-top: -0.12em;
+  border-radius: 2px;
+  background: var(--color-electric-lime);
+  transform-origin: left center;
+}
+
+.barbershop-problem-line--static {
+  position: relative;
+  inset: auto;
+  opacity: 1;
+  pointer-events: auto;
+  color: var(--color-ink);
+  font-size: clamp(22px, 2.6vw, 32px);
+  max-width: none;
+}
+
+.barbershop-problem-line--static.barbershop-problem-line--punch {
+  color: var(--color-ink);
+  background: linear-gradient(
+    90deg,
+    var(--color-electric-lime) 0%,
+    var(--color-electric-lime) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 0.42em;
+  background-position: 0 88%;
+  width: fit-content;
+}
+
+.barbershop-problem-media {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--color-off-white-canvas);
+  border: 1px solid var(--color-ash);
+}
+
+.barbershop-problem-media__panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 20px 22px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.barbershop-problem-media__panel.is-active,
+.barbershop-problem-media__panel.is-static {
+  opacity: 1;
+}
+
+.barbershop-problem-media__label {
+  font-family: var(--font-display);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  background: color-mix(in srgb, var(--color-pure-white) 82%, transparent);
+  border: 1px solid var(--color-ash);
+  border-radius: var(--radius-pill);
+  padding: 0.4rem 0.75rem;
+}
+
+/* Placeholder scene washes — swap for real media later */
+.barbershop-problem-media__panel--calendar {
+  background:
+    linear-gradient(160deg, #e8e8de 0%, #d2d2c8 100%);
+}
+
+.barbershop-problem-media__panel--miki {
+  background:
+    radial-gradient(ellipse 70% 60% at 70% 20%, color-mix(in srgb, var(--color-electric-lime) 55%, transparent), transparent 60%),
+    linear-gradient(165deg, var(--color-deep-charcoal) 0%, var(--color-off-black-ink) 100%);
+}
+
+.barbershop-problem-media__panel--miki .barbershop-problem-media__label,
+.barbershop-problem-media__panel--built .barbershop-problem-media__label,
+.barbershop-problem-media__panel--owner .barbershop-problem-media__label,
+.barbershop-problem-media__panel--close .barbershop-problem-media__label {
+  color: var(--color-pure-white);
+  background: color-mix(in srgb, var(--color-off-black-ink) 55%, transparent);
+  border-color: color-mix(in srgb, var(--color-pure-white) 18%, transparent);
+}
+
+.barbershop-problem-media__panel--shop {
+  background: linear-gradient(145deg, #f0ebe0 0%, #cfc8b8 55%, #a39a88 100%);
+}
+
+.barbershop-problem-media__panel--walkin {
+  background: linear-gradient(150deg, #efe8d8 0%, #d9cbb0 100%);
+}
+
+.barbershop-problem-media__panel--early {
+  background: linear-gradient(155deg, #e4ddd0 0%, #bdb3a2 100%);
+}
+
+.barbershop-problem-media__panel--addon {
+  background: linear-gradient(160deg, #ebe4d4 0%, #c8b89a 100%);
+}
+
+.barbershop-problem-media__panel--owner {
+  background:
+    radial-gradient(ellipse 50% 40% at 30% 70%, color-mix(in srgb, var(--color-electric-lime) 18%, transparent), transparent 55%),
+    linear-gradient(165deg, #3a3a32 0%, #1c1c16 100%);
+}
+
+.barbershop-problem-media__panel--close {
+  background: linear-gradient(165deg, #2a2a24 0%, #14140f 100%);
+}
+
+.barbershop-problem-media__panel--reality {
+  background: linear-gradient(150deg, #f5f5eb 0%, #e0dccf 100%);
+}
+
+.barbershop-problem-media__panel--built {
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 100%, color-mix(in srgb, var(--color-electric-lime) 40%, transparent), transparent 55%),
+    linear-gradient(165deg, var(--color-deep-charcoal) 0%, var(--color-off-black-ink) 100%);
+}
+
+@media (max-width: 899px) {
+  .barbershop-problem {
+    height: 540vh;
+  }
+
+  .barbershop-problem__sticky {
+    align-items: flex-start;
+    padding-top: 5rem;
+  }
+
+  .barbershop-problem__grid {
+    height: auto;
+    grid-template-rows: minmax(220px, 36dvh) minmax(160px, 28dvh);
+  }
+
+  .barbershop-problem-media {
+    order: -1;
+  }
+
+  .barbershop-problem-line {
+    font-size: clamp(24px, 6.5vw, 32px);
+    max-width: 16ch;
+  }
+}
+
+/* ── Barbershop footer — centered with logo ── */
+.barbershop-footer {
+  padding: 3.5rem 24px 3rem;
+}
+
+.barbershop-footer__inner {
+  max-width: 80rem;
+  margin-inline: auto;
+}
+
+.barbershop-footer__brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+  text-decoration: none;
+}
+
+.barbershop-footer__logo {
+  height: 1.5rem;
+  width: auto;
+}
+
+.barbershop-footer__links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.barbershop-footer__links a {
+  font-size: var(--text-body-sm);
+  line-height: 1.3;
+  color: var(--color-graphite);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.barbershop-footer__links a:hover {
+  color: var(--color-ink);
+}
+
+.barbershop-footer__rule {
+  width: 100%;
+  height: 1px;
+  margin-bottom: 1.5rem;
+  background-image: repeating-linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-ash) 90%, transparent) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+.barbershop-footer__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.barbershop-footer__copy {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  color: var(--color-graphite);
+}
+
+.barbershop-footer__social {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.barbershop-footer__social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-graphite);
+  transition: color 0.2s ease;
+}
+
+.barbershop-footer__social a:hover {
+  color: var(--color-ink);
+}
+
+@media (min-width: 640px) {
+  .barbershop-footer__links {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem 1.5rem;
+  }
+
+  .barbershop-footer__meta {
+    flex-direction: row;
+    justify-content: space-between;
   }
 }
 
@@ -2640,5 +4217,15 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .barbershop-hero-layer {
+    position: relative;
+    height: auto;
+    min-height: 70dvh;
+  }
+
+  .barbershop-stack-content {
+    margin-top: 0;
   }
 }

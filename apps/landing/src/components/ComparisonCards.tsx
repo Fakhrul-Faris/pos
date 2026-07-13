@@ -74,7 +74,7 @@ export function ComparisonCards() {
         <span
           aria-hidden
           className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-0 w-0.5 rounded-full h-16 md:h-20 bg-signal reveal-line-draw"
-          style={{ boxShadow: '0 4px 16px rgba(56, 206, 135, 0.35)' }}
+          style={{ boxShadow: '0 4px 16px color-mix(in srgb, var(--color-electric-lime) 35%, transparent)' }}
         />
       </RevealSlide>
       <span

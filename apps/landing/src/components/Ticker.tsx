@@ -1,3 +1,8 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+import { cn } from '../lib/utils'
+
 type TickerProps = {
   items: string[]
   'aria-label'?: string
@@ -25,8 +30,30 @@ function TickerGroup({
 }
 
 export function Ticker({ items, 'aria-label': ariaLabel }: TickerProps) {
+  const rootRef = useRef<HTMLElement>(null)
+  const [inView, setInView] = useState(true)
+
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(Boolean(entry?.isIntersecting))
+      },
+      { threshold: 0, rootMargin: '0px' },
+    )
+
+    observer.observe(root)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <section className="c-ticker" aria-label={ariaLabel}>
+    <section
+      ref={rootRef}
+      className={cn('c-ticker', !inView && 'is-offscreen')}
+      aria-label={ariaLabel}
+    >
       <div className="c-ticker__viewport">
         <div className="c-ticker__track">
           <TickerGroup items={items} />
