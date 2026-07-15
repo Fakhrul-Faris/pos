@@ -1,20 +1,19 @@
 'use client'
 
-import { RevealHeadline } from '../Reveal'
 import { InfiniteMovingCards } from '../ui/infinite-moving-cards'
 import { testimonials } from './data'
+import { SectionHeadline } from './SectionHeadline'
 
 export function BarbershopTestimonials() {
   return (
-    <section id="testimonials" className="barbershop-testimonials">
-      <div className="container-page max-w-4xl mx-auto">
-        <div className="max-w-2xl mb-10 md:mb-12">
-          <RevealHeadline
+    <section id="testimonials" className="barbershop-testimonials barbershop-band barbershop-band--paper">
+      <div className="container-page">
+        <div className="barbershop-section-head mb-10 md:mb-12">
+          <SectionHeadline
             segments={[
               { text: 'Trusted by shops' },
-              { text: 'that switched.', className: 'italic-beat' },
+              { text: 'that switched.', italic: true },
             ]}
-            className="text-heading-lg text-ink m-0"
           />
           <p className="text-body-lg text-muted m-0 mt-4">
             Real owners. Real Saturdays. One app instead of three.

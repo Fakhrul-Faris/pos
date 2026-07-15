@@ -15,21 +15,21 @@ const surfaces: Array<{
   {
     key: 'customer',
     title: 'Customer',
-    copy: 'Books and pays from their phone. No app to download.',
+    copy: 'Books from your QR. Pays from their phone. No app to install.',
     image: '/mockup/Phone.png',
     alt: 'Customer holding a phone on a green velvet couch',
   },
   {
     key: 'counter',
     title: 'Counter',
-    copy: 'Runs the queue and checkout from your tablet.',
+    copy: 'Runs the queue and checkout, from the tablet already sitting there.',
     image: '/mockup/Tablet.jpg',
     alt: 'Staff tablet resting on a lap outdoors on the grass',
   },
   {
     key: 'owner',
     title: 'Owner',
-    copy: 'Checks sales and manages staff from the merchant portal. Anywhere.',
+    copy: 'Checks sales and manages staff from anywhere.',
     image: '/mockup/Laptop.png',
     alt: 'Owner typing on a laptop from a cozy pink rug',
   },
@@ -48,16 +48,15 @@ export function ThreeSurfaces() {
         <div className="text-center max-w-[640px] mx-auto">
           <RevealHeadline
             segments={[
-              { text: 'Bring' },
-              { text: 'your', className: 'text-muted' },
-              { text: 'device.' },
+              { text: 'One counter.' },
+              { text: 'Three people.', className: 'italic-beat' },
             ]}
             className="text-heading-lg text-ink m-0"
           />
           <Reveal delay={0.25} y={20}>
             <p className="text-body-lg text-muted mt-4 mb-0">
-              No terminal to buy, no hardware bundle to wait on.
-              <br className="hidden sm:block" /> Miki runs on iPhone and Android.
+              Customers, staff, and you — all seeing the same business, from the
+              view that makes sense to them.
             </p>
           </Reveal>
         </div>

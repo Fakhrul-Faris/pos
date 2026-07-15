@@ -1,21 +1,18 @@
 'use client'
 
 import { type FormEvent, useId, useState } from 'react'
+import { motion } from 'motion/react'
 import { verticalHref, verticals } from '../data/verticals'
+import { BusinessTypeSelect } from './ui/business-type-select'
 import {
   ExpandableScreenContent,
+  ExpandableScreenMorphSurface,
+  useExpandableScreen,
 } from './ui/expandable-screen'
+import { SignupAnimatedField } from './ui/signup-animated-field'
+import { useReducedMotionSafe } from '../hooks/use-reduced-motion-safe'
 
-const benefits = [
-  {
-    icon: '✓',
-    text: 'Walk-ins, bookings, and checkout on one counter tablet — no app for customers.',
-  },
-  {
-    icon: '⚡',
-    text: '14 days free with full features. No card required. Your tablet, not ours.',
-  },
-]
+const CONTENT_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 function SignupForm() {
   const nameId = useId()
@@ -31,140 +28,128 @@ function SignupForm() {
       window.location.href = `${verticalHref(businessType)}?signup=1`
       return
     }
-    window.location.hash = 'waitlist'
+    window.location.hash = 'cta'
   }
 
   return (
-    <form className="signup-form" onSubmit={handleSubmit}>
+    <form id="signup-form" className="signup-form" onSubmit={handleSubmit}>
       <div className="signup-form__field">
         <label htmlFor={businessId} className="signup-form__label">
           Business type *
         </label>
-        <select
+        <BusinessTypeSelect
           id={businessId}
           name="business-type"
           required
           value={businessType}
-          onChange={(e) => setBusinessType(e.target.value)}
-          className="signup-form__input signup-form__select"
-        >
-          {verticals.map((v) => (
-            <option key={v.slug} value={v.slug}>
-              {v.title} {v.live ? '' : '(coming soon)'}
-            </option>
-          ))}
-        </select>
-        <p className="signup-form__helper">
-          Not sure? Pick the closest match. You can change it later.
-        </p>
+          onChange={setBusinessType}
+        />
       </div>
 
-      <div className="signup-form__field">
-        <label htmlFor={nameId} className="signup-form__label">
-          Full name *
-        </label>
-        <input
-          type="text"
+      <div className="signup-form__row">
+        <SignupAnimatedField
           id={nameId}
           name="name"
+          label="Full name"
           required
           autoComplete="name"
-          className="signup-form__input"
+          minLength={2}
         />
-      </div>
 
-      <div className="signup-form__field">
-        <label htmlFor={emailId} className="signup-form__label">
-          Email *
-        </label>
-        <input
-          type="email"
+        <SignupAnimatedField
           id={emailId}
           name="email"
+          type="email"
+          label="Email"
           required
           autoComplete="email"
-          className="signup-form__input"
         />
       </div>
 
-      <div className="signup-form__field">
-        <label htmlFor={passwordId} className="signup-form__label">
-          Password *
-        </label>
-        <input
-          type="password"
-          id={passwordId}
-          name="password"
-          required
-          minLength={8}
-          autoComplete="new-password"
-          className="signup-form__input"
-        />
+      <SignupAnimatedField
+        id={passwordId}
+        name="password"
+        type="password"
+        label="Password"
+        required
+        minLength={8}
+        autoComplete="new-password"
+      />
+
+      <div className="signup-form__footer">
+        <p className="signup-form__secured">
+          <span className="signup-form__secured-icon" aria-hidden>
+            ✓
+          </span>
+          No card required
+        </p>
+        <button type="submit" className="signup-form__submit">
+          Start free <span aria-hidden>→</span>
+        </button>
       </div>
-
-      <button type="submit" className="signup-form__submit">
-        Create account
-      </button>
-
-      <p className="signup-form__trust">
-        14 days free · No card required · Cancel anytime
-      </p>
     </form>
   )
 }
 
-export function SignupScreenContent() {
+function SignupCardSections() {
+  const { morphEnabled, animationDuration } = useExpandableScreen()
+  const reducedMotion = useReducedMotionSafe()
+
+  const baseDelay = reducedMotion
+    ? 0
+    : morphEnabled
+      ? animationDuration * 0.48
+      : 0.08
+
   return (
-    <ExpandableScreenContent className="bg-signal">
-      <div className="signup-screen">
-        <div className="signup-screen__layout">
-          <div className="signup-screen__copy">
-            <p className="signup-screen__eyebrow">Start free trial</p>
-            <h2 className="signup-screen__title">
-              Run your shop from one screen.
-            </h2>
-            <p className="signup-screen__sub">
-              Customers book from your QR. Staff run the counter from a shared
-              tablet. You manage from the web.
-            </p>
+    <>
+      <motion.div
+        className="signup-screen__copy"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: baseDelay,
+          duration: reducedMotion ? 0 : 0.3,
+          ease: CONTENT_EASE,
+        }}
+      >
+        <h2 className="signup-screen__title">You&apos;re almost running.</h2>
+        <p className="signup-screen__sub">
+          Add your services, share your QR, and you&apos;re ready for walk-ins
+          and bookings.
+        </p>
+      </motion.div>
 
-            <ul className="signup-screen__benefits">
-              {benefits.map((item) => (
-                <li key={item.text} className="signup-screen__benefit">
-                  <span className="signup-screen__benefit-icon" aria-hidden>
-                    {item.icon}
-                  </span>
-                  <p>{item.text}</p>
-                </li>
-              ))}
-            </ul>
+      <motion.div
+        className="signup-screen__panel"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: baseDelay + (reducedMotion ? 0 : 0.07),
+          duration: reducedMotion ? 0 : 0.32,
+          ease: CONTENT_EASE,
+        }}
+      >
+        <SignupForm />
+      </motion.div>
+    </>
+  )
+}
 
-            <div className="signup-screen__quote">
-              <p>
-                &ldquo;Finally — walk-ins and bookings in one place. We were live
-                the same afternoon.&rdquo;
-              </p>
-              <div className="signup-screen__quote-meta">
-                <span className="signup-screen__quote-avatar" aria-hidden>
-                  AK
-                </span>
-                <div>
-                  <p className="signup-screen__quote-name">Ahmad K.</p>
-                  <p className="signup-screen__quote-role">Barbershop owner, KL</p>
-                </div>
-              </div>
-            </div>
-          </div>
+export function SignupScreenContent() {
+  const { collapse } = useExpandableScreen()
 
-          <div className="signup-screen__form-panel">
-            <h3 className="signup-screen__form-title">Create your account</h3>
-            <p className="signup-screen__form-sub">
-              Barbershops are live today. Other verticals are on the way — same
-              platform, different workflows.
-            </p>
-            <SignupForm />
-          </div>
-        </div>
+  return (
+    <ExpandableScreenContent className="signup-screen-shell">
+      <div
+        className="signup-screen"
+        onClick={(event) => {
+          if (event.target === event.currentTarget) collapse()
+        }}
+      >
+        <ExpandableScreenMorphSurface className="signup-screen__card">
+          <SignupCardSections />
+        </ExpandableScreenMorphSurface>
       </div>
     </ExpandableScreenContent>
   )

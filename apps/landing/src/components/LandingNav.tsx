@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Btn } from '../Btn'
-import { ExpandableScreenTrigger } from '../ui/expandable-screen'
-import { navLinks, ctaLabel } from './data'
+import { Btn } from './Btn'
+import { ExpandableScreenTrigger } from './ui/expandable-screen'
+import { NavBusinessesPanel, NavDropdownTrigger } from './NavDropdown'
+import { businessCategoriesMenu } from './nav-menu-data'
 
 type BgTone = 'light' | 'dark'
+type MenuId = 'businesses' | null
 
 function parseRgba(color: string): { r: number; g: number; b: number; a: number } | null {
   const comma = color.match(
@@ -65,6 +67,7 @@ function resolveBgTone(el: Element | null): BgTone {
     }
 
     if (
+      node.classList.contains('hero-mercury') ||
       node.classList.contains('barbershop-hero') ||
       node.classList.contains('barbershop-hero__bg') ||
       node.classList.contains('barbershop-hero-layer')
@@ -78,10 +81,12 @@ function resolveBgTone(el: Element | null): BgTone {
   return 'dark'
 }
 
-export function BarbershopNav() {
+export function LandingNav() {
   const [open, setOpen] = useState(false)
+  const [activeMenu, setActiveMenu] = useState<MenuId>(null)
   const [bgTone, setBgTone] = useState<BgTone>('dark')
   const wrapRef = useRef<HTMLDivElement>(null)
+  const closeTimer = useRef<number | null>(null)
 
   useEffect(() => {
     if (!open) return
@@ -91,6 +96,12 @@ export function BarbershopNav() {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
+
+  useEffect(() => {
+    return () => {
+      if (closeTimer.current) window.clearTimeout(closeTimer.current)
+    }
+  }, [])
 
   useEffect(() => {
     const wrap = wrapRef.current
@@ -133,49 +144,83 @@ export function BarbershopNav() {
     }
   }, [])
 
+  function openMenu(id: MenuId) {
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current)
+      closeTimer.current = null
+    }
+    setActiveMenu(id)
+  }
+
+  function scheduleClose() {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current)
+    closeTimer.current = window.setTimeout(() => setActiveMenu(null), 120)
+  }
+
+  function keepOpen(id: MenuId) {
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current)
+      closeTimer.current = null
+    }
+    setActiveMenu(id)
+  }
+
   return (
-    <div ref={wrapRef} className="barbershop-nav-wrap" data-bg={bgTone}>
-      <header className="barbershop-nav-desktop">
-        <nav
-          className="nav-glass flex items-center gap-1 pl-5 pr-2 py-1.5"
-          aria-label="Barbershop"
-        >
-          <a href="/" className="flex items-center no-underline shrink-0 mr-3 text-ink">
-            <img src="/brand/miki-logo.png" alt="Miki" className="h-6 w-auto" />
-          </a>
-
-          <div className="flex flex-1 items-center justify-center gap-0.5">
-            {navLinks.map((link) => (
-              <a key={link.href} href={link.href} className="nav-link">
-                {link.label}
-              </a>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-1 shrink-0 ml-2">
-            <a href="#signin" className="nav-link">
-              Sign in
+    <div ref={wrapRef} className="barbershop-nav-wrap landing-nav-wrap" data-bg={bgTone}>
+      <header className="barbershop-nav-desktop" onMouseLeave={scheduleClose}>
+        <div className="relative max-w-[920px] mx-auto">
+          <nav className="nav-glass flex items-center gap-1 pl-5 pr-2 py-1.5" aria-label="Main">
+            <a href="/" className="flex items-center no-underline shrink-0 mr-3 text-ink">
+              <img src="/brand/miki-logo.png" alt="Miki" className="h-6 w-auto" />
             </a>
-            <ExpandableScreenTrigger>
-              <Btn variant="nav">{ctaLabel}</Btn>
-            </ExpandableScreenTrigger>
+
+            <div className="flex flex-1 items-center justify-center gap-0.5">
+              <div
+                className="relative"
+                onMouseEnter={() => openMenu('businesses')}
+                onMouseLeave={scheduleClose}
+              >
+                <NavDropdownTrigger
+                  label="Businesses"
+                  open={activeMenu === 'businesses'}
+                  onEnter={() => openMenu('businesses')}
+                  onLeave={scheduleClose}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1 shrink-0 ml-2">
+              <a href="#signin" className="nav-link">
+                Sign in
+              </a>
+              <ExpandableScreenTrigger>
+                <Btn variant="nav">Start free</Btn>
+              </ExpandableScreenTrigger>
+            </div>
+          </nav>
+
+          <div onMouseEnter={() => keepOpen(activeMenu)} onMouseLeave={scheduleClose}>
+            <NavBusinessesPanel
+              active={activeMenu === 'businesses'}
+              categories={businessCategoriesMenu}
+              onClose={() => setActiveMenu(null)}
+            />
           </div>
-        </nav>
+        </div>
       </header>
 
       <header className="barbershop-nav-mobile">
         <nav
           className="nav-glass flex items-center justify-between pl-4 pr-2 py-2"
-          aria-label="Barbershop mobile"
+          aria-label="Main mobile"
         >
-          <a href="/" className="flex items-center gap-2 no-underline text-ink">
-            <span className="w-2 h-2 rounded-full bg-signal" />
-            <span className="text-body-sm font-medium">Miki</span>
+          <a href="/" className="flex items-center no-underline shrink-0 text-ink">
+            <img src="/brand/miki-logo.png" alt="Miki" className="h-6 w-auto" />
           </a>
           <div className="flex items-center gap-2">
             <ExpandableScreenTrigger>
               <Btn variant="nav" className="text-body-sm">
-                {ctaLabel}
+                Start free
               </Btn>
             </ExpandableScreenTrigger>
             <button
@@ -195,21 +240,10 @@ export function BarbershopNav() {
           data-active={open}
         >
           <div className="nav-popup-panel p-2 flex flex-col gap-1">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="nav-popup-item"
-                onClick={() => setOpen(false)}
-              >
-                <span className="nav-popup-item-title">{link.label}</span>
-              </a>
-            ))}
-            <a
-              href="#signin"
-              className="nav-popup-item"
-              onClick={() => setOpen(false)}
-            >
+            <a href="#verticals" className="nav-popup-item" onClick={() => setOpen(false)}>
+              <span className="nav-popup-item-title">Businesses</span>
+            </a>
+            <a href="#signin" className="nav-popup-item" onClick={() => setOpen(false)}>
               <span className="nav-popup-item-title">Sign in</span>
             </a>
           </div>

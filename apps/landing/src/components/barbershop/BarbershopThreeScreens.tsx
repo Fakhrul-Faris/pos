@@ -3,8 +3,9 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useReducedMotionSafe } from '../../hooks/use-reduced-motion-safe'
-import { Reveal, RevealGroup, RevealHeadline, RevealItem, RevealScale } from '../Reveal'
+import { Reveal, RevealGroup, RevealItem, RevealScale } from '../Reveal'
 import { surfaces } from './data'
+import { SectionHeadline } from './SectionHeadline'
 
 type SurfaceKey = (typeof surfaces)[number]['key']
 
@@ -16,15 +17,14 @@ export function BarbershopThreeScreens() {
   const current = surfaces.find((s) => s.key === active)!
 
   return (
-    <section id="surfaces" className="py-[var(--section-gap)] bg-linen/50">
+    <section id="surfaces" className="barbershop-band barbershop-band--linen">
       <div className="container-page">
-        <div className="text-center max-w-[640px] mx-auto">
-          <RevealHeadline
+        <div className="barbershop-section-head">
+          <SectionHeadline
             segments={[
               { text: 'Three screens.' },
-              { text: 'One calm shop.', className: 'italic-beat' },
+              { text: 'One calm shop.', italic: true },
             ]}
-            className="text-heading-lg text-ink m-0"
           />
           <Reveal delay={0.25} y={20}>
             <p className="text-body-lg text-muted mt-4 mb-0">

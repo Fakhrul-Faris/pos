@@ -177,35 +177,6 @@ export const featureTips = [
   },
 ] as const
 
-export const features = [
-  {
-    title: 'QR booking',
-    body: 'Customer scans, picks a service, books a slot. No app store. No account. Just a name and phone.',
-  },
-  {
-    title: 'Now serving',
-    body: 'Status page shows the shop\'s current number and theirs. They check their phone. You keep cutting.',
-  },
-  {
-    title: 'Pick your barber',
-    body: 'Customers pick and see availability. Or turn it off — system assigns the next free chair.',
-  },
-  {
-    title: 'Hybrid walk-ins',
-    body: 'Online bookings keep their slot. Walk-ins fill the gaps. Neither steals from the other.',
-  },
-  {
-    title: 'Per-barber revenue',
-    body: 'Every payment tied to whoever was switched in. Cuts and income per chair, every day.',
-  },
-] as const
-
-export const featuresAlsoIncluded =
-  'Also in every paid plan: add-ons at chair · walk-in-only blocks · daily caps · offline mode · digital receipt'
-
-export const groupBookingsNote =
-  'Group bookings — Dad and two sons? One booking, one queue number, one check-in.'
-
 export const howItWorksSteps = [
   {
     id: 'shop',
@@ -412,11 +383,13 @@ export const testimonials = [
   },
 ] as const
 
+export const ctaLabel = 'Start free'
+
 export const closingCta = {
   headline: 'Stop juggling three different apps.',
   beats: ['Bookings.', 'Walk-ins.', 'Payments.', 'Payroll.'],
   body: 'Everything finally works together.',
-  cta: 'Start for free',
+  cta: ctaLabel,
   sub: 'No card required. No contract.',
 }
 

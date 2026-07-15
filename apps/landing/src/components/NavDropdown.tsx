@@ -95,10 +95,10 @@ export function NavBusinessesPanel({
                 <p className="nav-popup-empty__title">Coming soon</p>
                 <p className="nav-popup-empty__desc">
                   We&apos;re building workflows for {activeCategory?.title.toLowerCase()}{' '}
-                  shops. Join the waitlist to get early access.
+                  shops. Start free and we&apos;ll notify you when yours launches.
                 </p>
-                <a href="#waitlist" className="nav-popup-empty__link" onClick={onClose}>
-                  Join waitlist
+                <a href="#cta" className="nav-popup-empty__link" onClick={onClose}>
+                  Start free
                 </a>
               </div>
             )}

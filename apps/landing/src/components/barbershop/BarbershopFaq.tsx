@@ -2,8 +2,9 @@
 
 import { useId, useState } from 'react'
 import { motion } from 'motion/react'
-import { Reveal, RevealGroup, RevealHeadline, RevealItem } from '../Reveal'
+import { Reveal, RevealGroup, RevealItem } from '../Reveal'
 import { faqItems } from './data'
+import { SectionHeadline } from './SectionHeadline'
 
 const spring = {
   type: 'spring' as const,
@@ -67,8 +68,8 @@ export function BarbershopFaq() {
   const [open, setOpen] = useState<number | null>(null)
 
   return (
-    <section id="faq" className="barbershop-faq">
-      <div className="container-page max-w-2xl mx-auto">
+    <section id="faq" className="barbershop-faq barbershop-band barbershop-band--paper">
+      <div className="container-page barbershop-contain--prose">
         <div className="barbershop-faq__header">
           <Reveal delay={0.05} y={12}>
             <span className="barbershop-faq__badge">
@@ -79,10 +80,7 @@ export function BarbershopFaq() {
             </span>
           </Reveal>
 
-          <RevealHeadline
-            segments={[{ text: 'Totally fair to ask.' }]}
-            className="barbershop-faq__title"
-          />
+          <SectionHeadline segments={[{ text: 'Totally fair to ask.' }]} />
 
           <Reveal delay={0.2} y={14}>
             <p className="barbershop-faq__subtitle">

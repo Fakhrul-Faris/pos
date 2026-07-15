@@ -1087,6 +1087,20 @@
     font-size: var(--text-body-sm);
   }
 
+  .btn--inverse {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: var(--radius-button);
+    font-size: var(--text-body-sm);
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .btn--inverse:hover,
+  .btn--inverse:focus-visible {
+    color: var(--color-ink);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .btn__bg {
       transition: none;
@@ -2432,175 +2446,170 @@
     text-decoration: underline;
   }
 
+  .signup-screen-shell {
+    background: transparent;
+  }
+
   .signup-screen {
     min-height: 100%;
-    padding: 72px 24px 40px;
-    color: var(--color-pure-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 72px 16px 32px;
+    color: var(--color-ink);
   }
 
   @media (min-width: 768px) {
     .signup-screen {
-      padding: 64px 40px;
+      padding: 56px 24px 40px;
     }
   }
 
-  .signup-screen__layout {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    max-width: 1100px;
+  .signup-screen__card {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: 1080px;
     margin: 0 auto;
-    min-height: calc(100dvh - 112px);
+    border-radius: 28px;
+    background: var(--color-paper);
+    border: 1px solid var(--color-ash);
+    overflow: hidden;
+    box-shadow:
+      0 24px 64px color-mix(in srgb, #000 18%, transparent),
+      0 0 0 1px color-mix(in srgb, #000 4%, transparent);
   }
 
-  @media (min-width: 1024px) {
-    .signup-screen__layout {
-      flex-direction: row;
-      align-items: center;
-      gap: 64px;
+  @media (min-width: 900px) {
+    .signup-screen__card {
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      min-height: min(640px, calc(100dvh - 96px));
     }
   }
 
   .signup-screen__copy {
-    flex: 1;
-  }
-
-  .signup-screen__eyebrow {
-    margin: 0 0 12px;
-    font-size: var(--text-body-sm);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-pure-white) 75%, transparent);
-  }
-
-  .signup-screen__title {
-    margin: 0 0 16px;
-    font-size: clamp(32px, 5vw, 52px);
-    font-weight: 400;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-  }
-
-  .signup-screen__sub {
-    margin: 0 0 28px;
-    max-width: 42ch;
-    font-size: var(--text-body-lg);
-    line-height: 1.5;
-    color: color-mix(in srgb, var(--color-pure-white) 88%, transparent);
-  }
-
-  .signup-screen__benefits {
-    list-style: none;
-    margin: 0 0 32px;
-    padding: 0;
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-  }
-
-  .signup-screen__benefit {
-    display: flex;
-    gap: 14px;
     align-items: flex-start;
+    gap: 0;
+    padding: 2rem 1.5rem;
+    background: color-mix(in srgb, var(--color-linen) 45%, var(--color-paper));
   }
 
-  .signup-screen__benefit p {
-    margin: 0;
-    font-size: var(--text-body);
-    line-height: 1.5;
-    color: color-mix(in srgb, var(--color-pure-white) 92%, transparent);
-  }
-
-  .signup-screen__benefit-icon {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--color-pure-white) 12%, transparent);
-    font-size: 18px;
-  }
-
-  .signup-screen__quote {
-    padding-top: 24px;
-    border-top: 1px solid color-mix(in srgb, var(--color-pure-white) 20%, transparent);
-  }
-
-  .signup-screen__quote p {
-    margin: 0 0 16px;
-    font-size: var(--text-body-lg);
-    line-height: 1.5;
-  }
-
-  .signup-screen__quote-meta {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .signup-screen__quote-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: color-mix(in srgb, var(--color-pure-white) 15%, transparent);
-    font-size: var(--text-body-sm);
-    font-weight: 500;
-  }
-
-  .signup-screen__quote-name {
-    margin: 0;
-    font-size: var(--text-body);
-    font-weight: 500;
-  }
-
-  .signup-screen__quote-role {
-    margin: 2px 0 0;
-    font-size: var(--text-body-sm);
-    color: color-mix(in srgb, var(--color-pure-white) 70%, transparent);
-  }
-
-  .signup-screen__form-panel {
-    flex: 1;
-    width: 100%;
-    max-width: 480px;
-  }
-
-  @media (min-width: 1024px) {
-    .signup-screen__form-panel {
-      max-width: none;
+  @media (min-width: 900px) {
+    .signup-screen__copy {
+      padding: 2.75rem 2.25rem 2.5rem;
     }
   }
 
-  .signup-screen__form-title {
-    margin: 0 0 8px;
-    font-size: clamp(28px, 4vw, 36px);
+  .signup-screen__title {
+    margin: 0 0 1rem;
+    max-width: 14ch;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.4vw, 2.85rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+  }
+
+  .signup-screen__title-muted {
+    color: var(--color-stone);
+    font-weight: 400;
+  }
+
+  .signup-screen__sub {
+    margin: 0 0 1.5rem;
+    max-width: 36ch;
+    font-size: var(--text-body);
+    line-height: 1.55;
+    color: var(--color-graphite);
+  }
+
+  .signup-screen__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 auto;
+    padding: 0 0 1.75rem;
+    list-style: none;
+  }
+
+  .signup-screen__tags li {
+    padding: 0.4rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-ash);
+    background: var(--color-paper);
+    font-size: var(--text-caption);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--color-ink);
+  }
+
+  .signup-screen__panel {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.75rem 1.35rem 1.5rem;
+    background: var(--color-off-black-ink);
+    color: var(--color-paper);
+  }
+
+  @media (min-width: 900px) {
+    .signup-screen__panel {
+      padding: 2.25rem 2rem 1.75rem;
+      border-radius: 22px;
+      margin: 0.85rem;
+    }
+  }
+
+  .signup-screen__panel-title {
+    margin: 0;
+    max-width: 16ch;
+    font-family: var(--font-display);
+    font-size: clamp(1.55rem, 2.4vw, 2rem);
     font-weight: 500;
     line-height: 1.1;
     letter-spacing: -0.03em;
+    color: var(--color-pure-white);
   }
 
-  .signup-screen__form-sub {
-    margin: 0 0 24px;
-    font-size: var(--text-body);
+  .signup-screen__panel-sub {
+    margin: 0;
+    width: 100%;
+    max-width: 40ch;
+    font-size: var(--text-body-sm);
     line-height: 1.5;
-    color: color-mix(in srgb, var(--color-pure-white) 85%, transparent);
+    color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
   }
 
   .signup-form {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 0.9rem;
+    margin-top: auto;
+  }
+
+  .signup-form__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
+  @media (min-width: 560px) {
+    .signup-form__row {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
   .signup-form__field {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.4rem;
   }
 
   .signup-form__label {
@@ -2608,72 +2617,292 @@
     font-weight: 500;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-pure-white) 90%, transparent);
+    color: color-mix(in srgb, var(--color-ivory) 70%, transparent);
   }
 
-  .signup-form__input,
-  .signup-form__select {
+  .signup-form__input {
+    width: 100%;
+    border: 1px solid color-mix(in srgb, var(--color-ivory) 14%, transparent);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--color-pure-white) 6%, transparent);
+    color: var(--color-pure-white);
+    font: inherit;
+    font-size: var(--text-body-sm);
+    padding: 0.7rem 0.9rem;
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .signup-form__input::placeholder {
+    color: color-mix(in srgb, var(--color-ivory) 40%, transparent);
+  }
+
+  .signup-form__input:focus {
+    border-color: color-mix(in srgb, var(--color-electric-lime) 55%, transparent);
+    background: color-mix(in srgb, var(--color-pure-white) 9%, transparent);
+  }
+
+  .signup-field {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .signup-field__shell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 52px;
+    border: 1px solid color-mix(in srgb, var(--color-ivory) 14%, transparent);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--color-pure-white) 6%, transparent);
+    overflow: hidden;
+  }
+
+  .signup-field__label {
+    position: absolute;
+    left: 0.9rem;
+    top: 1.05rem;
+    z-index: 1;
+    margin: 0;
+    transform-origin: left center;
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--color-ivory) 78%, transparent);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .signup-field__input {
     width: 100%;
     border: 0;
+    background: transparent;
+    color: var(--color-pure-white);
+    font: inherit;
+    font-size: var(--text-body-sm);
+    padding: 1.35rem 2.4rem 0.55rem 0.9rem;
+    outline: none;
+    caret-color: var(--color-electric-lime);
+  }
+
+  .signup-field__input::placeholder {
+    color: transparent;
+  }
+
+  .signup-field__check {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    display: inline-flex;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: -0.575rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--color-electric-lime) 22%, transparent);
+    color: var(--color-electric-lime);
+    pointer-events: none;
+  }
+
+  .signup-field__check-icon {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+
+  .signup-type-select {
+    position: relative;
+    width: 100%;
+  }
+
+  .signup-type-select__trigger {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 45px;
+    border: 1px solid color-mix(in srgb, var(--color-ivory) 14%, transparent);
     border-radius: 12px;
+    background: color-mix(in srgb, var(--color-pure-white) 6%, transparent);
+    color: var(--color-pure-white);
+    font: inherit;
+    font-size: var(--text-body-sm);
+    padding: 0.7rem 0.9rem;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .signup-type-select__trigger:hover,
+  .signup-type-select__trigger--open,
+  .signup-type-select__trigger:focus-visible {
+    border-color: color-mix(in srgb, var(--color-electric-lime) 55%, transparent);
+    background: color-mix(in srgb, var(--color-pure-white) 9%, transparent);
+  }
+
+  .signup-type-select__value {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    text-align: left;
+  }
+
+  .signup-type-select__soon {
+    color: color-mix(in srgb, var(--color-ivory) 55%, transparent);
+  }
+
+  .signup-type-select__chevron {
+    display: inline-flex;
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    color: color-mix(in srgb, var(--color-ivory) 70%, transparent);
+  }
+
+  .signup-type-select__chevron-svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .signup-type-select__icon {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .signup-type-select__icon-svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .signup-type-select__icon-overlay {
+    position: absolute;
+    inset: 0;
+  }
+
+  .signup-type-select__menu-wrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    z-index: 50;
+    overflow: hidden;
+  }
+
+  .signup-type-select__menu {
+    width: 100%;
+    border: 1px solid color-mix(in srgb, var(--color-ivory) 16%, transparent);
+    background: color-mix(in srgb, var(--color-off-black-ink) 96%, var(--color-pure-white));
+    padding: 0.25rem;
+    box-shadow: 0 18px 40px color-mix(in srgb, #000 35%, transparent);
+  }
+
+  .signup-type-select__list {
+    position: relative;
+    padding: 0.35rem 0;
+  }
+
+  .signup-type-select__highlight {
+    position: absolute;
+    inset-inline: 0.25rem;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--color-pure-white) 10%, transparent);
+    pointer-events: none;
+  }
+
+  .signup-type-select__option {
+    position: relative;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.65rem 1rem;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: color-mix(in srgb, var(--color-ivory) 72%, transparent);
+    font: inherit;
+    font-size: var(--text-body-sm);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .signup-type-select__option--active {
+    color: var(--color-pure-white);
+  }
+
+  .signup-form__footer {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+    margin-top: 0.35rem;
+  }
+
+  @media (min-width: 560px) {
+    .signup-form__footer {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .signup-form__secured {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    font-size: var(--text-caption);
+    color: color-mix(in srgb, var(--color-electric-lime) 70%, var(--color-ivory));
+  }
+
+  .signup-form__secured-icon {
+    display: inline-flex;
+    width: 1rem;
+    height: 1rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--color-electric-lime) 22%, transparent);
+    color: var(--color-electric-lime);
+    font-size: 0.65rem;
+    font-weight: 500;
+  }
+
+  .signup-form__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.75rem 1.25rem;
+    border: 0;
+    border-radius: 9999px;
     background: var(--color-paper);
     color: var(--color-ink);
     font: inherit;
     font-size: var(--text-body-sm);
-    padding: 12px 16px;
-    outline: none;
-    transition: box-shadow 0.2s ease;
-  }
-
-  .signup-form__input:focus,
-  .signup-form__select:focus {
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-pure-white) 35%, transparent);
-  }
-
-  .signup-form__input::placeholder {
-    color: var(--color-muted);
-  }
-
-  .signup-form__select {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231c1c1c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 40px;
-  }
-
-  .signup-form__helper {
-    margin: 0;
-    font-size: var(--text-caption);
-    line-height: 1.4;
-    color: color-mix(in srgb, var(--color-pure-white) 70%, transparent);
-  }
-
-  .signup-form__submit {
-    width: 100%;
-    margin-top: 4px;
-    border: 0;
-    border-radius: 999px;
-    background: var(--color-paper);
-    color: var(--color-ink);
-    font: inherit;
-    font-size: var(--text-body);
     font-weight: 500;
-    padding: 14px 24px;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background-color 0.2s ease;
+  }
+
+  @media (min-width: 560px) {
+    .signup-form__submit {
+      width: auto;
+      min-width: 10.5rem;
+    }
   }
 
   .signup-form__submit:hover {
-    background: color-mix(in srgb, var(--color-paper) 92%, var(--color-ink));
-  }
-
-  .signup-form__trust {
-    margin: 0;
-    text-align: center;
-    font-size: var(--text-caption);
-    color: color-mix(in srgb, var(--color-pure-white) 75%, transparent);
+    background: var(--color-electric-lime);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -2704,8 +2933,60 @@
   --barbershop-inset: clamp(12px, 1.8vw, 20px);
   --barbershop-radius: 28px;
   --barbershop-stack-radius: 28px;
+  /* Content width tiers — use with .container-page */
+  --barbershop-hero: 48rem; /* 768px — hero text column */
+  --barbershop-prose: 42rem; /* 672px — headlines, FAQ, closing */
+  --barbershop-medium: 56rem; /* 896px — compare, carousel shells */
+  --barbershop-wide: 64rem; /* 1024px — grids, pricing, problem */
   position: relative;
   background: var(--color-off-black-ink);
+}
+
+/* Width tier overrides (pair with .container-page) */
+.container-page.barbershop-contain--hero {
+  max-width: min(var(--barbershop-hero, 48rem), var(--page-max));
+}
+
+.container-page.barbershop-contain--prose {
+  max-width: min(var(--barbershop-prose, 42rem), var(--page-max));
+}
+
+.container-page.barbershop-contain--medium {
+  max-width: min(var(--barbershop-medium, 56rem), var(--page-max));
+}
+
+.container-page.barbershop-contain--wide {
+  max-width: min(var(--barbershop-wide, 64rem), var(--page-max));
+}
+
+/* Canonical section headline block */
+.barbershop-section-head {
+  max-width: var(--barbershop-prose);
+  margin-inline: auto;
+  text-align: center;
+}
+
+/*
+  Surface bands — business vertical template rhythm:
+  paper → linen → paper → linen → ink → paper → linen → paper → ink
+*/
+.barbershop-band {
+  padding-block: var(--section-gap);
+}
+
+.barbershop-band--paper {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.barbershop-band--linen {
+  background: color-mix(in srgb, var(--color-linen) 55%, var(--color-paper));
+  color: var(--color-ink);
+}
+
+.barbershop-band--ink {
+  background: var(--color-off-black-ink);
+  color: var(--color-pure-white);
 }
 
 .barbershop-page > #navbar-banner {
@@ -2733,6 +3014,14 @@
   top: 0;
   z-index: 50;
   pointer-events: none;
+}
+
+/* Homepage: fixed overlay so hero stays full-bleed at scroll 0 */
+.barbershop-nav-wrap.landing-nav-wrap {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  width: 100%;
 }
 
 .barbershop-nav-wrap.is-sampling,
@@ -2810,7 +3099,8 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-.barbershop-nav-desktop .nav-glass img {
+.barbershop-nav-desktop .nav-glass img,
+.barbershop-nav-mobile .nav-glass img {
   filter: brightness(0) invert(1);
 }
 
@@ -2828,6 +3118,65 @@
 
 .barbershop-nav-wrap[data-bg='light'] .nav-popup-item-title {
   color: var(--color-ivory);
+}
+
+/* Homepage: keep Product/Businesses dropdowns light with dark titles */
+.landing-nav-wrap .nav-popup-heading {
+  color: var(--color-ink);
+}
+
+.landing-nav-wrap .nav-popup-item {
+  transition:
+    background-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.landing-nav-wrap .nav-popup-item-title {
+  color: var(--color-ink);
+  transition: color 0.18s ease;
+}
+
+.landing-nav-wrap .nav-popup-item-desc {
+  transition: color 0.18s ease;
+}
+
+.landing-nav-wrap .nav-popup-item:hover {
+  background: color-mix(in srgb, var(--color-electric-lime) 22%, var(--color-paper));
+}
+
+.landing-nav-wrap .nav-popup-item:hover .nav-popup-item-title {
+  color: var(--color-ink);
+}
+
+.landing-nav-wrap .nav-popup-item:hover .nav-popup-item-desc {
+  color: var(--color-deep-charcoal);
+}
+
+.landing-nav-wrap .nav-popup-item:focus-visible {
+  outline: 2px solid var(--color-electric-lime);
+  outline-offset: 2px;
+  background: color-mix(in srgb, var(--color-electric-lime) 22%, var(--color-paper));
+}
+
+.landing-nav-wrap[data-bg='light'] .nav-popup-panel {
+  background: #fafafa;
+  border-color: rgba(38, 38, 43, 0.08);
+  box-shadow:
+    0 24px 40px -20px rgba(38, 38, 43, 0.3),
+    0 10px 24px 0 rgba(38, 38, 43, 0.06),
+    0 1px 1px 0 rgba(38, 38, 43, 0.16),
+    0 0 0 1px rgba(38, 38, 43, 0.05),
+    0 8px 14px -10px rgba(38, 38, 43, 0.4);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.landing-nav-wrap[data-bg='light'] .nav-popup-item:hover {
+  background: color-mix(in srgb, var(--color-electric-lime) 22%, var(--color-paper));
+}
+
+.landing-nav-wrap[data-bg='light'] .nav-popup-item-title {
+  color: var(--color-ink);
 }
 
 .barbershop-hero {
@@ -3128,12 +3477,6 @@
 }
 
 /* ── Barbershop compare — Saddle-style dark table ── */
-.barbershop-compare {
-  padding: var(--section-gap) 0;
-  background: var(--color-off-black-ink);
-  color: var(--color-pure-white);
-}
-
 .barbershop-compare__card {
   overflow: hidden;
   border-radius: 28px;
@@ -3291,10 +3634,7 @@
 
 /* ── Barbershop testimonials — single-row marquee ── */
 .barbershop-testimonials {
-  padding: var(--section-gap) 0;
   overflow: hidden;
-  background: color-mix(in srgb, var(--color-linen) 55%, var(--color-paper));
-  border-block: 1px solid var(--color-ash);
 }
 
 .barbershop-testimonials__scroller {
@@ -3422,11 +3762,6 @@
 }
 
 /* ── Barbershop FAQ — Billow-style centered accordion ── */
-.barbershop-faq {
-  padding: var(--section-gap) 0;
-  background: var(--color-paper);
-}
-
 .barbershop-faq__header {
   display: flex;
   flex-direction: column;
@@ -3462,15 +3797,6 @@
   font-size: 0.75rem;
   font-weight: 600;
   line-height: 1;
-}
-
-.barbershop-faq__title {
-  margin: 0;
-  font-size: clamp(2rem, 5vw, 3.25rem);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  font-weight: 500;
-  color: var(--color-ink);
 }
 
 .barbershop-faq__subtitle {
@@ -3565,11 +3891,6 @@
 }
 
 /* ── Barbershop how-it-works — ISO-style bento ── */
-.barbershop-how {
-  padding: var(--section-gap) 0;
-  background: var(--color-paper);
-}
-
 .barbershop-how__bento {
   display: grid;
   grid-template-columns: 1fr;
@@ -3804,38 +4125,6 @@
   margin-bottom: 1px;
 }
 
-.barbershop-pricing-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 40px;
-  padding: 0 16px;
-  border: 0;
-  border-radius: 100px;
-  background: var(--color-ink);
-  color: var(--color-paper);
-  font-size: 14px;
-  font-weight: 400;
-  font-family: inherit;
-  cursor: pointer;
-  text-align: center;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.barbershop-pricing-cta:hover {
-  background: var(--color-deep-charcoal);
-}
-
-.barbershop-pricing-cta--featured {
-  background: var(--color-signal);
-  color: var(--color-ink);
-}
-
-.barbershop-pricing-cta--featured:hover {
-  background: var(--color-signal-tint);
-}
-
 .barbershop-pricing-features {
   display: flex;
   flex-direction: column;
@@ -3872,12 +4161,10 @@
 .barbershop-problem {
   position: relative;
   height: 480vh;
-  border-bottom: 1px solid var(--color-ash);
 }
 
 .barbershop-problem--static {
   height: auto;
-  padding-block: var(--section-gap);
 }
 
 .barbershop-problem__sticky {
@@ -4110,12 +4397,7 @@
 
 /* ── Barbershop footer — centered with logo ── */
 .barbershop-footer {
-  padding: 3.5rem 24px 3rem;
-}
-
-.barbershop-footer__inner {
-  max-width: 80rem;
-  margin-inline: auto;
+  padding-block: 3.5rem 3rem;
 }
 
 .barbershop-footer__brand {

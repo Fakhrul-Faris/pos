@@ -20,7 +20,7 @@ export function BarbershopPage() {
     <ExpandableScreen
       layoutId="barbershop-signup-cta"
       triggerRadius="32px"
-      contentRadius="0px"
+      contentRadius="28px"
     >
       <div className="barbershop-page group/page-layout-container">
         <PromoBanner />

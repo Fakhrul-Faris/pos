@@ -5,8 +5,6 @@ import { motion, useScroll, useSpring, useTransform } from 'motion/react'
 import { useReducedMotionSafe } from '../hooks/use-reduced-motion-safe'
 import { RevealGroup, RevealHeadline, RevealItem } from './Reveal'
 import { Btn } from './Btn'
-import { Nav } from './Nav'
-import { MobileNav } from './MobileNav'
 import { ExpandableScreenTrigger } from './ui/expandable-screen'
 
 /**
@@ -104,17 +102,18 @@ function HeroCopy() {
     <RevealGroup className="flex max-w-[640px] flex-col items-center" stagger={0.14} delay={0.35}>
       <RevealItem>
         <h1 className="hero-display text-pure-white m-0 mb-6 flex flex-col items-center">
-          <RevealHeadline as="span" segments={[{ text: 'Run your shop.' }]} />
+          <RevealHeadline as="span" segments={[{ text: 'Your tablet.' }]} />
           <RevealHeadline
             as="span"
-            segments={[{ text: 'Not the chaos.', className: 'italic-beat' }]}
+            segments={[{ text: 'Not their terminal.', className: 'italic-beat' }]}
             delay={0.2}
           />
         </h1>
       </RevealItem>
       <RevealItem>
         <p className="text-body-lg text-ivory m-0 mb-10 max-w-[520px] leading-[1.35] font-normal">
-          Walk-ins, bookings, and checkout on one screen.
+          Bookings, walk-ins, and payments running on the phone or tablet already
+          behind your counter.
         </p>
       </RevealItem>
       <RevealItem>
@@ -196,41 +195,30 @@ export function Hero() {
 
   if (reducedMotion) {
     return (
-      <>
-        <Nav variant="overlay" />
-        <MobileNav />
-        <section
-          className="hero-mercury relative min-h-dvh flex flex-col"
-          data-id="theme-switcher"
-          data-theme="darkNeutral"
-          data-apply-globally="false"
-        >
+      <section
+        className="hero-mercury relative min-h-dvh flex flex-col"
+        data-nav-bg="dark"
+        data-id="theme-switcher"
+        data-theme="darkNeutral"
+        data-apply-globally="false"
+      >
           <MediaPlaceholder />
           <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-16 pt-24 text-center">
             <HeroCopy />
           </div>
         </section>
-        <section className="bg-paper px-6 py-24 text-center">
-          <p className="hero-reveal-tagline m-0 mx-auto">
-            Whatever you sell, cuts, coffee, or candles, run it all from one
-            screen.
-          </p>
-        </section>
-      </>
     )
   }
 
   return (
-    <>
-      <Nav variant="overlay" />
-      <MobileNav />
-      <section
-        ref={sectionRef}
-        className="hero-mercury relative h-[280vh]"
-        data-id="theme-switcher"
-        data-theme="darkNeutral"
-        data-apply-globally="false"
-      >
+    <section
+      ref={sectionRef}
+      className="hero-mercury relative h-[280vh]"
+      data-nav-bg="dark"
+      data-id="theme-switcher"
+      data-theme="darkNeutral"
+      data-apply-globally="false"
+    >
         <div className="sticky top-0 h-dvh overflow-hidden">
           {/* Reveal stage: tiles + tagline, uncovered as the media card shrinks */}
           <div className="absolute inset-0 z-0 bg-paper">
@@ -279,6 +267,5 @@ export function Hero() {
           </motion.div>
         </div>
       </section>
-    </>
   )
 }

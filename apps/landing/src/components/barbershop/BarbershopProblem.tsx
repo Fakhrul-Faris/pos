@@ -100,12 +100,12 @@ function ProblemScroll() {
     <section
       ref={sectionRef}
       id="problem"
-      className="barbershop-problem"
+      className="barbershop-problem barbershop-band--paper"
       aria-label="How barbershops actually run"
       data-active-beat={activeIndex}
     >
       <div className="barbershop-problem__sticky">
-        <div className="barbershop-problem__grid container-page max-w-5xl mx-auto">
+        <div className="barbershop-problem__grid container-page barbershop-contain--wide">
           <div className="barbershop-problem__copy">
             {problemBeats.map((beat, i) => (
               <RevealLine
@@ -140,10 +140,10 @@ function ProblemStatic() {
   return (
     <section
       id="problem"
-      className="barbershop-problem barbershop-problem--static"
+      className="barbershop-problem barbershop-problem--static barbershop-band barbershop-band--paper"
       aria-label="How barbershops actually run"
     >
-      <div className="container-page max-w-5xl mx-auto barbershop-problem__grid">
+      <div className="container-page barbershop-contain--wide barbershop-problem__grid">
         <div className="barbershop-problem__copy barbershop-problem__copy--static">
           {problemBeats.map((beat) => (
             <p

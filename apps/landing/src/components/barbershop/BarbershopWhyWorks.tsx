@@ -1,7 +1,8 @@
 'use client'
 
-import { Reveal, RevealGroup, RevealHeadline, RevealItem } from '../Reveal'
+import { Reveal, RevealGroup, RevealItem } from '../Reveal'
 import { whySwitchCompare, type WhySwitchValue } from './data'
+import { SectionHeadline } from './SectionHeadline'
 
 function CheckIcon() {
   return (
@@ -56,15 +57,19 @@ function CompareCell({ value, tone }: { value: WhySwitchValue; tone: 'miki' | 't
 
 export function BarbershopWhyWorks() {
   return (
-    <section id="why-works" className="barbershop-compare">
-      <div className="container-page max-w-4xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
-          <RevealHeadline
+    <section
+      id="why-works"
+      className="barbershop-compare barbershop-band barbershop-band--ink"
+      data-nav-bg="dark"
+    >
+      <div className="container-page barbershop-contain--medium">
+        <div className="barbershop-section-head mb-10 md:mb-12">
+          <SectionHeadline
+            tone="inverse"
             segments={[
               { text: 'Built for barbers.' },
-              { text: 'Not adapted for them.', className: 'italic-beat' },
+              { text: 'Not adapted for them.', italic: true },
             ]}
-            className="text-heading-lg text-pure-white m-0"
           />
         </div>
 

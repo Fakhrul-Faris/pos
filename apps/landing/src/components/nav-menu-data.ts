@@ -29,35 +29,25 @@ export const productMenu: NavMenuColumn[] = [
     heading: 'Product',
     items: [
       {
-        title: 'One screen',
-        description: 'Bookings, queue, and checkout together',
-        href: '#compare',
-      },
-      {
         title: 'How it works',
-        description: 'Customer, counter, and owner on your device',
+        description: 'Customer, counter, and owner — one business',
         href: '#how-it-works',
       },
       {
-        title: 'Payments',
-        description: 'Cash, cards, or QR — your choice',
-        href: '#payments',
+        title: 'Three leaks',
+        description: 'At the door, rush hour, and close',
+        href: '#why-miki',
+      },
+      {
+        title: 'Your business',
+        description: 'Workflows for how your shop runs',
+        href: '#verticals',
       },
     ],
   },
   {
     heading: 'Explore',
     items: [
-      {
-        title: 'Your business',
-        description: 'Barbershop, salon, and clinic workflows',
-        href: '#verticals',
-      },
-      {
-        title: 'FAQ',
-        description: 'Hardware, setup, and no contracts',
-        href: '#faq',
-      },
       {
         title: 'Start free',
         description: '14 days free · No card required',

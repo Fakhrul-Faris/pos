@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 
-type BtnVariant = 'nav' | 'hero' | 'default' | 'block'
+type BtnVariant = 'nav' | 'hero' | 'default' | 'block' | 'inverse'
 
 type BtnProps = {
   children: ReactNode
@@ -14,6 +14,7 @@ const variantClass: Record<BtnVariant, string> = {
   hero: 'btn--hero',
   default: 'btn--default',
   block: 'btn--block',
+  inverse: 'btn--inverse',
 }
 
 function BtnContent({ children }: { children: ReactNode }) {

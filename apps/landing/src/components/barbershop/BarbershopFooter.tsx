@@ -1,7 +1,8 @@
 import { Btn } from '../Btn'
-import { Reveal, RevealGroup, RevealHeadline, RevealItem } from '../Reveal'
+import { Reveal, RevealGroup, RevealItem } from '../Reveal'
 import { ExpandableScreenTrigger } from '../ui/expandable-screen'
 import { closingCta } from './data'
+import { SectionHeadline } from './SectionHeadline'
 
 const footerLinks = [
   { label: 'Features', href: '#features' },
@@ -53,16 +54,20 @@ const socialLinks = [
 
 export function BarbershopClosingCta() {
   return (
-    <section className="py-20 md:py-28 bg-ink text-paper" data-nav-bg="dark">
-      <div className="container-page max-w-2xl text-center">
+    <section
+      className="barbershop-band barbershop-band--ink"
+      data-nav-bg="dark"
+    >
+      <div className="container-page barbershop-contain--prose text-center">
         <RevealGroup stagger={0.12} delay={0.1}>
           <RevealItem>
-            <RevealHeadline
+            <SectionHeadline
+              tone="inverse"
+              className="mb-5"
               segments={[
                 { text: 'Stop juggling three' },
-                { text: 'different apps.', className: 'italic-beat' },
+                { text: 'different apps.', italic: true },
               ]}
-              className="text-heading text-pure-white m-0 mb-5"
             />
           </RevealItem>
           <RevealItem>
@@ -89,8 +94,8 @@ export function BarbershopClosingCta() {
 
 export function BarbershopFooter() {
   return (
-    <footer className="barbershop-footer">
-      <div className="barbershop-footer__inner">
+    <footer className="barbershop-footer barbershop-band--paper" data-nav-bg="light">
+      <div className="container-page barbershop-footer__inner">
         <Reveal delay={0.08} y={12}>
           <a href="/" className="barbershop-footer__brand" aria-label="Miki home">
             <img src="/brand/miki-logo.png" alt="Miki" className="barbershop-footer__logo" />

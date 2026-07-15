@@ -50,13 +50,13 @@ export function MobileNav() {
         data-active={open}
       >
         <div className="nav-popup-panel p-2 flex flex-col gap-1">
-          <a href="#compare" className="nav-popup-item" onClick={() => setOpen(false)}>
+          <a href="#how-it-works" className="nav-popup-item" onClick={() => setOpen(false)}>
             <span className="nav-popup-item-title">Product</span>
           </a>
           <a href="#verticals" className="nav-popup-item" onClick={() => setOpen(false)}>
             <span className="nav-popup-item-title">Businesses</span>
           </a>
-          <a href="#compare" className="nav-popup-item" onClick={() => setOpen(false)}>
+          <a href="#why-miki" className="nav-popup-item" onClick={() => setOpen(false)}>
             <span className="nav-popup-item-title">Compare</span>
           </a>
           <a href="#signin" className="nav-popup-item" onClick={() => setOpen(false)}>

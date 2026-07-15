@@ -116,7 +116,7 @@ export function Nav({ variant: _variant = 'default' }: { variant?: NavVariant })
               />
             </div>
 
-            <a href="#compare" className="nav-link">
+            <a href="#why-miki" className="nav-link">
               Compare
             </a>
           </div>

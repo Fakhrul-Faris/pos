@@ -1,9 +1,10 @@
 'use client'
 
-import { ItalicHeadline } from '../ui'
+import { Btn } from '../Btn'
+import { ExpandableScreenTrigger } from '../ui/expandable-screen'
+import { ctaLabel, pricingIntro, pricingTiers } from './data'
+import { SectionHeadline } from './SectionHeadline'
 import { Reveal, RevealGroup, RevealItem } from '../Reveal'
-import { useSignupScreen } from '../ui/expandable-screen'
-import { pricingIntro, pricingTiers } from './data'
 
 function CheckIcon() {
   return (
@@ -27,30 +28,19 @@ function CheckIcon() {
 }
 
 function PricingCta({ featured }: { featured?: boolean }) {
-  const { openSignup } = useSignupScreen()
-
   return (
-    <button
-      type="button"
-      className={[
-        'barbershop-pricing-cta',
-        featured ? 'barbershop-pricing-cta--featured' : '',
-      ]
-        .filter(Boolean)
-        .join(' ')}
-      onClick={() => openSignup({ morph: false })}
-    >
-      Start Free
-    </button>
+    <ExpandableScreenTrigger className="w-full">
+      <Btn variant={featured ? 'block' : 'inverse'}>{ctaLabel}</Btn>
+    </ExpandableScreenTrigger>
   )
 }
 
 export function BarbershopPricing() {
   return (
-    <section id="pricing" className="py-[var(--section-gap)]">
-      <div className="container-page max-w-5xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <ItalicHeadline
+    <section id="pricing" className="barbershop-band barbershop-band--linen">
+      <div className="container-page barbershop-contain--wide">
+        <div className="barbershop-section-head mb-12">
+          <SectionHeadline
             before={pricingIntro.titleBefore}
             italic={pricingIntro.titleItalic}
           />

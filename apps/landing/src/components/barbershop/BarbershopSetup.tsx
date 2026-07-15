@@ -1,15 +1,15 @@
 'use client'
 
-import { ItalicHeadline } from '../ui'
 import { RevealGroup, RevealItem } from '../Reveal'
 import { howItWorksIntro, howItWorksSteps } from './data'
+import { SectionHeadline } from './SectionHeadline'
 
 export function BarbershopSetup() {
   return (
-    <section id="how-it-works" className="barbershop-how">
-      <div className="container-page max-w-5xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
-          <ItalicHeadline
+    <section id="how-it-works" className="barbershop-how barbershop-band barbershop-band--linen">
+      <div className="container-page barbershop-contain--wide">
+        <div className="barbershop-section-head mb-10 md:mb-12">
+          <SectionHeadline
             before={howItWorksIntro.titleBefore}
             italic={howItWorksIntro.titleItalic}
           />
