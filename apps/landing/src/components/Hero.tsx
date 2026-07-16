@@ -4,8 +4,7 @@ import type { MotionValue } from 'motion/react'
 import { motion, useScroll, useSpring, useTransform } from 'motion/react'
 import { useReducedMotionSafe } from '../hooks/use-reduced-motion-safe'
 import { RevealGroup, RevealHeadline, RevealItem } from './Reveal'
-import { Btn } from './Btn'
-import { ExpandableScreenTrigger } from './ui/expandable-screen'
+import { HeroBusinessSelect } from './HeroBusinessSelect'
 
 /**
  * Placeholder tiles revealed around the shrinking media card.
@@ -118,10 +117,8 @@ function HeroCopy() {
       </RevealItem>
       <RevealItem>
         <div className="flex flex-col items-center gap-4">
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <ExpandableScreenTrigger>
-              <Btn variant="hero">Start free</Btn>
-            </ExpandableScreenTrigger>
+          <div className="flex flex-col items-center justify-center gap-3">
+            <HeroBusinessSelect />
             <a
               href="#how-it-works"
               className="text-body-sm text-ivory/80 no-underline hover:text-pure-white transition-colors"

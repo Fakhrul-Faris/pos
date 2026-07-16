@@ -1,7 +1,6 @@
-import { Btn } from './Btn'
-import { Reveal, RevealGroup, RevealItem } from './Reveal'
-import { ExpandableScreenTrigger } from './ui/expandable-screen'
+import { RevealGroup, RevealItem } from './Reveal'
 import { SectionHeadline } from './barbershop/SectionHeadline'
+import { HeroBusinessSelect } from './HeroBusinessSelect'
 
 export function ClosingCta() {
   return (
@@ -28,9 +27,9 @@ export function ClosingCta() {
             </p>
           </RevealItem>
           <RevealItem>
-            <ExpandableScreenTrigger>
-              <Btn variant="hero">Start now for free</Btn>
-            </ExpandableScreenTrigger>
+            <div className="flex justify-center">
+              <HeroBusinessSelect />
+            </div>
             <p className="text-caption text-ash-text m-0 mt-4 tracking-[0.01em]">
               14 days free · No card required · Cancel anytime
             </p>
