@@ -665,7 +665,7 @@ Draft grid (unchanged):
 | **Customer Web · Hi-Fi** | `CW-Hi — *` (see hi-fi grid) |
 | **POS · Hi-Fi** | `POS-Hi — *` — 1280×800 · motion prototype skin (see below) |
 | **Merchant · Hi-Fi** | `MP-Hi — *` — 1440×900 · owner web · flex sidebar shell (see below) |
-| **Admin · Hi-Fi** | `AP-Hi — *` — 1440×900 · platform internal · [`admin-portal.md`](../../platform/admin-portal.md) |
+| **Admin · Hi-Fi** | `AP-Hi — *` — 1440×900 · platform internal · [`Miki Admin Portal BRD.md`](../../platform/Miki%20Admin%20Portal%20BRD.md) · [`user flow`](../../platform/Miki%20admin%20portal%20user%20flow.md) |
 | **Customer Web App** (draft) | CW — * (see draft grid) |
 | **POS** | Today Board, **Today Board · Party #42**, Party Check-in, Party Assign, Party Payment, HitPay (P-07-02), HitPay · Card, HitPay · Party, **HitPay · Timeout** |
 | **Merchant Portal** | Shell Layout, Calendar, **Walk-in Blocks**, Services, Booking Rules, QR Codes, Reports |

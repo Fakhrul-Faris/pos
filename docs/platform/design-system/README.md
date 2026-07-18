@@ -35,7 +35,7 @@ Three layers (primitive → semantic → component), per [W3C design tokens](htt
 | Surface | Tech | Component library | Density |
 | :--- | :--- | :--- | :--- |
 | **Merchant Portal** | React + Vite | HeroUI v3 | Compact |
-| **Admin Portal** | React + Vite | HeroUI v3 | Compact |
+| **Admin Portal** | Next.js | `@miki/ui` + Tailwind | Compact |
 | **Customer Web** | React + Vite | HeroUI v3 | Loose |
 | **Counter POS** | React Native + Expo | Custom (same tokens) | Medium |
 | **Marketing Site** | React + Vite | HeroUI v3 | — |

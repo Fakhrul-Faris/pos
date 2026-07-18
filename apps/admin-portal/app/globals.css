@@ -1,0 +1,46 @@
+@import "@miki/ui/globals.css";
+
+/* Login stage — atmosphere + entrance (admin gate only) */
+.login-atmosphere {
+  background:
+    radial-gradient(ellipse 80% 50% at 15% 40%, rgba(255, 255, 255, 0.06), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 85% 70%, rgba(145, 141, 246, 0.08), transparent 50%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 47px,
+      rgba(255, 255, 255, 0.025) 47px,
+      rgba(255, 255, 255, 0.025) 48px
+    );
+}
+
+@keyframes login-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-brand {
+  animation: login-rise 420ms ease-out both;
+}
+
+.login-panel {
+  animation: login-rise 480ms 80ms ease-out both;
+}
+
+.login-demo-row {
+  animation: login-rise 400ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-brand,
+  .login-panel,
+  .login-demo-row {
+    animation: none;
+  }
+}

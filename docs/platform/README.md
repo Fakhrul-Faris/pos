@@ -14,7 +14,8 @@
 | [**pricing-model.md**](pricing-model.md) | Trial → Lite → paid **mechanics** (no vertical RM prices) |
 | [**payment-rails.md**](payment-rails.md) | HitPay aggregator model, C′ rail philosophy, ledger, payouts *(internal)* |
 | [**design-system/**](design-system/) | Design tokens SSOT — primitives, semantic tokens, Tailwind/Penpot |
-| [**admin-portal.md**](admin-portal.md) | Platform admin (internal) — A-xx screens, roles, Penpot index |
+| [**Miki Admin Portal BRD.md**](Miki%20Admin%20Portal%20BRD.md) | Admin portal business requirements (SSOT) |
+| [**Miki admin portal user flow.md**](Miki%20admin%20portal%20user%20flow.md) | Admin portal user flows (SSOT) |
 
 ---
 

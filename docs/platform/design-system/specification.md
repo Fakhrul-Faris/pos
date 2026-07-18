@@ -388,7 +388,7 @@ miki/
 │   └── ui-native/               ← Miki-specific RN components (POS)
 ├── apps/
 │   ├── merchant-portal/         ← React + Vite + HeroUI (data-density="compact")
-│   ├── admin-portal/            ← React + Vite + HeroUI (data-density="compact")
+│   ├── admin-portal/            ← Next.js + @miki/ui (data-density="compact")
 │   ├── customer-web/            ← React + Vite + HeroUI (data-density="loose")
 │   ├── pos/                     ← React Native + Expo (tokens via @miki/tokens)
 │   └── marketing/               ← React + Vite + HeroUI (marketing site)
