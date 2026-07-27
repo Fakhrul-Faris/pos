@@ -209,14 +209,18 @@ export function Sidebar({
     )
   }
 
-  const effectiveState = hoverExpanded ? 'expanded' : state
-  const effectiveCollapsible = effectiveState === 'collapsed' ? collapsible : 'none'
+  // Visual expand-on-hover should not change layout reservation.
+  // Keep peer/gap width on pinned `state`; only the fixed panel + labels use hover.
+  const pinnedCollapsible = state === 'collapsed' ? collapsible : 'none'
+  const visualState = hoverExpanded ? 'expanded' : state
+  const visualCollapsible = visualState === 'collapsed' ? collapsible : 'none'
 
   return (
     <div
       data-slot="sidebar-container"
-      data-state={effectiveState}
-      data-collapsible={effectiveCollapsible}
+      data-state={visualState}
+      data-collapsible={visualCollapsible}
+      data-pinned-collapsible={pinnedCollapsible}
       data-variant={variant}
       data-side={side}
       onMouseEnter={() => {
@@ -225,24 +229,21 @@ export function Sidebar({
       onMouseLeave={() => setHoverExpanded(false)}
       className={cn(
         'group peer relative hidden text-sidebar-foreground md:block',
-        'w-[var(--sidebar-width)] transition-[width] duration-200 ease-linear',
-        'data-[collapsible=icon]:w-[var(--sidebar-width-icon)]',
-        'data-[collapsible=offcanvas]:w-0',
-        (variant === 'floating' || variant === 'inset') &&
-          'data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+1rem)]',
+        'transition-[width] duration-200 ease-linear',
+        // Reserve space from pinned state only (ignore hover expand).
+        pinnedCollapsible === 'icon'
+          ? variant === 'floating' || variant === 'inset'
+            ? 'w-[calc(var(--sidebar-width-icon)+1rem)]'
+            : 'w-[var(--sidebar-width-icon)]'
+          : pinnedCollapsible === 'offcanvas'
+            ? 'w-0'
+            : 'w-[var(--sidebar-width)]',
       )}
     >
       <div
         data-slot="sidebar-gap"
         className={cn(
-          'relative h-svh bg-transparent transition-[width] duration-200 ease-linear',
-          state === 'collapsed' && collapsible === 'icon'
-            ? (variant === 'floating' || variant === 'inset')
-              ? 'w-[calc(var(--sidebar-width-icon)+1rem)]'
-              : 'w-[var(--sidebar-width-icon)]'
-            : state === 'collapsed' && collapsible === 'offcanvas'
-              ? 'w-0'
-              : 'w-[var(--sidebar-width)]',
+          'relative h-svh w-full bg-transparent transition-[width] duration-200 ease-linear',
         )}
       />
       <div
@@ -250,14 +251,20 @@ export function Sidebar({
         data-side={side}
         className={cn(
           'fixed inset-y-0 z-10 hidden h-svh transition-[left,right,width] duration-200 ease-linear md:flex',
-          effectiveState === 'expanded' ? 'w-[var(--sidebar-width)]' : '',
           side === 'left'
             ? 'left-0 group-data-[collapsible=offcanvas]:-left-[var(--sidebar-width)]'
             : 'right-0 group-data-[collapsible=offcanvas]:-right-[var(--sidebar-width)]',
           variant === 'floating' || variant === 'inset'
-            ? cn('p-2', effectiveState === 'collapsed' && 'w-[calc(var(--sidebar-width-icon)+1rem)]')
-            : effectiveState === 'collapsed' ? 'w-[var(--sidebar-width-icon)]' : 'w-[var(--sidebar-width)]',
-          hoverExpanded && 'shadow-2xl',
+            ? cn(
+                'p-2',
+                visualState === 'collapsed'
+                  ? 'w-[calc(var(--sidebar-width-icon)+1rem)]'
+                  : 'w-[var(--sidebar-width)]',
+              )
+            : visualState === 'collapsed'
+              ? 'w-[var(--sidebar-width-icon)]'
+              : 'w-[var(--sidebar-width)]',
+          hoverExpanded && 'z-30 shadow-2xl',
           className,
         )}
         {...props}
@@ -387,8 +394,9 @@ export function SidebarContent({
     <div
       data-slot="sidebar-content"
       className={cn(
-        'flex min-h-0 flex-1 flex-col gap-2 overflow-auto overflow-x-hidden',
-        'group-data-[collapsible=icon]:overflow-hidden',
+        'flex min-h-0 flex-1 flex-col gap-2 overflow-auto',
+        // Keep vertical scroll, but don't clip collapsed notification dots.
+        'group-data-[collapsible=icon]:overflow-y-auto group-data-[collapsible=icon]:overflow-x-visible',
         className,
       )}
       {...props}
@@ -485,7 +493,7 @@ export function SidebarMenuButton({
         'focus-visible:ring-1 focus-visible:ring-sidebar-ring',
         'disabled:pointer-events-none disabled:opacity-50',
         'data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground',
-        'group-data-[collapsible=icon]:size-9 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2',
+        'group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-9 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:overflow-visible group-data-[collapsible=icon]:p-2',
         '[&>span:not([data-sidebar-dot])]:truncate [&>svg]:size-[18px] [&>svg]:shrink-0',
         'group-data-[collapsible=icon]:[&>span:not([data-sidebar-dot])]:hidden',
         className,
@@ -508,6 +516,7 @@ export function SidebarMenuBadge({
         'pointer-events-none absolute top-1/2 right-1 z-10 flex h-5 min-w-5 -translate-y-1/2 items-center justify-center rounded-[6px] bg-amber-100 px-1 font-mono text-[10px] font-semibold text-amber-900 tabular-nums select-none',
         'peer-hover/menu-button:text-amber-900',
         'peer-data-[active=true]/menu-button:text-amber-900',
+        // Number chip only when expanded; collapsed uses the dot.
         'group-data-[collapsible=icon]:hidden',
         className,
       )}
@@ -529,7 +538,7 @@ export function SidebarSeparator({
   )
 }
 
-/** Tiny helper for collapsed-only badge dot */
+/** Collapsed-only notification dot (number chip is SidebarMenuBadge). */
 export function SidebarMenuDot({
   show,
   className,
@@ -541,8 +550,11 @@ export function SidebarMenuDot({
   return (
     <span
       data-sidebar-dot
+      aria-hidden
       className={cn(
-        'absolute -top-0.5 -right-0.5 hidden size-2 rounded-full bg-amber-500 ring-2 ring-sidebar group-data-[collapsible=icon]:block',
+        // Anchored to the menu item; only visible in icon-collapsed mode.
+        'pointer-events-none absolute top-1.5 right-1.5 z-20 hidden size-2 rounded-full bg-amber-500 ring-2 ring-sidebar',
+        'group-data-[collapsible=icon]:block',
         className,
       )}
     />

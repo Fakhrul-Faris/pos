@@ -170,10 +170,12 @@ export function Shell({
                         >
                           <Icon />
                           <span>{item.label}</span>
-                          <SidebarMenuDot show={badge > 0} />
                         </SidebarMenuButton>
                         {badge > 0 && (
-                          <SidebarMenuBadge>{badge}</SidebarMenuBadge>
+                          <>
+                            <SidebarMenuDot show />
+                            <SidebarMenuBadge>{badge}</SidebarMenuBadge>
+                          </>
                         )}
                       </SidebarMenuItem>
                     )

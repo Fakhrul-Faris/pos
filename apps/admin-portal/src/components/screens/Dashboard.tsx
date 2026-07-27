@@ -6,18 +6,15 @@ import {
   formatDate,
   formatRM,
   merchantName,
-  primaryBrand,
   primaryOwner,
 } from '@/data/mock'
 import type { AdminScreen } from '@/data/types'
-import { PLAN_LABELS } from '@/data/types'
 import {
   MerchantStatusBadge,
   RefundStatusBadge,
   DualStatusBadge,
   FlagBadge,
 } from '../StatusBadge'
-import { IconAlert } from '../icons'
 import { Badge, Chip } from '../ui/Badge'
 import { Button } from '../ui/Button'
 import { TD, TH, TR } from '../ui/Table'
@@ -83,7 +80,6 @@ export function Dashboard({
   })
 
   const supportOpen = support.filter((s) => s.status !== 'resolved')
-  const supportHigh = supportOpen.filter((s) => s.priority === 'high')
 
   const moneyCards = [
     {
@@ -107,49 +103,6 @@ export function Dashboard({
       screen: 'reconciliation' as AdminScreen,
     },
   ]
-
-  const growthCards = [
-    {
-      label: 'Signups (7d)',
-      count: recentSignups.length,
-      screen: 'merchants' as AdminScreen,
-    },
-    {
-      label: 'Trials ending (7d)',
-      count: trialsEnding.length,
-      screen: 'merchants' as AdminScreen,
-    },
-    {
-      label: 'Silent merchants',
-      count: silentMerchants.length,
-      screen: 'merchants' as AdminScreen,
-    },
-  ]
-
-  const supportCards = [
-    {
-      label: 'Open / high priority',
-      count: queueCounts.support,
-      screen: 'support' as AdminScreen,
-    },
-    {
-      label: 'High priority open',
-      count: supportHigh.length,
-      screen: 'support' as AdminScreen,
-    },
-  ]
-
-  const moneyEmpty =
-    pendingSuspensions.length +
-      pendingRefunds.length +
-      flagged.length +
-      pendingPayouts.length ===
-    0
-
-  const growthEmpty =
-    recentSignups.length + trialsEnding.length + silentMerchants.length === 0
-
-  const supportEmpty = supportOpen.length === 0
 
   type TableTab = 'money' | 'growth' | 'support'
   const [tableTab, setTableTab] = useState<TableTab>('money')
@@ -467,58 +420,6 @@ function CountCard({
       </p>
     </button>
   )
-}
-
-function QueuePanel({
-  title,
-  icon,
-  children,
-}: {
-  title: string
-  icon?: boolean
-  children: ReactNode
-}) {
-  return (
-    <div className="rounded-[12px] border border-gray-400 bg-gray-100">
-      <div className="flex items-center gap-2 border-b border-gray-400 px-3 py-2">
-        {icon && <IconAlert className="text-amber-900" />}
-        <h3 className="text-[13px] font-semibold text-gray-1000">{title}</h3>
-      </div>
-      <ul className="divide-y divide-gray-400">{children}</ul>
-    </div>
-  )
-}
-
-function QueueRow({
-  title,
-  subtitle,
-  onClick,
-  trailing,
-}: {
-  title: string
-  subtitle: string
-  onClick: () => void
-  trailing: ReactNode
-}) {
-  return (
-    <li>
-      <button
-        type="button"
-        onClick={onClick}
-        className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-gray-200"
-      >
-        <div className="min-w-0">
-          <p className="truncate text-[13px] font-medium text-gray-1000">{title}</p>
-          <p className="truncate text-[11px] text-gray-900">{subtitle}</p>
-        </div>
-        <div className="shrink-0">{trailing}</div>
-      </button>
-    </li>
-  )
-}
-
-function EmptyRow({ text }: { text: string }) {
-  return <li className="px-3 py-6 text-center text-[13px] text-gray-900">{text}</li>
 }
 
 function MiniLineChart({ values }: { values: number[] }) {
