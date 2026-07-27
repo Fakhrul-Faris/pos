@@ -6,8 +6,8 @@ export type AdminScreen =
   | 'subscriptions'
   | 'transactions'
   | 'reconciliation'
-  | 'marketing'
-  | 'marketing-detail'
+  | 'support'
+  | 'accounting'
   | 'audit'
 
 export type AdminId = 'fakhrul' | 'haziq' | 'helmi'
@@ -54,6 +54,9 @@ export type AuditActionType =
   | 'merchant_reactivated'
   | 'note_added'
   | 'flagged_reviewed'
+  | 'support_status_updated'
+  | 'support_priority_updated'
+  | 'support_note_added'
   | 'experiment_created'
   | 'experiment_concluded'
   | 'post_logged'
@@ -67,21 +70,46 @@ export type AdminUser = {
 }
 
 export type Merchant = {
+  /** Organization id — Admin “Merchant” umbrella */
   id: string
   businessName: string
-  ownerName: string
-  ownerEmail: string
   vertical: string
-  plan: PlanTier
   status: MerchantStatus
   signupDate: string
   lastActive: string
-  mrr: number
-  outlets: number
-  bookingsThisMonth: number
   notes: MerchantNote[]
+  brands: Brand[]
+  owners: MerchantOwner[]
+}
+
+export type MerchantOwner = {
+  id: string
+  name: string
+  email: string
+  role: 'owner' | 'billing' | 'ops'
+  /** Masked payout bank — typically owner/billing contact */
   bankAccountMasked: string
+}
+
+export type Brand = {
+  id: string
+  organizationId: string
+  name: string
+  /** Billable unit */
   subscription: SubscriptionInfo
+  mrr: number
+  branches: Branch[]
+}
+
+export type Branch = {
+  id: string
+  brandId: string
+  name: string
+  address: string
+  city: string
+  hoursSummary: string
+  isHeadquarters: boolean
+  isActive: boolean
 }
 
 export type MerchantNote = {
@@ -111,7 +139,11 @@ export type PaymentRecord = {
 
 export type RefundRequest = {
   id: string
+  /** Organization (Admin “Merchant”) — settlement / dual-approval unit */
   merchantId: string
+  /** Optional outlet context — not the settlement key */
+  brandId?: string
+  branchId?: string
   receiptId: string
   amount: number
   reason: string
@@ -153,7 +185,11 @@ export type PayoutOverride = {
 
 export type Transaction = {
   id: string
+  /** Organization — platform settlement unit */
   merchantId: string
+  /** Optional Brand / Branch context for triage (POS outlet) */
+  brandId?: string
+  branchId?: string
   amount: number
   surcharge: number
   settlementAmount: number
@@ -165,6 +201,7 @@ export type Transaction = {
   reviewedAt?: string
 }
 
+/** Period × Organization — settlement grain (not Brand subscription) */
 export type ReconciliationRow = {
   merchantId: string
   period: string
@@ -172,6 +209,33 @@ export type ReconciliationRow = {
   surchargeRevenue: number
   owedToMerchant: number
   settledAmount: number
+}
+
+/** Support inbox — end-customer submissions (not merchant Help ≠ this module) */
+export type SupportPriority = 'high' | 'normal' | 'low'
+export type SupportStatus = 'open' | 'in_progress' | 'resolved'
+export type SupportChannel = 'in_app' | 'email' | 'web'
+export type SupportType =
+  | 'payment'
+  | 'access'
+  | 'billing'
+  | 'product'
+  | 'other'
+
+export type SupportSubmission = {
+  id: string
+  /** Organization context when known */
+  merchantId: string | null
+  subject: string
+  type: SupportType
+  channel: SupportChannel
+  priority: SupportPriority
+  status: SupportStatus
+  submittedAt: string
+  body: string
+  customerName: string
+  resolutionNotes: string
+  resolvedAt: string | null
 }
 
 export type AuditEntry = {

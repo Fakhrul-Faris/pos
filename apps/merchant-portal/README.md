@@ -1,8 +1,9 @@
 # Merchant Portal
 
-Owner web app for **O-xx screens** — dashboard, schedule, settings.
+Web app for shop **Owners** - schedule, catalogue, people, payments oversight, settings (**O-xx** screens).
 
-**Spec:** [`docs/modules/barbershop/ui.md`](../../docs/modules/barbershop/ui.md) · Part 3  
+**IA SSOT (sole):** [`docs/platform/Miki Merchant Portal - Designer IA Brief.md`](../../docs/platform/Miki%20Merchant%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md)  
+**Screen specs:** [`docs/modules/barbershop/ui.md`](../../docs/modules/barbershop/ui.md) · Part 3  
 **Direction:** [`docs/design/portal-personality-brief.md`](../../docs/design/portal-personality-brief.md)  
 **Theme:** [`docs/design/themes/visitors-design.md`](../../docs/design/themes/visitors-design.md)
 

@@ -79,8 +79,8 @@ export function TransactionDetailDrawer({
             </h3>
             <dl className="divide-y divide-fog">
               <DetailRow label="Gross" value={formatMoney(transaction.gross, false)} />
-              <DetailRow label="Fee" value={transaction.fee > 0 ? formatMoney(transaction.fee) : '—'} />
-              <DetailRow label="Net" value={transaction.net > 0 ? formatMoney(transaction.net) : '—'} />
+              <DetailRow label="Fee" value={transaction.fee > 0 ? formatMoney(transaction.fee) : '-'} />
+              <DetailRow label="Net" value={transaction.net > 0 ? formatMoney(transaction.net) : '-'} />
             </dl>
           </section>
 

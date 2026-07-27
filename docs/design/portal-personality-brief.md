@@ -1,7 +1,8 @@
 # Merchant Portal — Personality Brief
 
 **Status:** Locked direction · v1  
-**Applies to:** Merchant Portal (Owner web) · O-xx screens  
+**Applies to:** Merchant Portal (Owner role) · O-xx screens  
+**IA SSOT:** [`../platform/Miki Merchant Portal — Designer IA Brief.md`](../platform/Miki%20Merchant%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md)  
 **Token SSOT:** [`../platform/design-system/tokens.json`](../platform/design-system/tokens.json)  
 **Full spec:** [`../platform/design-system/specification.md`](../platform/design-system/specification.md) §3.3
 

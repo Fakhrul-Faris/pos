@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import { useAdminStore } from '@/data/store'
-import { formatDateTime, formatRM, merchantName } from '@/data/mock'
+import { formatDateTime, formatRM, merchantName, primaryOwner } from '@/data/mock'
 import type { ReasonCode } from '@/data/types'
 import { REASON_CODE_LABELS } from '@/data/types'
 import { DualStatusBadge } from '../StatusBadge'
+import { Button } from '../ui/Button'
+import { EmptyRow, Table, TBody, TD, TH, THead, TR } from '../ui/Table'
 
 type Props = {
   onOpenMerchant: (id: string) => void
@@ -35,35 +37,30 @@ export function Reconciliation({ onOpenMerchant }: Props) {
   )
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4">
       <header className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-ui text-carbon">
-            Reconciliation
-          </h1>
-          <p className="mt-1 text-sm text-graphite">
-            HitPay balance vs amounts owed. Settlement still runs outside the
-            system (manual DuitNow). Overrides need dual approval + reason code.
+          <h1 className="page-title">Reconciliation</h1>
+          <p className="page-desc">
+            HitPay collected vs owed per organization. Settlement runs outside
+            Miki — not platform Accounting / GL.
           </p>
         </div>
-        <button type="button" className="btn-primary" onClick={() => setShowForm(true)}>
+        <Button size="small" onClick={() => setShowForm(true)}>
           Request payout override
-        </button>
+        </Button>
       </header>
 
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
         {[
           ['HitPay collected', totals.hitpay],
           ['Surcharge revenue', totals.surcharge],
-          ['Owed to merchants', totals.owed],
+          ['Owed to orgs', totals.owed],
           ['Actually settled', totals.settled],
         ].map(([label, value]) => (
-          <div
-            key={label as string}
-            className="rounded-xl border border-fog bg-paper-white p-4 shadow-subtle-2"
-          >
-            <p className="text-xs uppercase tracking-[0.08em] text-ash">{label}</p>
-            <p className="mt-2 text-xl font-semibold tabular-nums text-carbon">
+          <div key={label as string} className="geist-panel p-3.5">
+            <p className="text-[11px] font-medium text-gray-900">{label}</p>
+            <p className="mt-1.5 font-mono text-xl font-semibold tabular-nums text-gray-1000">
               {formatRM(value as number)}
             </p>
           </div>
@@ -71,47 +68,57 @@ export function Reconciliation({ onOpenMerchant }: Props) {
       </div>
 
       {showForm && (
-        <div className="rounded-xl border border-fog bg-paper-white p-5 shadow-subtle-2">
-          <h2 className="text-sm font-semibold text-carbon">Payout override</h2>
+        <div className="geist-panel p-4">
+          <h2 className="text-[13px] font-semibold text-gray-1000">
+            Payout override
+          </h2>
+          <p className="mt-1 text-[11px] text-gray-900">
+            Dual approval. Targets organization payout (owner bank), not Brand
+            SaaS.
+          </p>
           <div className="mt-3 grid grid-cols-2 gap-3">
-            <label className="text-xs text-ash">
-              Merchant
+            <label className="text-[11px] text-gray-900">
+              Organization
               <select
                 value={form.merchantId}
                 onChange={(e) => setForm({ ...form, merchantId: e.target.value })}
-                className="mt-1 w-full rounded-lg border border-fog px-3 py-2 text-sm"
+                className="geist-input mt-1"
               >
-                {store.merchants.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.businessName}
-                  </option>
-                ))}
+                {store.merchants.map((m) => {
+                  const owner = primaryOwner(m)
+                  return (
+                    <option key={m.id} value={m.id}>
+                      {m.businessName}
+                      {owner ? ` · ${owner.bankAccountMasked}` : ''}
+                    </option>
+                  )
+                })}
               </select>
             </label>
-            <label className="text-xs text-ash">
+            <label className="text-[11px] text-gray-900">
               Period
               <input
                 value={form.period}
                 onChange={(e) => setForm({ ...form, period: e.target.value })}
-                className="mt-1 w-full rounded-lg border border-fog px-3 py-2 text-sm"
+                className="geist-input mt-1"
               />
             </label>
-            <label className="text-xs text-ash">
+            <label className="text-[11px] text-gray-900">
               Amount (RM)
               <input
                 value={form.amount}
                 onChange={(e) => setForm({ ...form, amount: e.target.value })}
-                className="mt-1 w-full rounded-lg border border-fog px-3 py-2 text-sm"
+                className="geist-input mt-1"
               />
             </label>
-            <label className="text-xs text-ash">
+            <label className="text-[11px] text-gray-900">
               Reason code
               <select
                 value={form.reasonCode}
                 onChange={(e) =>
                   setForm({ ...form, reasonCode: e.target.value as ReasonCode })
                 }
-                className="mt-1 w-full rounded-lg border border-fog px-3 py-2 text-sm"
+                className="geist-input mt-1"
               >
                 {(Object.keys(REASON_CODE_LABELS) as ReasonCode[]).map((c) => (
                   <option key={c} value={c}>
@@ -121,31 +128,30 @@ export function Reconciliation({ onOpenMerchant }: Props) {
               </select>
             </label>
             {form.reasonCode === 'other' && (
-              <label className="col-span-2 text-xs text-ash">
+              <label className="col-span-2 text-[11px] text-gray-900">
                 Note (required)
                 <input
                   value={form.reasonCodeNote}
                   onChange={(e) =>
                     setForm({ ...form, reasonCodeNote: e.target.value })
                   }
-                  className="mt-1 w-full rounded-lg border border-fog px-3 py-2 text-sm"
+                  className="geist-input mt-1"
                 />
               </label>
             )}
-            <label className="col-span-2 text-xs text-ash">
+            <label className="col-span-2 text-[11px] text-gray-900">
               Notes
               <input
                 value={form.notes}
                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                className="mt-1 w-full rounded-lg border border-fog px-3 py-2 text-sm"
+                className="geist-input mt-1"
               />
             </label>
           </div>
-          {error && <p className="mt-2 text-xs text-ember">{error}</p>}
-          <div className="mt-4 flex gap-2">
-            <button
-              type="button"
-              className="btn-primary"
+          {error && <p className="mt-2 text-[11px] text-red-900">{error}</p>}
+          <div className="mt-3 flex gap-2">
+            <Button
+              size="small"
               onClick={() => {
                 const amount = Number(form.amount)
                 if (!amount) {
@@ -168,94 +174,106 @@ export function Reconciliation({ onOpenMerchant }: Props) {
                 setError('')
               }}
             >
-              Submit (counts as first approval)
-            </button>
-            <button
-              type="button"
-              className="btn-ghost"
+              Submit (first approval)
+            </Button>
+            <Button
+              size="small"
+              variant="secondary"
               onClick={() => setShowForm(false)}
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       )}
 
-      <section className="overflow-hidden rounded-xl border border-fog bg-paper-white shadow-subtle-2">
-        <div className="border-b border-fog px-4 py-3">
-          <h2 className="text-sm font-semibold text-carbon">Per-merchant period</h2>
+      <section>
+        <div className="mb-2">
+          <h2 className="text-[13px] font-semibold text-gray-1000">
+            Per-organization period
+          </h2>
+          <p className="text-[11px] text-gray-900">
+            Grain = Organization (payout bank). Brand breakdown deferred.
+          </p>
         </div>
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-fog bg-mist/60 text-xs uppercase tracking-[0.06em] text-ash">
+        <Table>
+          <THead>
             <tr>
-              <th className="px-4 py-3 font-medium">Merchant</th>
-              <th className="px-4 py-3 font-medium">Period</th>
-              <th className="px-4 py-3 font-medium">HitPay</th>
-              <th className="px-4 py-3 font-medium">Surcharge</th>
-              <th className="px-4 py-3 font-medium">Owed</th>
-              <th className="px-4 py-3 font-medium">Settled</th>
-              <th className="px-4 py-3 font-medium">Gap</th>
+              <TH>Organization</TH>
+              <TH>Period</TH>
+              <TH>HitPay</TH>
+              <TH>Surcharge</TH>
+              <TH>Owed</TH>
+              <TH>Settled</TH>
+              <TH>Gap</TH>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-fog">
+          </THead>
+          <TBody>
             {store.reconciliation.map((r) => {
               const gap = r.owedToMerchant - r.settledAmount
+              const org = store.merchants.find((m) => m.id === r.merchantId)
+              const owner = org ? primaryOwner(org) : undefined
               return (
-                <tr key={`${r.merchantId}-${r.period}`}>
-                  <td className="px-4 py-3">
+                <TR key={`${r.merchantId}-${r.period}`}>
+                  <TD>
                     <button
                       type="button"
                       onClick={() => onOpenMerchant(r.merchantId)}
-                      className="font-medium text-lavender hover:underline"
+                      className="font-medium text-blue-900 hover:underline"
                     >
                       {merchantName(store.merchants, r.merchantId)}
                     </button>
-                  </td>
-                  <td className="px-4 py-3 text-xs text-ash">{r.period}</td>
-                  <td className="px-4 py-3 tabular-nums">
+                    {owner && (
+                      <p className="text-[11px] text-gray-900">
+                        {owner.bankAccountMasked}
+                      </p>
+                    )}
+                  </TD>
+                  <TD muted>{r.period}</TD>
+                  <TD mono muted>
                     {formatRM(r.hitpayCollected)}
-                  </td>
-                  <td className="px-4 py-3 tabular-nums">
+                  </TD>
+                  <TD mono muted>
                     {formatRM(r.surchargeRevenue)}
-                  </td>
-                  <td className="px-4 py-3 tabular-nums">
+                  </TD>
+                  <TD mono muted>
                     {formatRM(r.owedToMerchant)}
-                  </td>
-                  <td className="px-4 py-3 tabular-nums">
+                  </TD>
+                  <TD mono muted>
                     {formatRM(r.settledAmount)}
-                  </td>
-                  <td
-                    className={[
-                      'px-4 py-3 tabular-nums font-medium',
-                      gap > 0 ? 'text-ember' : 'text-mint',
-                    ].join(' ')}
+                  </TD>
+                  <TD
+                    mono
+                    className={
+                      gap > 0
+                        ? 'font-medium text-red-900'
+                        : 'font-medium text-green-900'
+                    }
                   >
                     {formatRM(gap)}
-                  </td>
-                </tr>
+                  </TD>
+                </TR>
               )
             })}
-          </tbody>
-        </table>
+          </TBody>
+        </Table>
       </section>
 
-      <section className="overflow-hidden rounded-xl border border-fog bg-paper-white shadow-subtle-2">
-        <div className="border-b border-fog px-4 py-3">
-          <h2 className="text-sm font-semibold text-carbon">
-            Payout override queue
-          </h2>
-        </div>
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-fog bg-mist/60 text-xs uppercase tracking-[0.06em] text-ash">
+      <section>
+        <h2 className="mb-2 text-[13px] font-semibold text-gray-1000">
+          Payout override queue
+        </h2>
+        <Table>
+          <THead>
             <tr>
-              <th className="px-4 py-3 font-medium">Merchant</th>
-              <th className="px-4 py-3 font-medium">Amount</th>
-              <th className="px-4 py-3 font-medium">Status</th>
-              <th className="px-4 py-3 font-medium">Logged</th>
-              <th className="px-4 py-3 font-medium">Actions</th>
+              <TH>Organization</TH>
+              <TH>Amount</TH>
+              <TH>Status</TH>
+              <TH>Logged</TH>
+              <TH>Actions</TH>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-fog">
+          </THead>
+          <TBody>
             {store.payoutOverrides.map((p) => {
               const canApprove =
                 (p.status === 'pending_second' || p.status === 'pending_first') &&
@@ -263,61 +281,65 @@ export function Reconciliation({ onOpenMerchant }: Props) {
                 p.loggedBy !== store.currentAdmin.id &&
                 p.firstApprover !== store.currentAdmin.id
               return (
-                <tr key={p.id}>
-                  <td className="px-4 py-3">
+                <TR key={p.id}>
+                  <TD>
                     <button
                       type="button"
                       onClick={() => onOpenMerchant(p.merchantId)}
-                      className="font-medium text-lavender hover:underline"
+                      className="font-medium text-blue-900 hover:underline"
                     >
                       {merchantName(store.merchants, p.merchantId)}
                     </button>
-                    <p className="text-xs text-ash">{p.period}</p>
-                  </td>
-                  <td className="px-4 py-3 tabular-nums">{formatRM(p.amount)}</td>
-                  <td className="px-4 py-3">
+                    <p className="text-[11px] text-gray-900">{p.period}</p>
+                  </TD>
+                  <TD mono muted>
+                    {formatRM(p.amount)}
+                  </TD>
+                  <TD>
                     <DualStatusBadge status={p.status} />
-                  </td>
-                  <td className="px-4 py-3 text-xs text-ash">
-                    {p.loggedBy} · {formatDateTime(p.loggedAt)}
-                  </td>
-                  <td className="px-4 py-3">
+                  </TD>
+                  <TD muted>
+                    <span className="text-[11px]">
+                      {p.loggedBy} · {formatDateTime(p.loggedAt)}
+                    </span>
+                  </TD>
+                  <TD>
                     {canApprove ? (
-                      <div className="flex gap-1.5">
-                        <button
-                          type="button"
-                          className="rounded-full bg-mint px-2.5 py-1 text-xs font-medium text-paper-white"
+                      <div className="flex gap-1">
+                        <Button
+                          size="tiny"
+                          variant="secondary"
+                          className="!border-green-700 !text-green-900"
                           onClick={() => store.approvePayoutOverride(p.id)}
                         >
                           Approve
-                        </button>
-                        <button
-                          type="button"
-                          className="rounded-full bg-ember px-2.5 py-1 text-xs font-medium text-paper-white"
+                        </Button>
+                        <Button
+                          size="tiny"
+                          variant="error"
                           onClick={() => {
                             const reason = window.prompt('Reject reason?')
                             if (reason) store.rejectPayoutOverride(p.id, reason)
                           }}
                         >
                           Reject
-                        </button>
+                        </Button>
                       </div>
-                    ) : p.status === 'pending_second' || p.status === 'pending_first' ? (
-                      <span className="text-xs text-ash">Waiting for another admin</span>
+                    ) : p.status === 'pending_second' ||
+                      p.status === 'pending_first' ? (
+                      <span className="text-[11px] text-gray-900">
+                        Waiting for another admin
+                      </span>
                     ) : null}
-                  </td>
-                </tr>
+                  </TD>
+                </TR>
               )
             })}
             {store.payoutOverrides.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-ash">
-                  No payout overrides.
-                </td>
-              </tr>
+              <EmptyRow colSpan={5} text="No payout overrides." />
             )}
-          </tbody>
-        </table>
+          </TBody>
+        </Table>
       </section>
     </div>
   )

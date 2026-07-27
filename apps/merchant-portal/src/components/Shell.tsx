@@ -22,8 +22,8 @@ export function Shell({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   return (
-    <div className="flex min-h-0 flex-1 items-stretch justify-center gap-0 p-1.5">
-      <div className="mx-auto flex h-full w-full max-w-7xl flex-1 flex-col gap-1.5 overflow-visible md:flex-row">
+    <div className="flex min-h-0 flex-1 items-stretch gap-0 p-1.5">
+      <div className="flex h-full w-full min-w-0 flex-1 flex-col gap-1.5 overflow-visible md:flex-row">
         <Sidebar
           businessName={businessName}
           staffLabel={staffLabel}
@@ -32,7 +32,7 @@ export function Shell({
           onNavigate={onNavigate}
           onToggle={() => setSidebarCollapsed((prev) => !prev)}
         />
-        <main className="m-px min-h-0 min-w-0 flex-1 overflow-y-auto rounded-xl bg-paper-white">
+        <main className="m-px min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-auto rounded-xl bg-paper-white">
           {children}
         </main>
       </div>

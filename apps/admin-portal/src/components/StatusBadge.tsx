@@ -2,30 +2,25 @@
 
 import type { MerchantStatus, RefundStatus, DualApprovalStatus } from '@/data/types'
 import { STATUS_LABELS } from '@/data/types'
+import { Badge } from './ui/Badge'
 
-const merchantStatusClass: Record<MerchantStatus, string> = {
-  active: 'bg-mint-wash text-mint',
-  suspension_pending: 'bg-[#fff4e0] text-amber',
-  suspended: 'bg-[#ffe8e0] text-ember',
-  churned: 'bg-mist text-ash',
+const merchantTone: Record<MerchantStatus, 'green' | 'amber' | 'red' | 'gray'> = {
+  active: 'green',
+  suspension_pending: 'amber',
+  suspended: 'red',
+  churned: 'gray',
 }
 
 export function MerchantStatusBadge({ status }: { status: MerchantStatus }) {
-  return (
-    <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${merchantStatusClass[status]}`}
-    >
-      {STATUS_LABELS[status]}
-    </span>
-  )
+  return <Badge tone={merchantTone[status]}>{STATUS_LABELS[status]}</Badge>
 }
 
-const refundClass: Record<RefundStatus, string> = {
-  pending_first: 'bg-mist text-graphite',
-  pending_second: 'bg-[#fff4e0] text-amber',
-  approved: 'bg-mint-wash text-mint',
-  rejected: 'bg-[#ffe8e0] text-ember',
-  processed: 'bg-mist text-ash',
+const refundTone: Record<RefundStatus, 'gray' | 'amber' | 'green' | 'red'> = {
+  pending_first: 'gray',
+  pending_second: 'amber',
+  approved: 'green',
+  rejected: 'red',
+  processed: 'gray',
 }
 
 const refundLabel: Record<RefundStatus, string> = {
@@ -37,20 +32,14 @@ const refundLabel: Record<RefundStatus, string> = {
 }
 
 export function RefundStatusBadge({ status }: { status: RefundStatus }) {
-  return (
-    <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${refundClass[status]}`}
-    >
-      {refundLabel[status]}
-    </span>
-  )
+  return <Badge tone={refundTone[status]}>{refundLabel[status]}</Badge>
 }
 
-const dualClass: Record<DualApprovalStatus, string> = {
-  pending_first: 'bg-mist text-graphite',
-  pending_second: 'bg-[#fff4e0] text-amber',
-  approved: 'bg-mint-wash text-mint',
-  rejected: 'bg-[#ffe8e0] text-ember',
+const dualTone: Record<DualApprovalStatus, 'gray' | 'amber' | 'green' | 'red'> = {
+  pending_first: 'gray',
+  pending_second: 'amber',
+  approved: 'green',
+  rejected: 'red',
 }
 
 const dualLabel: Record<DualApprovalStatus, string> = {
@@ -61,19 +50,9 @@ const dualLabel: Record<DualApprovalStatus, string> = {
 }
 
 export function DualStatusBadge({ status }: { status: DualApprovalStatus }) {
-  return (
-    <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${dualClass[status]}`}
-    >
-      {dualLabel[status]}
-    </span>
-  )
+  return <Badge tone={dualTone[status]}>{dualLabel[status]}</Badge>
 }
 
 export function FlagBadge() {
-  return (
-    <span className="inline-flex items-center rounded-full bg-[#ffe8e0] px-2 py-0.5 text-xs font-medium text-ember">
-      Flagged
-    </span>
-  )
+  return <Badge tone="red">Flagged</Badge>
 }

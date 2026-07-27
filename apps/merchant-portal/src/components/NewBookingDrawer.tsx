@@ -3,12 +3,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
   calendarToday,
-  serviceOptions,
   type BookingSource,
   type VerticalLabels,
 } from '../data/mock'
 import { useBookings } from '../data/bookingsStore'
 import type { NewBookingDefaults, NewBookingInput } from '../data/bookingsStore'
+import { useServices } from '../data/servicesStore'
 import { IconX } from './icons'
 
 type NewBookingDrawerProps = {
@@ -50,11 +50,11 @@ function generateTimeSlots() {
 
 const timeSlots = generateTimeSlots()
 
-function emptyForm(defaults?: NewBookingDefaults) {
+function emptyForm(defaults?: NewBookingDefaults, fallbackServiceId?: string) {
   return {
     customer: defaults?.customer ?? '',
     phone: defaults?.phone ?? '',
-    serviceId: defaults?.serviceId ?? serviceOptions[0].id,
+    serviceId: defaults?.serviceId ?? fallbackServiceId ?? 'haircut',
     staffName: defaults?.staffName ?? '',
     date: defaults?.date ?? calendarToday,
     startMinutes: defaults?.startMinutes ?? 11 * 60,
@@ -74,16 +74,18 @@ export function NewBookingDrawer({
 }: NewBookingDrawerProps) {
   const { staff, findBookingConflict, suggestNextAvailableStart, findAnyAvailableStaffId } =
     useBookings()
-  const [form, setForm] = useState(() => emptyForm(defaults))
+  const { activeServices, services } = useServices()
+  const catalog = activeServices.length > 0 ? activeServices : services
+  const [form, setForm] = useState(() => emptyForm(defaults, catalog[0]?.id))
 
   useEffect(() => {
     if (!open) return
-    const base = emptyForm(defaults)
+    const base = emptyForm(defaults, catalog[0]?.id)
     setForm({
       ...base,
       staffName: base.staffName || defaults?.staffName || staff[0]?.name || 'Anyone',
     })
-  }, [open, defaults, staff])
+  }, [open, defaults, staff, catalog])
 
   useEffect(() => {
     if (!open) return
@@ -95,8 +97,8 @@ export function NewBookingDrawer({
   }, [open, onClose])
 
   const selectedService = useMemo(
-    () => serviceOptions.find((s) => s.id === form.serviceId) ?? serviceOptions[0],
-    [form.serviceId],
+    () => catalog.find((s) => s.id === form.serviceId) ?? catalog[0],
+    [form.serviceId, catalog],
   )
 
   const staffChoices = useMemo(() => [...staff.map((s) => s.name), 'Anyone'], [staff])
@@ -112,8 +114,16 @@ export function NewBookingDrawer({
       date: form.date,
       startMinutes: form.startMinutes,
       durationMinutes: selectedService.durationMinutes,
+      bufferMinutes: selectedService.bufferMinutes,
     })
-  }, [findAnyAvailableStaffId, form.date, form.staffName, form.startMinutes, selectedService.durationMinutes])
+  }, [
+    findAnyAvailableStaffId,
+    form.date,
+    form.staffName,
+    form.startMinutes,
+    selectedService.durationMinutes,
+    selectedService.bufferMinutes,
+  ])
 
   const anyoneAssignedStaffName = useMemo(() => {
     if (!anyoneAssignedStaffId) return null
@@ -127,6 +137,7 @@ export function NewBookingDrawer({
       date: form.date,
       startMinutes: form.startMinutes,
       durationMinutes: selectedService.durationMinutes,
+      bufferMinutes: selectedService.bufferMinutes,
       ignoreBookingId: editBookingId,
     })
   }, [
@@ -134,6 +145,7 @@ export function NewBookingDrawer({
     form.date,
     form.startMinutes,
     selectedService.durationMinutes,
+    selectedService.bufferMinutes,
     selectedStaffId,
     editBookingId,
   ])
@@ -145,6 +157,7 @@ export function NewBookingDrawer({
       date: form.date,
       startMinutes: form.startMinutes,
       durationMinutes: selectedService.durationMinutes,
+      bufferMinutes: selectedService.bufferMinutes,
     })
   }, [
     conflict,
@@ -153,6 +166,7 @@ export function NewBookingDrawer({
     form.date,
     form.startMinutes,
     selectedService.durationMinutes,
+    selectedService.bufferMinutes,
   ])
 
   const canAssignAnyone = form.staffName !== 'Anyone' || anyoneAssignedStaffId !== null
@@ -254,7 +268,7 @@ export function NewBookingDrawer({
                   onChange={(e) => setForm((f) => ({ ...f, serviceId: e.target.value }))}
                   className="w-full rounded-lg border border-fog bg-paper-white px-3 py-2 text-sm text-carbon outline-none focus:border-lavender"
                 >
-                  {serviceOptions.map((s) => (
+                  {catalog.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.label} · {s.durationMinutes} min · RM {s.price}
                     </option>
@@ -390,7 +404,7 @@ export function NewBookingDrawer({
                 <textarea
                   value={form.notes}
                   onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
-                  placeholder="Optional — preferences, allergies, etc."
+                  placeholder="Optional - preferences, allergies, etc."
                   rows={2}
                   className="w-full resize-none rounded-lg border border-fog bg-paper-white px-3 py-2 text-sm text-carbon outline-none focus:border-lavender"
                 />

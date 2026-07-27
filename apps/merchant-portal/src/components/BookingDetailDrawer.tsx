@@ -131,7 +131,7 @@ export function BookingDetailDrawer({
               <DetailRow label="Date" value={formatDate(booking.date)} />
               <DetailRow
                 label="Time"
-                value={`${formatTime(booking.startMinutes)} – ${formatTime(endMinutes)}`}
+                value={`${formatTime(booking.startMinutes)} - ${formatTime(endMinutes)}`}
               />
               <DetailRow label="Duration" value={`${booking.durationMinutes} min`} />
               <DetailRow label="Service" value={booking.services} />

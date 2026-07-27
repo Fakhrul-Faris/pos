@@ -17,6 +17,7 @@ import {
   INITIAL_POSTS,
   INITIAL_RECONCILIATION,
   INITIAL_REFUNDS,
+  INITIAL_SUPPORT,
   INITIAL_TRANSACTIONS,
 } from './mock'
 import type {
@@ -35,6 +36,9 @@ import type {
   ReconciliationRow,
   RefundRequest,
   SocialPlatform,
+  SupportPriority,
+  SupportStatus,
+  SupportSubmission,
   Transaction,
 } from './types'
 
@@ -45,6 +49,7 @@ type AdminStore = {
   transactions: Transaction[]
   reconciliation: ReconciliationRow[]
   payoutOverrides: PayoutOverride[]
+  support: SupportSubmission[]
   audit: AuditEntry[]
   experiments: MarketingExperiment[]
   posts: MarketingPost[]
@@ -54,10 +59,17 @@ type AdminStore = {
   addNote: (merchantId: string, body: string) => void
   suspendMerchant: (merchantId: string, note?: string) => void
   reactivateMerchant: (merchantId: string, note?: string) => void
-  extendSubscription: (merchantId: string, days: number, note: string) => void
-  waiveSubscription: (merchantId: string, note: string) => void
+  extendSubscription: (
+    merchantId: string,
+    brandId: string,
+    days: number,
+    note: string,
+  ) => void
+  waiveSubscription: (merchantId: string, brandId: string, note: string) => void
   logRefund: (input: {
     merchantId: string
+    brandId?: string
+    branchId?: string
     receiptId: string
     amount: number
     reason: string
@@ -85,6 +97,9 @@ type AdminStore = {
     id: string,
     rejectReason: string,
   ) => { ok: boolean; error?: string }
+  updateSupportStatus: (id: string, status: SupportStatus) => void
+  updateSupportPriority: (id: string, priority: SupportPriority) => void
+  updateSupportNotes: (id: string, notes: string) => void
   createExperiment: (input: {
     name: string
     hypothesis: string
@@ -131,6 +146,7 @@ export function AdminStoreProvider({ children }: { children: ReactNode }) {
   const [transactions, setTransactions] = useState(INITIAL_TRANSACTIONS)
   const [reconciliation] = useState(INITIAL_RECONCILIATION)
   const [payoutOverrides, setPayoutOverrides] = useState(INITIAL_PAYOUT_OVERRIDES)
+  const [support, setSupport] = useState(INITIAL_SUPPORT)
   const [audit, setAudit] = useState(INITIAL_AUDIT)
   const [experiments, setExperiments] = useState(INITIAL_EXPERIMENTS)
   const [posts, setPosts] = useState(INITIAL_POSTS)
@@ -221,7 +237,12 @@ export function AdminStoreProvider({ children }: { children: ReactNode }) {
                 ...m.notes,
               ]
             : m.notes
-          return { ...m, status: 'suspended' as const, mrr: 0, notes }
+          return {
+            ...m,
+            status: 'suspended' as const,
+            notes,
+            brands: m.brands.map((b) => ({ ...b, mrr: 0 })),
+          }
         }),
       )
       pushAudit(currentAdmin, {
@@ -256,7 +277,17 @@ export function AdminStoreProvider({ children }: { children: ReactNode }) {
             ...m,
             status: 'active' as const,
             notes,
-            subscription: { ...m.subscription, status: 'active' as const, graceEndsAt: null },
+            brands: m.brands.map((b) => ({
+              ...b,
+              subscription: {
+                ...b.subscription,
+                status:
+                  b.subscription.status === 'cancelled'
+                    ? b.subscription.status
+                    : ('active' as const),
+                graceEndsAt: null,
+              },
+            })),
           }
         }),
       )
@@ -271,38 +302,45 @@ export function AdminStoreProvider({ children }: { children: ReactNode }) {
   )
 
   const extendSubscription = useCallback(
-    (merchantId: string, days: number, note: string) => {
+    (merchantId: string, brandId: string, days: number, note: string) => {
       if (!currentAdmin) return
       setMerchants((prev) =>
         prev.map((m) => {
           if (m.id !== merchantId) return m
-          const base = m.subscription.graceEndsAt
-            ? new Date(m.subscription.graceEndsAt)
-            : new Date()
-          base.setDate(base.getDate() + days)
           return {
             ...m,
             status: 'active',
-            subscription: {
-              ...m.subscription,
-              status: 'active',
-              graceEndsAt: null,
-              nextBillingDate: base.toISOString().slice(0, 10),
-            },
+            brands: m.brands.map((b) => {
+              if (b.id !== brandId) return b
+              const base = b.subscription.graceEndsAt
+                ? new Date(b.subscription.graceEndsAt)
+                : new Date()
+              base.setDate(base.getDate() + days)
+              return {
+                ...b,
+                subscription: {
+                  ...b.subscription,
+                  status: 'active',
+                  graceEndsAt: null,
+                  nextBillingDate: base.toISOString().slice(0, 10),
+                },
+              }
+            }),
           }
         }),
       )
       pushAudit(currentAdmin, {
         action: 'subscription_extended',
         merchantId,
-        detail: `Extended ${days} days — ${note}`,
+        entityId: brandId,
+        detail: `Extended ${days} days - ${note}`,
       })
     },
     [currentAdmin, pushAudit],
   )
 
   const waiveSubscription = useCallback(
-    (merchantId: string, note: string) => {
+    (merchantId: string, brandId: string, note: string) => {
       if (!currentAdmin) return
       setMerchants((prev) =>
         prev.map((m) => {
@@ -310,26 +348,33 @@ export function AdminStoreProvider({ children }: { children: ReactNode }) {
           return {
             ...m,
             status: 'active',
-            subscription: {
-              ...m.subscription,
-              status: 'waived',
-              graceEndsAt: null,
-              paymentHistory: [
-                {
-                  id: uid('pay'),
-                  date: nowIso().slice(0, 10),
-                  amount: m.mrr || m.subscription.lastPaymentAmount || 0,
-                  status: 'waived' as const,
+            brands: m.brands.map((b) => {
+              if (b.id !== brandId) return b
+              return {
+                ...b,
+                subscription: {
+                  ...b.subscription,
+                  status: 'waived',
+                  graceEndsAt: null,
+                  paymentHistory: [
+                    {
+                      id: uid('pay'),
+                      date: nowIso().slice(0, 10),
+                      amount: b.mrr || b.subscription.lastPaymentAmount || 0,
+                      status: 'waived' as const,
+                    },
+                    ...b.subscription.paymentHistory,
+                  ],
                 },
-                ...m.subscription.paymentHistory,
-              ],
-            },
+              }
+            }),
           }
         }),
       )
       pushAudit(currentAdmin, {
         action: 'subscription_waived',
         merchantId,
+        entityId: brandId,
         detail: note,
       })
     },
@@ -339,6 +384,8 @@ export function AdminStoreProvider({ children }: { children: ReactNode }) {
   const logRefund = useCallback(
     (input: {
       merchantId: string
+      brandId?: string
+      branchId?: string
       receiptId: string
       amount: number
       reason: string
@@ -594,6 +641,68 @@ export function AdminStoreProvider({ children }: { children: ReactNode }) {
     [currentAdmin, payoutOverrides, pushAudit],
   )
 
+  const updateSupportStatus = useCallback(
+    (id: string, status: SupportStatus) => {
+      if (!currentAdmin) return
+      setSupport((prev) =>
+        prev.map((r) => {
+          if (r.id !== id) return r
+          return {
+            ...r,
+            status,
+            resolvedAt: status === 'resolved' ? nowIso() : null,
+          }
+        }),
+      )
+      const row = support.find((s) => s.id === id)
+      pushAudit(currentAdmin, {
+        action: 'support_status_updated',
+        merchantId: row?.merchantId ?? undefined,
+        entityId: id,
+        after: status,
+        detail: `Support ${id} → ${status}`,
+      })
+    },
+    [currentAdmin, support, pushAudit],
+  )
+
+  const updateSupportPriority = useCallback(
+    (id: string, priority: SupportPriority) => {
+      if (!currentAdmin) return
+      setSupport((prev) =>
+        prev.map((r) => (r.id === id ? { ...r, priority } : r)),
+      )
+      const row = support.find((s) => s.id === id)
+      pushAudit(currentAdmin, {
+        action: 'support_priority_updated',
+        merchantId: row?.merchantId ?? undefined,
+        entityId: id,
+        after: priority,
+        detail: `Support ${id} priority → ${priority}`,
+      })
+    },
+    [currentAdmin, support, pushAudit],
+  )
+
+  const updateSupportNotes = useCallback(
+    (id: string, notes: string) => {
+      if (!currentAdmin) return
+      setSupport((prev) =>
+        prev.map((r) =>
+          r.id === id ? { ...r, resolutionNotes: notes } : r,
+        ),
+      )
+      const row = support.find((s) => s.id === id)
+      pushAudit(currentAdmin, {
+        action: 'support_note_added',
+        merchantId: row?.merchantId ?? undefined,
+        entityId: id,
+        detail: `Updated resolution notes on ${id}`,
+      })
+    },
+    [currentAdmin, support, pushAudit],
+  )
+
   const createExperiment = useCallback(
     (input: {
       name: string
@@ -735,6 +844,7 @@ export function AdminStoreProvider({ children }: { children: ReactNode }) {
       transactions,
       reconciliation,
       payoutOverrides,
+      support,
       audit,
       experiments,
       posts,
@@ -754,6 +864,9 @@ export function AdminStoreProvider({ children }: { children: ReactNode }) {
       requestPayoutOverride,
       approvePayoutOverride,
       rejectPayoutOverride,
+      updateSupportStatus,
+      updateSupportPriority,
+      updateSupportNotes,
       createExperiment,
       concludeExperiment,
       addPost,
@@ -766,6 +879,7 @@ export function AdminStoreProvider({ children }: { children: ReactNode }) {
       transactions,
       reconciliation,
       payoutOverrides,
+      support,
       audit,
       experiments,
       posts,
@@ -785,6 +899,9 @@ export function AdminStoreProvider({ children }: { children: ReactNode }) {
       requestPayoutOverride,
       approvePayoutOverride,
       rejectPayoutOverride,
+      updateSupportStatus,
+      updateSupportPriority,
+      updateSupportNotes,
       createExperiment,
       concludeExperiment,
       addPost,

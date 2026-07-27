@@ -31,13 +31,13 @@ export function Marketing({ onOpenExperiment }: Props) {
     store.posts.filter((p) => p.experimentId === id).length
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4">
       <header className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-ui text-carbon">
+          <h1 className="page-title">
             Marketing
           </h1>
-          <p className="mt-1 text-sm text-graphite">
+          <p className="page-desc">
             Organic experiment log — compare hooks and platforms, not vanity
             dashboards. Paid ads out of scope.
           </p>
@@ -59,12 +59,8 @@ export function Marketing({ onOpenExperiment }: Props) {
             key={id}
             type="button"
             onClick={() => setTab(id)}
-            className={[
-              'rounded-full px-3 py-1.5 text-xs font-medium',
-              tab === id
-                ? 'bg-carbon text-paper-white'
-                : 'bg-mist text-graphite hover:bg-fog',
-            ].join(' ')}
+            data-active={tab === id ? 'true' : 'false'}
+            className="geist-chip"
           >
             {label}
           </button>
@@ -72,48 +68,48 @@ export function Marketing({ onOpenExperiment }: Props) {
       </div>
 
       {showForm && (
-        <div className="rounded-xl border border-fog bg-paper-white p-5 shadow-subtle-2">
-          <h2 className="text-sm font-semibold text-carbon">Create experiment</h2>
+        <div className="geist-panel p-4">
+          <h2 className="text-sm font-semibold text-gray-1000">Create experiment</h2>
           <div className="mt-3 grid grid-cols-2 gap-3">
-            <label className="col-span-2 text-xs text-ash">
+            <label className="col-span-2 text-xs text-gray-900">
               Name
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Week 3: pain-point hooks"
-                className="mt-1 w-full rounded-lg border border-fog px-3 py-2 text-sm outline-none focus:border-lavender"
+                className="mt-1 w-full rounded-[6px] border border-gray-400 px-3 py-2 text-sm outline-none focus:border-gray-600"
               />
             </label>
-            <label className="col-span-2 text-xs text-ash">
+            <label className="col-span-2 text-xs text-gray-900">
               Hypothesis
               <textarea
                 value={form.hypothesis}
                 onChange={(e) => setForm({ ...form, hypothesis: e.target.value })}
                 rows={2}
                 placeholder="What angle are we testing, on which audience?"
-                className="mt-1 w-full rounded-lg border border-fog px-3 py-2 text-sm outline-none focus:border-lavender"
+                className="mt-1 w-full rounded-[6px] border border-gray-400 px-3 py-2 text-sm outline-none focus:border-gray-600"
               />
             </label>
-            <label className="text-xs text-ash">
+            <label className="text-xs text-gray-900">
               Start date
               <input
                 type="date"
                 value={form.startDate}
                 onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-                className="mt-1 w-full rounded-lg border border-fog px-3 py-2 text-sm"
+                className="geist-input mt-1"
               />
             </label>
-            <label className="text-xs text-ash">
+            <label className="text-xs text-gray-900">
               End date (optional)
               <input
                 type="date"
                 value={form.endDate}
                 onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-                className="mt-1 w-full rounded-lg border border-fog px-3 py-2 text-sm"
+                className="geist-input mt-1"
               />
             </label>
           </div>
-          {error && <p className="mt-2 text-xs text-ember">{error}</p>}
+          {error && <p className="mt-2 text-xs text-red-900">{error}</p>}
           <div className="mt-4 flex gap-2">
             <button
               type="button"
@@ -156,57 +152,57 @@ export function Marketing({ onOpenExperiment }: Props) {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-xl border border-fog bg-paper-white shadow-subtle-2">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-fog bg-mist/60 text-xs uppercase tracking-[0.06em] text-ash">
+      <div className="geist-panel overflow-hidden">
+        <table className="geist-table">
+          <thead>
             <tr>
-              <th className="px-4 py-3 font-medium">Experiment</th>
-              <th className="px-4 py-3 font-medium">Status</th>
-              <th className="px-4 py-3 font-medium">Dates</th>
-              <th className="px-4 py-3 font-medium">Posts</th>
-              <th className="px-4 py-3 font-medium">Created by</th>
+              <th className="px-3 py-2 font-medium">Experiment</th>
+              <th className="px-3 py-2 font-medium">Status</th>
+              <th className="px-3 py-2 font-medium">Dates</th>
+              <th className="px-3 py-2 font-medium">Posts</th>
+              <th className="px-3 py-2 font-medium">Created by</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-fog">
+          <tbody className="divide-y divide-gray-400">
             {rows.map((e) => (
               <tr
                 key={e.id}
-                className="cursor-pointer hover:bg-mist"
+                className="cursor-pointer "
                 onClick={() => onOpenExperiment(e.id)}
               >
-                <td className="px-4 py-3">
-                  <p className="font-medium text-carbon">{e.name}</p>
-                  <p className="mt-0.5 line-clamp-1 text-xs text-ash">
+                <td className="px-3 py-2">
+                  <p className="font-medium text-gray-1000">{e.name}</p>
+                  <p className="mt-0.5 line-clamp-1 text-xs text-gray-900">
                     {e.hypothesis}
                   </p>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-3 py-2">
                   <span
                     className={[
-                      'inline-flex rounded-full px-2 py-0.5 text-xs font-medium',
+                      'inline-flex rounded-[6px] px-1.5 py-0.5 text-xs font-medium',
                       e.status === 'active'
-                        ? 'bg-mint-wash text-mint'
-                        : 'bg-mist text-ash',
+                        ? 'bg-green-100 text-green-900'
+                        : 'bg-gray-200 text-gray-900',
                     ].join(' ')}
                   >
                     {e.status === 'active' ? 'Active' : 'Concluded'}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-xs text-graphite">
+                <td className="px-3 py-2 text-xs text-gray-900">
                   {formatDate(e.startDate)}
                   {e.endDate ? ` → ${formatDate(e.endDate)}` : ' → …'}
                 </td>
-                <td className="px-4 py-3 tabular-nums text-graphite">
+                <td className="px-3 py-2 tabular-nums text-gray-900">
                   {postCount(e.id)}
                 </td>
-                <td className="px-4 py-3 capitalize text-graphite">
+                <td className="px-3 py-2 capitalize text-gray-900">
                   {e.createdBy}
                 </td>
               </tr>
             ))}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-10 text-center text-ash">
+                <td colSpan={5} className="px-3 py-8 text-center text-gray-900">
                   No experiments yet. Create one to start logging posts.
                 </td>
               </tr>

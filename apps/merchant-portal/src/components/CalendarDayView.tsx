@@ -15,7 +15,7 @@ function formatTime(minutes: number) {
 
 function formatTimeRange(startMinutes: number, durationMinutes: number) {
   const end = startMinutes + durationMinutes
-  return `${formatTime(startMinutes)} – ${formatTime(end)}`
+  return `${formatTime(startMinutes)} - ${formatTime(end)}`
 }
 
 function sortByTime(events: CalendarEvent[]) {
@@ -210,7 +210,7 @@ function FloorKanbanView({
             </div>
             <div className="flex flex-1 flex-col gap-2.5 p-2">
               {columnEvents.length === 0 ? (
-                <p className="py-4 text-center text-[11px] text-ash">—</p>
+                <p className="py-4 text-center text-[11px] text-ash">-</p>
               ) : (
                 columnEvents.map((event) => {
                   const member = staffById[event.staffId]

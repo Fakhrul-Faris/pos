@@ -6,13 +6,16 @@
 **Motion prototype:** [`../../design/motion-prototype.md`](../../design/motion-prototype.md)  
 **Engineering modules:** [`../../product/engineering-modules.md`](../../product/engineering-modules.md)
 
-This document combines information architecture and all screen specifications for the three surfaces: Customer web, Shared POS, and Owner web.
+This document combines **screen specifications** for the three surfaces: Customer web, Shared POS, and Owner web (Merchant Portal).
+
+**Merchant Portal IA / nav / module map SSOT:** [`../../platform/Miki Merchant Portal — Designer IA Brief.md`](../../platform/Miki%20Merchant%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md) — do not maintain a parallel Owner sidebar tree in this file.
 
 ---
 
 # Part 0 — Information Architecture
 
-**Spec:** [`spec.md`](spec.md)
+**Spec:** [`spec.md`](spec.md)  
+**Merchant Portal nav SSOT:** [Designer IA Brief](../../platform/Miki%20Merchant%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md)
 
 ---
 
@@ -31,22 +34,21 @@ flowchart TB
         P3[Booking detail]
         P4[Checkout]
     end
-    subgraph owner [Owner - merchant web]
+    subgraph merchant [Merchant Portal - Owner laptop]
         O1[Dashboard]
-        O2[Calendar]
-        O3[Services & barbers]
-        O4[Reports]
+        O2[Schedule and catalogue]
+        O3[People and money]
+        O4[Settings]
     end
     C1 --> C2 --> C3
     P2 --> P3 --> P4
-    O2 --> O3
 ```
 
 | Code | Surface | Device | Login |
 | :--- | :--- | :--- | :--- |
 | **C-** | Customer web | Customer phone | None (booking token in URL) |
 | **P-** | POS | 1 shop tablet/PC | Shop session + barber switch |
-| **O-** | Owner web | Laptop | Owner account |
+| **O-** | Merchant Portal (Owner role) | Laptop | Owner account |
 
 ---
 
@@ -72,34 +74,26 @@ Login → Barber picker (persistent header)
 Today → Booking card → Detail → [Add service] → Start → Complete → Pay
 ```
 
-### Owner web (sidebar)
-```
-Dashboard
-Calendar (all barbers)
-Bookings list
-Services
-Barbers & caps
-Walk-in slot rules
-Devices & billing
-Reports
-Settings
-```
+### Merchant Portal (Owner sidebar)
+
+**SSOT:** [`Miki Merchant Portal — Designer IA Brief.md`](../../platform/Miki%20Merchant%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md) §4.  
+Do not duplicate the left-rail / module map here. Part 3 below remains O-xx **screen** specs (to be expanded to match the brief over time).
 
 ---
 
 ## Module map → screens
 
-| Module | Customer | POS | Owner |
+| Module | Customer | POS | Owner (Merchant Portal) |
 | :--- | :--- | :--- | :--- |
 | MOD-01 Auth | — | P-01 | O-01 |
 | MOD-05 Menu | C-05 | P-05 | O-05 |
 | MOD-06 Queue/Book | C-06 | P-06 | O-06 |
-| MOD-07 Pay | C-07 | P-07 | — |
+| MOD-07 Pay | C-07 | P-07 | — (Payments oversight in portal IA; checkout on POS) |
 | MOD-08 Receipt | C-08 | P-08 | — |
 | MOD-09 Reports | — | P-09 | O-09 |
 | MOD-10 Offline | — | P-10 | — |
 
-Detail: [`#part-1--customer-web`](#part-1--customer-web), [`#part-2--pos-shared-counter`](#part-2--pos-shared-counter), [`#part-3--owner-web`](#part-3--owner-web).
+Full Merchant Portal module list (People, Inventory, Accounting, etc.): see Designer IA Brief. Detail: [`#part-1--customer-web`](#part-1--customer-web), [`#part-2--pos-shared-counter`](#part-2--pos-shared-counter), [`#part-3--owner-web`](#part-3--owner-web).
 
 ---
 
@@ -473,10 +467,13 @@ P-06-01 Tap #42 · Party of 3
 
 ---
 
-# Part 3 — Owner Web
+# Part 3 — Owner Web (Merchant Portal)
 
-**Audience:** Shop owner (often also a barber)  
-**Device:** Desktop / laptop (responsive tablet OK)
+**Audience:** Shop owner (often also a barber) — **Owner** role on **Merchant Portal**  
+**Device:** Desktop / laptop (responsive tablet OK)  
+**IA / nav SSOT:** [`../../platform/Miki Merchant Portal — Designer IA Brief.md`](../../platform/Miki%20Merchant%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md)
+
+Screen frames below are the current O-xx set (Phase 1A-oriented). Expand over time to match the Designer IA Brief (Inventory, People/Roster/Leave/Payroll, Accounting, etc.).
 
 ---
 

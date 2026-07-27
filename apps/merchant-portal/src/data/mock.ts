@@ -1,6 +1,21 @@
 export type VerticalId = 'barbershop' | 'salon' | 'clinic'
 
-export type PortalScreen = 'dashboard' | 'calendar' | 'bookings' | 'payments' | 'staff' | 'queue'
+export type PortalScreen =
+  | 'dashboard'
+  | 'calendar'
+  | 'bookings'
+  | 'customers'
+  | 'payments'
+  | 'staff'
+  | 'services'
+  | 'inventory'
+  | 'roster'
+  | 'leave'
+  | 'reports'
+  | 'payroll'
+  | 'accounting'
+  | 'settings'
+  | 'help'
 
 export type VerticalLabels = {
   id: VerticalId
@@ -198,7 +213,7 @@ function dateKey(year: number, month: number, day: number) {
   return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
 }
 
-// Week of Mon 6 Jul – Sun 12 Jul 2026 (today = Tue 7 Jul)
+// Week of Mon 6 Jul - Sun 12 Jul 2026 (today = Tue 7 Jul)
 const weekDates = {
   mon: dateKey(2026, 7, 6),
   tue: dateKey(2026, 7, 7),
@@ -421,7 +436,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: 'booking',
     amount: 45,
   },
-  // Saturday — walk-in blocks (peak hours)
+  // Saturday - walk-in blocks (peak hours)
   {
     id: 'w1',
     staffId: 's1',
@@ -461,7 +476,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: 'booking',
     amount: 45,
   },
-  // Sunday — lighter day
+  // Sunday - lighter day
   {
     id: 'c19',
     staffId: 's2',
@@ -501,8 +516,8 @@ export type BookingRecord = {
 const customerMeta: Record<string, { phone: string; source: BookingSource; notes?: string }> = {
   'Ahmad R.': { phone: '+60 12-345 6789', source: 'online', notes: 'Prefers skin fade #2 guard.' },
   'Daniel T.': { phone: '+60 17-882 1044', source: 'online' },
-  'Walk-in': { phone: '—', source: 'walk-in' },
-  'Marcus L.': { phone: '+60 19-223 4410', source: 'online', notes: 'Regular — books Ivan when possible.' },
+  'Walk-in': { phone: '-', source: 'walk-in' },
+  'Marcus L.': { phone: '+60 19-223 4410', source: 'online', notes: 'Regular - books Ivan when possible.' },
   'Wei J.': { phone: '+60 16-778 9021', source: 'phone' },
   'Sarah K.': { phone: '+60 11-445 2200', source: 'online' },
 }
@@ -582,16 +597,20 @@ export type ServiceOption = {
   id: string
   label: string
   durationMinutes: number
+  /** Buffer after service (minutes) */
+  bufferMinutes: number
   price: number
+  category: string
+  active: boolean
 }
 
 export const serviceOptions: ServiceOption[] = [
-  { id: 'haircut', label: 'Haircut', durationMinutes: 45, price: 45 },
-  { id: 'skin-fade', label: 'Skin fade', durationMinutes: 60, price: 55 },
-  { id: 'fade-beard', label: 'Skin fade + beard', durationMinutes: 60, price: 65 },
-  { id: 'fade-wash', label: 'Fade + wash', durationMinutes: 55, price: 55 },
-  { id: 'beard-trim', label: 'Beard trim', durationMinutes: 25, price: 25 },
-  { id: 'kids-cut', label: 'Kids cut', durationMinutes: 30, price: 35 },
+  { id: 'haircut', label: 'Haircut', durationMinutes: 45, bufferMinutes: 5, price: 45, category: 'Cuts', active: true },
+  { id: 'skin-fade', label: 'Skin fade', durationMinutes: 60, bufferMinutes: 5, price: 55, category: 'Cuts', active: true },
+  { id: 'fade-beard', label: 'Skin fade + beard', durationMinutes: 60, bufferMinutes: 10, price: 65, category: 'Combos', active: true },
+  { id: 'fade-wash', label: 'Fade + wash', durationMinutes: 55, bufferMinutes: 5, price: 55, category: 'Combos', active: true },
+  { id: 'beard-trim', label: 'Beard trim', durationMinutes: 25, bufferMinutes: 5, price: 25, category: 'Grooming', active: true },
+  { id: 'kids-cut', label: 'Kids cut', durationMinutes: 30, bufferMinutes: 5, price: 35, category: 'Cuts', active: true },
 ]
 
 export function staffNameToId(name: string): string {

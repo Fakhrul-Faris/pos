@@ -219,7 +219,7 @@ export function BookingsFilter({
       {open && (
         <div className="absolute left-0 top-full z-50 mt-2 flex items-start">
           {/* Main panel */}
-          <div className="w-[220px] overflow-hidden rounded-xl border border-fog bg-paper-white shadow-panel">
+          <div className="w-[220px] overflow-x-auto rounded-xl border border-fog bg-paper-white shadow-panel">
             <div className="flex items-center justify-between border-b border-fog px-4 py-3">
               <span className="text-sm font-medium text-carbon">Filter</span>
               <button
@@ -274,7 +274,7 @@ export function BookingsFilter({
           </div>
 
           {/* Sub-panel */}
-          <div className="ml-1 w-[200px] overflow-hidden rounded-xl border border-fog bg-paper-white shadow-panel">
+          <div className="ml-1 w-[200px] overflow-x-auto rounded-xl border border-fog bg-paper-white shadow-panel">
             <div className="p-1.5">
               {activeCategory === 'date' &&
                 dateOptions.map((opt) => {

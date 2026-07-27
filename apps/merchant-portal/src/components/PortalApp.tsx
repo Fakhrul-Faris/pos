@@ -7,7 +7,16 @@ import { Calendar } from '@/components/Calendar'
 import { Transactions } from '@/components/Transactions'
 import { BookingsList } from '@/components/BookingsList'
 import { StaffScreen } from '@/components/StaffScreen'
-import { QueueView } from '@/components/QueueView'
+import { Customers } from '@/components/Customers'
+import { Services } from '@/components/Services'
+import { Inventory } from '@/components/Inventory'
+import { Roster } from '@/components/Roster'
+import { Leave } from '@/components/Leave'
+import { Reports } from '@/components/Reports'
+import { Payroll } from '@/components/Payroll'
+import { Accounting } from '@/components/Accounting'
+import { Settings, type SettingsTab } from '@/components/Settings'
+import { HelpScreen } from '@/components/HelpScreen'
 import { BookingDetailDrawer } from '@/components/BookingDetailDrawer'
 import { NewBookingDrawer } from '@/components/NewBookingDrawer'
 import { PrototypeBar } from '@/components/PrototypeBar'
@@ -15,9 +24,12 @@ import { TransactionDetailDrawer } from '@/components/TransactionDetailDrawer'
 import { Toast, type ToastState } from '@/components/Toast'
 import { useBookings, type NewBookingDefaults } from '@/data/bookingsStore'
 import { serviceOptions, verticals, type BookingRecord, type PortalScreen, type VerticalId } from '@/data/mock'
+import { getServicesSnapshot } from '@/data/servicesStore'
+import { useShopSettings } from '@/data/settingsStore'
 
 function serviceIdFromLabel(label: string) {
-  return serviceOptions.find((s) => s.label === label)?.id ?? serviceOptions[0].id
+  const catalog = getServicesSnapshot()
+  return catalog.find((s) => s.label === label)?.id ?? catalog[0]?.id ?? serviceOptions[0].id
 }
 
 export function PortalApp() {
@@ -29,6 +41,7 @@ export function PortalApp() {
   const [editBookingId, setEditBookingId] = useState<string | undefined>()
   const [calendarDate, setCalendarDate] = useState<string | undefined>()
   const [selectedTransactionId, setSelectedTransactionId] = useState<string | undefined>()
+  const [settingsTab, setSettingsTab] = useState<SettingsTab>('shop')
   const [toast, setToast] = useState<ToastState>({
     open: false,
     kind: 'success',
@@ -49,6 +62,7 @@ export function PortalApp() {
     refundTransaction,
   } = useBookings()
 
+  const { settings } = useShopSettings()
   const vertical = verticals[verticalId]
 
   const selectedRecord = useMemo(() => {
@@ -83,10 +97,13 @@ export function PortalApp() {
         onDemoNowMinutesChange={setDemoNowMinutes}
       />
       <Shell
-        businessName={vertical.businessName}
+        businessName={settings.branchName || vertical.businessName}
         staffLabel={vertical.staffPlural}
         activeScreen={screen}
-        onNavigate={setScreen}
+        onNavigate={(next) => {
+          if (next === 'settings') setSettingsTab('shop')
+          setScreen(next)
+        }}
       >
         {screen === 'dashboard' && (
           <Dashboard
@@ -94,7 +111,6 @@ export function PortalApp() {
             onSelectBooking={setSelectedBooking}
             onViewAllBookings={() => setScreen('bookings')}
             onNewBooking={() => openNewBooking()}
-            onOpenCounter={() => setScreen('queue')}
             onManageStaff={() => setScreen('staff')}
           />
         )}
@@ -113,20 +129,28 @@ export function PortalApp() {
             onNewBooking={() => openNewBooking()}
           />
         )}
-        {screen === 'staff' && (
-          <StaffScreen vertical={vertical} onSelectBooking={setSelectedBooking} />
-        )}
-        {screen === 'queue' && (
-          <QueueView
+        {screen === 'customers' && (
+          <Customers
+            vertical={vertical}
             onSelectBooking={setSelectedBooking}
-            onStartService={(id) => {
-              updateStatus(id, 'in-service')
-              setToast({
-                open: true,
-                kind: 'success',
-                title: 'Added to barber list',
-                message: 'Moved to “Now serving”.',
-              })
+            onNewBooking={(defaults) => openNewBooking(defaults)}
+          />
+        )}
+        {screen === 'services' && <Services />}
+        {screen === 'inventory' && <Inventory />}
+        {screen === 'roster' && <Roster vertical={vertical} />}
+        {screen === 'leave' && <Leave vertical={vertical} />}
+        {screen === 'reports' && <Reports vertical={vertical} />}
+        {screen === 'payroll' && <Payroll vertical={vertical} />}
+        {screen === 'accounting' && <Accounting />}
+        {screen === 'settings' && <Settings initialTab={settingsTab} />}
+        {screen === 'staff' && (
+          <StaffScreen
+            vertical={vertical}
+            onSelectBooking={setSelectedBooking}
+            onGoToBilling={() => {
+              setSettingsTab('billing')
+              setScreen('settings')
             }}
           />
         )}
@@ -136,6 +160,7 @@ export function PortalApp() {
             onSelectTransaction={(id) => setSelectedTransactionId(id)}
           />
         )}
+        {screen === 'help' && <HelpScreen />}
       </Shell>
 
       <BookingDetailDrawer
@@ -157,7 +182,7 @@ export function PortalApp() {
         onRebook={(booking) => {
           openNewBooking({
             customer: booking.customer,
-            phone: booking.phone !== '—' ? booking.phone : '',
+            phone: booking.phone !== '-' ? booking.phone : '',
             serviceId: serviceIdFromLabel(booking.services),
             staffName: booking.staffName,
             date: calendarDate ?? booking.date,
@@ -170,7 +195,7 @@ export function PortalApp() {
           setEditBookingId(booking.id)
           setNewBookingDefaults({
             customer: booking.customer,
-            phone: booking.phone !== '—' ? booking.phone : '',
+            phone: booking.phone !== '-' ? booking.phone : '',
             serviceId: serviceIdFromLabel(booking.services),
             staffName: booking.staffName,
             date: booking.date,

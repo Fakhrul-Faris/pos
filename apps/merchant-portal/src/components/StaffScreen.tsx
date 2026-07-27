@@ -3,14 +3,17 @@
 import { useState } from 'react'
 import type { BookingRecord, VerticalLabels } from '../data/mock'
 import { useBookings, type StaffRosterMember } from '../data/bookingsStore'
+import { useShopSettings, PLAN_LABELS, merchantPlanForTier } from '../data/settingsStore'
 import { StaffStatusBadge } from './StatusBadge'
 import { AddStaffDrawer } from './AddStaffDrawer'
 import { UpgradePaywallDrawer } from './UpgradePaywallDrawer'
 import { ManageStaffDrawer } from './ManageStaffDrawer'
+import { PageEditControls, usePageEditMode } from './PageEditControls'
 
 type StaffScreenProps = {
   vertical: VerticalLabels
   onSelectBooking: (booking: BookingRecord) => void
+  onGoToBilling?: () => void
 }
 
 function formatTime(minutes: number) {
@@ -56,7 +59,7 @@ function StaffCard({
           <div className="rounded-lg bg-linen px-3 py-2">
             <p className="text-[11px] text-ash">Next free</p>
             <p className="tabular-nums mt-0.5 text-sm font-medium text-carbon">
-              {member.nextFree ?? '—'}
+              {member.nextFree ?? '-'}
             </p>
           </div>
           <div className="rounded-lg bg-linen px-3 py-2">
@@ -129,32 +132,38 @@ function StaffCard({
   )
 }
 
-export function StaffScreen({ vertical, onSelectBooking }: StaffScreenProps) {
+export function StaffScreen({
+  vertical,
+  onSelectBooking,
+  onGoToBilling,
+}: StaffScreenProps) {
   const {
     getStaffRoster,
     setStaffOverride,
     addStaff,
     entitlements,
-    plan,
-    upgradePlan,
     staff,
     renameStaff,
     removeStaff,
+    upgradePlan,
   } = useBookings()
+  const { settings, setPlan } = useShopSettings()
   const roster = getStaffRoster()
 
   const activeCount = roster.filter((m) => m.status === 'available' || m.status === 'busy').length
   const [addOpen, setAddOpen] = useState(false)
   const [paywallOpen, setPaywallOpen] = useState(false)
   const [manageOpen, setManageOpen] = useState(false)
+  const { editing: pageEditing, savedFlash, startEdit, save, cancel } = usePageEditMode()
 
   function handleSetStatus(staffId: string, status: 'available' | 'break' | 'off') {
+    if (!pageEditing) return
     if (status === 'available') setStaffOverride(staffId, null)
     else setStaffOverride(staffId, status)
   }
 
   return (
-    <div className="mx-auto h-full max-w-[1200px] rounded-xl border border-fog px-6 py-6">
+    <div className="h-full w-full rounded-xl border border-fog px-4 py-4 sm:px-6 sm:py-6">
       <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-medium tracking-ui text-sky">{vertical.staffPlural}</p>
@@ -163,16 +172,27 @@ export function StaffScreen({ vertical, onSelectBooking }: StaffScreenProps) {
           </h1>
           <p className="mt-1 text-sm text-ash">
             {activeCount} of {roster.length} active · {vertical.serviceArea.toLowerCase()} status ·{' '}
-            {staff.length}/{entitlements.staffLimit} on {plan}
+            {staff.length}/{entitlements.staffLimit} on {PLAN_LABELS[settings.plan]}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button type="button" onClick={() => setManageOpen(true)} className="btn-ghost px-4 py-2">
-            Manage
-          </button>
-          <button type="button" onClick={() => setAddOpen(true)} className="btn-primary px-4 py-2">
-            Add {vertical.staffSingular.toLowerCase()}
-          </button>
+        <div className="flex flex-wrap items-center gap-2">
+          {pageEditing && (
+            <>
+              <button type="button" onClick={() => setManageOpen(true)} className="btn-ghost px-4 py-2">
+                Manage
+              </button>
+              <button type="button" onClick={() => setAddOpen(true)} className="btn-primary px-4 py-2">
+                Add {vertical.staffSingular.toLowerCase()}
+              </button>
+            </>
+          )}
+          <PageEditControls
+            editing={pageEditing}
+            savedFlash={savedFlash}
+            onEdit={startEdit}
+            onSave={save}
+            onCancel={cancel}
+          />
         </div>
       </header>
 
@@ -206,11 +226,12 @@ export function StaffScreen({ vertical, onSelectBooking }: StaffScreenProps) {
       <UpgradePaywallDrawer
         open={paywallOpen}
         onClose={() => setPaywallOpen(false)}
-        subtitle={`You’re on ${plan}. This plan supports up to ${entitlements.staffLimit} staff.`}
+        subtitle={`You’re on ${PLAN_LABELS[settings.plan]}. This plan supports up to ${entitlements.staffLimit} staff.`}
         onUpgrade={() => {
-          upgradePlan(plan === 'starter' ? 'growth' : 'pro')
+          setPlan('ocelot')
+          upgradePlan(merchantPlanForTier('ocelot'))
           setPaywallOpen(false)
-          setAddOpen(true)
+          onGoToBilling?.()
         }}
       />
 

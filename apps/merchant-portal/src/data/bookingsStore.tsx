@@ -14,7 +14,6 @@ import {
   calendarToday,
   eventToTodayBooking,
   minutesToTimeLabel,
-  serviceOptions,
   type BookingRecord,
   type BookingSource,
   type BookingStatus,
@@ -26,6 +25,20 @@ import {
   todayTransactions as initialTransactions,
   type Transaction,
 } from './mock'
+import { getServicesSnapshot } from './servicesStore'
+
+function bufferForServicesLabel(services?: string) {
+  if (!services) return 0
+  const catalog = getServicesSnapshot()
+  const exact = catalog.find((s) => s.label === services)
+  if (exact) return exact.bufferMinutes
+  const partial = catalog.find((s) => services.includes(s.label))
+  return partial?.bufferMinutes ?? 0
+}
+
+function slotEnd(startMinutes: number, durationMinutes: number, bufferMinutes = 0) {
+  return startMinutes + durationMinutes + bufferMinutes
+}
 
 export type NewBookingInput = {
   customer: string
@@ -108,6 +121,7 @@ type BookingsContextValue = {
     date: string
     startMinutes: number
     durationMinutes: number
+    bufferMinutes?: number
     ignoreBookingId?: string
   }) => BookingConflict | null
   suggestNextAvailableStart: (params: {
@@ -115,11 +129,13 @@ type BookingsContextValue = {
     date: string
     startMinutes: number
     durationMinutes: number
+    bufferMinutes?: number
   }) => number | null
   findAnyAvailableStaffId: (params: {
     date: string
     startMinutes: number
     durationMinutes: number
+    bufferMinutes?: number
   }) => string | null
   getStaffRoster: () => StaffRosterMember[]
   getStaffOnShift: () => StaffOnShift[]
@@ -240,15 +256,17 @@ export function BookingsProvider({ children }: { children: ReactNode }) {
       date,
       startMinutes,
       durationMinutes,
+      bufferMinutes = 0,
       ignoreBookingId,
     }: {
       staffId: string
       date: string
       startMinutes: number
       durationMinutes: number
+      bufferMinutes?: number
       ignoreBookingId?: string
     }): BookingConflict | null => {
-      const endMinutes = startMinutes + durationMinutes
+      const endMinutes = slotEnd(startMinutes, durationMinutes, bufferMinutes)
       for (const e of events) {
         if (e.type !== 'booking') continue
         if (e.staffId !== staffId) continue
@@ -256,7 +274,11 @@ export function BookingsProvider({ children }: { children: ReactNode }) {
         if (ignoreBookingId && e.id === ignoreBookingId) continue
 
         const eStart = e.startMinutes
-        const eEnd = e.startMinutes + e.durationMinutes
+        const eEnd = slotEnd(
+          e.startMinutes,
+          e.durationMinutes,
+          bufferForServicesLabel(e.services),
+        )
         const overlaps = startMinutes < eEnd && endMinutes > eStart
         if (!overlaps) continue
 
@@ -279,18 +301,27 @@ export function BookingsProvider({ children }: { children: ReactNode }) {
       date,
       startMinutes,
       durationMinutes,
+      bufferMinutes = 0,
     }: {
       staffId: string
       date: string
       startMinutes: number
       durationMinutes: number
+      bufferMinutes?: number
     }) => {
       const openMinutes = 9 * 60
       const closeMinutes = 20 * 60
       const step = 15
+      const span = durationMinutes + bufferMinutes
       let t = Math.max(openMinutes, startMinutes)
-      while (t + durationMinutes <= closeMinutes) {
-        const conflict = findBookingConflict({ staffId, date, startMinutes: t, durationMinutes })
+      while (t + span <= closeMinutes) {
+        const conflict = findBookingConflict({
+          staffId,
+          date,
+          startMinutes: t,
+          durationMinutes,
+          bufferMinutes,
+        })
         if (!conflict) return t
         t += step
       }
@@ -304,10 +335,12 @@ export function BookingsProvider({ children }: { children: ReactNode }) {
       date,
       startMinutes,
       durationMinutes,
+      bufferMinutes = 0,
     }: {
       date: string
       startMinutes: number
       durationMinutes: number
+      bufferMinutes?: number
     }) => {
       for (const member of staff) {
         const conflict = findBookingConflict({
@@ -315,6 +348,7 @@ export function BookingsProvider({ children }: { children: ReactNode }) {
           date,
           startMinutes,
           durationMinutes,
+          bufferMinutes,
         })
         if (!conflict) return member.id
       }
@@ -485,13 +519,15 @@ export function BookingsProvider({ children }: { children: ReactNode }) {
 
   const addBooking = useCallback(
     (input: NewBookingInput) => {
-      const service = serviceOptions.find((s) => s.id === input.serviceId) ?? serviceOptions[0]
+      const catalog = getServicesSnapshot()
+      const service = catalog.find((s) => s.id === input.serviceId) ?? catalog[0]
       const staffId =
         input.staffName === 'Anyone'
           ? findAnyAvailableStaffId({
               date: input.date,
               startMinutes: input.startMinutes,
               durationMinutes: service.durationMinutes,
+              bufferMinutes: service.bufferMinutes,
             }) ??
             staff[0]?.id ??
             's1'
@@ -537,13 +573,15 @@ export function BookingsProvider({ children }: { children: ReactNode }) {
       const existing = events.find((e) => e.type === 'booking' && e.id === bookingId)
       if (!existing || existing.type !== 'booking') return null
 
-      const service = serviceOptions.find((s) => s.id === serviceId) ?? serviceOptions[0]
+      const catalog = getServicesSnapshot()
+      const service = catalog.find((s) => s.id === serviceId) ?? catalog[0]
       const staffId =
         staffName === 'Anyone'
           ? findAnyAvailableStaffId({
               date,
               startMinutes,
               durationMinutes: service.durationMinutes,
+              bufferMinutes: service.bufferMinutes,
             }) ??
             staff[0]?.id ??
             existing.staffId

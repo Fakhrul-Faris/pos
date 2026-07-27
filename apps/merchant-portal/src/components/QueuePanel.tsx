@@ -2,11 +2,8 @@
 
 import { useBookings } from '../data/bookingsStore'
 
-type QueuePanelProps = {
-  onOpenCounter?: () => void
-}
-
-export function QueuePanel({ onOpenCounter }: QueuePanelProps) {
+/** Dashboard monitor only - live queue operate lives on Shared POS. */
+export function QueuePanel() {
   const { getQueueState } = useBookings()
   const queue = getQueueState()
 
@@ -16,7 +13,7 @@ export function QueuePanel({ onOpenCounter }: QueuePanelProps) {
         <div>
           <p className="text-xs text-ash">Queue right now</p>
           <p className="font-display tabular-nums mt-1 text-3xl font-medium tracking-ui text-carbon">
-            {queue.nowServing ? `#${queue.nowServing.queueNumber}` : '—'}
+            {queue.nowServing ? `#${queue.nowServing.queueNumber}` : '-'}
           </p>
           <p className="mt-1 text-sm text-graphite">
             Now serving · {queue.waitingCount} waiting
@@ -33,11 +30,11 @@ export function QueuePanel({ onOpenCounter }: QueuePanelProps) {
           { label: 'Waiting', value: String(queue.waitingCount) },
           {
             label: 'Avg wait',
-            value: queue.avgWaitMinutes > 0 ? `${queue.avgWaitMinutes}m` : '—',
+            value: queue.avgWaitMinutes > 0 ? `${queue.avgWaitMinutes}m` : '-',
           },
           {
             label: 'Longest',
-            value: queue.longestWaitMinutes > 0 ? `${queue.longestWaitMinutes}m` : '—',
+            value: queue.longestWaitMinutes > 0 ? `${queue.longestWaitMinutes}m` : '-',
           },
         ].map((item) => (
           <div key={item.label}>
@@ -49,9 +46,13 @@ export function QueuePanel({ onOpenCounter }: QueuePanelProps) {
         ))}
       </div>
 
-      <button type="button" onClick={onOpenCounter} className="btn-ghost mt-4 w-full py-2.5">
-        Open counter view
-      </button>
+      <p className="mt-4 rounded-lg bg-linen px-3 py-2.5 text-xs leading-snug text-ash">
+        Counter operate (check-in / start / checkout) runs on the{' '}
+        <span className="font-medium text-graphite">shared POS</span>. Layout
+        preserved for POS - see{' '}
+        <code className="text-[10px]">docs/design/component-refs/queue-component-design.png</code>
+        .
+      </p>
     </div>
   )
 }

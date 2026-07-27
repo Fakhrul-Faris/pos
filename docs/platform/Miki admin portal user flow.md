@@ -1,60 +1,52 @@
 # User Flow Document
 ## Miki — Internal Ops Admin Portal
 
-**Version:** 1.0 (Draft)
-**Purpose:** Map out step-by-step user flows for each core module to inform screen design and wireframing.
-**Reference:** Based on `miki-admin-portal-brd.md`
+**Version:** 1.2 (Draft)  
+**Purpose:** Step-by-step user flows for admin modules (process only — not navigation / IA).  
+**Reference:** [`Miki Admin Portal BRD.md`](./Miki%20Admin%20Portal%20BRD.md)  
+**Changelog (1.2):** Org→Brand→Branch hub; Brand billing; Support + Accounting flows; cross-flow table updated.
+
+**IA / nav / module map SSOT (do not duplicate here):** [`Miki Admin Portal — Designer IA Brief.md`](./Miki%20Admin%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md)
 
 **Actors used throughout:**
 - **Admin** — Fakhrul / Haziq / Helmi (Super Admin, v1 single role)
 - **System** — automated logic (flags, calculations, logs)
 - **HitPay** — external payment processor
-- **Merchant** — receives outcomes but has no portal access
+- **Merchant** — receives outcomes but has no portal access (Organization / Brand / Branch in data)
 
 ---
 
-## 1. Global Navigation Flow
+## 1. Navigation
 
-```
-Login
-  │
-  ▼
-Admin Dashboard (landing)
-  │
-  ├── Merchants
-  ├── Refunds
-  ├── Subscriptions & Suspensions
-  ├── Transactions (incl. flagged/suspicious)
-  ├── Reconciliation
-  ├── Marketing (organic experiments)
-  └── Audit Log
-```
-
-**Design note:** Dashboard landing is an **ops + growth attention queue**, not a summary/analytics page. Surface: pending refund approvals, dual-approval items, flagged transactions, merchants approaching suspension, **recent signups / trials ending / silent merchants**, and **marketing check-ins** (empty experiments, stale metrics). Counts deep-link into the relevant module — no chart wall.
+Sitemap, left rail, module list, groupings, and design priority live only in the **Designer IA Brief**. This document does not maintain a parallel nav tree.
 
 ---
 
 ## 2. Merchant Management Flow
 
 ```
-Merchants List
+Merchants List  (= Organizations)
   │
   ├── Search / filter (by name, status, signup date)
   │
   ▼
-Select Merchant → Merchant Detail View
+Select Organization → Merchant Detail (hub)
   │
-  ├── Profile info (business name, contact, signup date)
-  ├── Subscription status (see Flow 4)
-  ├── Transaction history (see Flow 5)
-  ├── Refund history (see Flow 3)
+  ├── Overview (org profile, primary contact, lifecycle status, notes)
+  ├── Brands
+  │     └── Brand detail → subscription / billing / payment history
+  │                        (see Flow 4 — billable unit = Brand)
+  ├── Branches (outlets) — read: address, hours, settings
+  ├── Owners — contacts + masked payout bank
+  ├── Activity shortcuts → Finance queues filtered to this org
+  │     (refunds, transactions, reconciliation — Flows 3, 5, 6)
   └── Admin actions:
         ├── Manually suspend
         ├── Manually reactivate
         └── Add internal note
 ```
 
-**Design note:** Merchant Detail should be the hub — every other module (refunds, subscriptions, transactions) is reachable from here in context, not just from separate top-level lists.
+**Design note:** Merchant Detail is the hub — Finance and Subscriptions are reachable in context from Org/Brand, not only from top-level lists. Do not design a flat single-entity “merchant profile” that ignores Brand/Branch.
 
 ---
 
@@ -66,13 +58,13 @@ Admin A logs the request into the portal:
   │
   ▼
 New Refund Request Screen
-  │  Fields: Receipt ID, Reason, Amount, Merchant, [supporting notes]
+  │  Fields: Receipt ID, Reason, Amount, Merchant/Org (and Brand if needed), [supporting notes]
   │
   ▼
 Status: PENDING APPROVAL
   │
   ▼
-Refund Queue (visible to all Admins)
+Refund Queue (visible to all Admins) — under Finance
   │
   ▼
 Admin B reviews request
@@ -106,24 +98,24 @@ Admin B reviews request
 ## 4. Subscription & Suspension Flow
 
 ```
-System checks subscription payment status (recurring check)
+System checks Brand subscription payment status (recurring check)
   │
-  ├── Payment successful ──────► No action, status stays Active
+  ├── Payment successful ──────► No action, Brand stays Active
   │
   └── Payment failed/missed
         │
         ▼
-  System raises suspension flag
+  System raises suspension flag on Brand / related Org view
         │
         ▼
-  Merchant Detail shows "Suspension Pending" state
+  Merchant Detail / Brand detail shows "Suspension Pending"
         │
         ▼
   Admin reviews (manual step before suspension is finalized)
         │
-        ├── Manually extend/waive ──► Status: Active, logged with note
+        ├── Manually extend/waive Brand sub ──► Active, logged with note
         │
-        └── No action taken ──────► Status: Suspended (system-enforced
+        └── No action taken ──────► Suspended (system-enforced
                                       after grace period — grace period
                                       length TBD in FSD)
         │
@@ -132,40 +124,40 @@ System checks subscription payment status (recurring check)
   the subscription trigger (e.g. other business reasons)
 ```
 
-**Design note:** "Suspension Pending" needs to be visually distinct from "Suspended" — it's the window where an admin can intervene, and it should show up prominently on the dashboard action queue (Flow 1).
+**Design note:** "Suspension Pending" needs to be visually distinct from "Suspended" — it's the window where an admin can intervene, and it should show up prominently on the dashboard action queue. Billing actions always attach to **Brand**.
 
 ---
 
 ## 5. Transaction Review / Suspicious Transaction Flow
 
 ```
-Transaction occurs (via HitPay)
+Transaction occurs (via HitPay / POS)
   │
   ▼
 System pulls transaction log from HitPay (periodic pull, v1)
   │
-  ├── Normal transaction ──────► Appears in standard transaction list
+  ├── Normal transaction ──────► Appears in standard transaction list (Finance)
   │
-  └── Flagged by HitPay ───────► Appears in Flagged/Review queue
+  └── Flagged by HitPay ───────► Appears in Flagged/Review queue (default filter)
         │
         ▼
   Admin reviews flagged transaction
-        │  (sees: amount, merchant, timestamp, HitPay's reason if given)
+        │  (sees: amount, merchant/org, timestamp, HitPay's reason if given)
         │
         ├── No action needed ──► Marked reviewed, logged
         │
-        └── Action needed ─────► Admin manually suspends merchant
+        └── Action needed ─────► Admin manually suspends
                                   (goes to Flow 4, manual suspend path)
 ```
 
-**Design note:** Since detection logic lives with HitPay, this screen is a review/triage tool, not an investigation tool — don't over-design it with analytics. A clean list + drill-into-detail is enough for v1.
+**Design note:** Triage tool, not investigation/analytics. Admin does not edit POS line items here.
 
 ---
 
 ## 6. Reconciliation / Settlement Flow
 
 ```
-Reconciliation View
+Reconciliation View (Finance)
   │
   ▼
 Shows, per period:
@@ -183,7 +175,7 @@ Admin identifies discrepancies (manual review, v1)
                                      logged in Audit Log
 ```
 
-**Design note:** This is inherently a numbers-heavy screen. Prioritize a clear per-merchant or per-period table over dashboards/charts — reporting/analytics is explicitly out of scope for v1.
+**Design note:** Period × merchant/Brand table over dashboards/charts. This is Finance, not Accounting (GL).
 
 ---
 
@@ -191,24 +183,61 @@ Admin identifies discrepancies (manual review, v1)
 
 ```
 Every financial action (refund approval/rejection, payout override,
-manual subscription change, manual suspend/reactivate) writes to
-Audit Log automatically.
+manual Brand subscription change, manual suspend/reactivate) writes to
+Audit Log automatically. Support status changes may log lightly (FSD).
   │
   ▼
 Audit Log Screen
   │
-  ├── Filter by: admin, action type, merchant, date range
+  ├── Filter by: admin, action type, merchant/org, date range
   │
   ▼
 Entry detail shows: who, what, when, reason code (if applicable),
 before/after state where relevant
 ```
 
-**Design note:** This doesn't need its own polished UI investment in v1 beyond a searchable table — but every other flow above needs to actually write to it, so it should be designed early enough that Haziq can build the logging hooks alongside each feature, not bolted on after.
+**Design note:** Searchable table is enough for v1 UI investment; logging hooks ship with each feature.
 
 ---
 
-## 8. Marketing Experiment Flow (Organic)
+## 8. Support Inbox Flow
+
+```
+Support Inbox (list)
+  │
+  ├── Filter: status, priority, complaint type, date
+  │
+  ▼
+Open Submission Detail
+  │
+  ├── Customer info, subject, channel, attachments (read)
+  ├── Update status / priority
+  ├── Add / edit resolution notes
+  └── Mark resolved (resolved date)
+```
+
+**Design note:** Inbox only — no form or question builder in admin v1. Feeds the Dashboard Support queue block.
+
+---
+
+## 9. Accounting Flow (Platform Books)
+
+```
+Accounting (platform)
+  │
+  ├── Chart of accounts — list / view account
+  ├── Journal entries — list / view entry (+ lines)
+  ├── Ledger / period balances — by fiscal period
+  └── Fiscal years / periods — list / closed flags
+```
+
+**Design note:** Utilitarian tables OK. This is **Miki platform** books only — not merchant books, and not Finance (refunds/recon). No analytics charts required in v1.
+
+---
+
+## 10. Marketing Experiment Flow (Organic) — Deferred
+
+**Deferred for v1** per Designer IA Brief / BRD §9 — retained for backlog only; do not wireframe in current design pass.
 
 ```
 Marketing → Experiment List
@@ -224,40 +253,35 @@ Select Experiment → Experiment Detail
   └── Conclude experiment → write learnings notes
 ```
 
-**Design note:** This is an experiment log, not a social dashboard. Group by hypothesis; keep metrics entry boring and fast. No charts in v1.
-
 ---
 
-## 9. Cross-Flow Dependencies Summary
+## 11. Cross-Flow Dependencies Summary
 
 | Flow | Depends on / Feeds into |
 |------|--------------------------|
+| Merchant hub | Entry to Brand billing, Finance shortcuts, Support context |
 | Refund Approval | Writes to Audit Log; visible from Merchant Detail |
-| Subscription & Suspension | Feeds Dashboard action queue; visible from Merchant Detail |
-| Transaction Review | Can trigger Subscription & Suspension (manual path) |
-| Reconciliation | Can trigger Refund/Payout dual approval |
-| Marketing | Independent; optional light audit on create/edit post |
-| Audit Log | Receives writes from all financial-action flows |
+| Subscription & Suspension (Brand) | Feeds Dashboard ops queue; Brand detail |
+| Transaction Review | Can trigger Suspension (manual path) |
+| Reconciliation | Can trigger payout dual approval; Finance |
+| Support Inbox | Feeds Dashboard Support queue |
+| Accounting | Independent of Finance ops; platform GL only |
+| Marketing | Deferred (v1) |
+| Audit Log | Receives writes from financial (and agreed) admin actions |
 
 ---
 
-## 10. Open Questions for FSD (carried over from BRD)
+## 12. Open Questions for FSD (carried over from BRD)
 
-- Grace period length before system-enforced suspension after a missed payment (Flow 4)
-- Exact fields returned by HitPay for flagged transactions (Flow 5) — pending API review
-- Whether dual approval needs a "pending too long" escalation/reminder, given only 3 admins in v1
-- Which engagement metrics are realistic to ask for per platform (Facebook / Threads / X / Reddit)
+- Grace period length before system-enforced suspension after a missed Brand payment (Flow 4)
+- Exact fields returned by HitPay for flagged transactions (Flow 5)
+- Whether dual approval needs a "pending too long" escalation/reminder (3 admins in v1)
+- Org vs Brand ownership of lifecycle statuses
+- Support submission statuses / priorities for v1 UI
+- Platform accounting: which GL screens are must-ship vs read-only first
 
 ---
 
-## 11. Suggested Build Priority (for wireframing)
+## 13. Design / wireframe priority
 
-Given the 1-month timeline, suggested order based on what's most operationally urgent (money-related, currently fully manual):
-
-1. Merchant Detail + List (hub for everything else)
-2. Subscription & Suspension (directly tied to revenue continuity)
-3. Refund Approval (dual approval, currently informal)
-4. Reconciliation (currently manual/error-prone)
-5. Transaction Review (lower urgency — HitPay already handles detection)
-6. Audit Log (build incrementally alongside 2–5, not standalone)
-7. Marketing experiment log (parallel / after money paths stabilize)
+**SSOT:** Designer IA Brief §9 (Design priority order). Do not maintain a parallel priority list here.

@@ -25,8 +25,10 @@ BARBERSHOP MODULE (this folder)
            │
            ├── Customer web  (C-xx)  phone, no login
            ├── Shared POS    (P-xx)  one tablet, barber switcher
-           └── Owner web     (O-xx)  setup, calendar, reports
+           └── Owner web     (O-xx)  Merchant Portal — setup, calendar, reports
 ```
+
+**Merchant Portal IA:** [`../../platform/Miki Merchant Portal — Designer IA Brief.md`](../../platform/Miki%20Merchant%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md)
 
 ---
 
@@ -37,7 +39,7 @@ BARBERSHOP MODULE (this folder)
 | [**spec.md**](spec.md) | Anyone building barbershop | **Authoritative rules** — roles, state machine, policies, offline |
 | [**pricing-funnel.md**](pricing-funnel.md) | Product, marketing, finance | Trial → Lite → paid in plain language (barbershop numbers) |
 | [**features-and-pricing.md**](features-and-pricing.md) | Product, design, eng | Feature catalog + Ocelot/Mantis/Patriot matrix + RM prices |
-| [**ui.md**](ui.md) | Design, frontend | IA + all screens (C-xx, P-xx, O-xx) |
+| [**ui.md**](ui.md) | Design, frontend | Screen specs (C-xx, P-xx, O-xx). **Merchant Portal nav IA:** [`../../platform/Miki Merchant Portal — Designer IA Brief.md`](../../platform/Miki%20Merchant%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md) |
 | [**motion-prototype.md**](../../design/motion-prototype.md) | Design, frontend | Coded motion demos + party flow reference |
 | [**marketing.md**](marketing.md) | Marketing, Penpot | Canonical `/barbershop` landing copy |
 | [**compare.md**](compare.md) | Marketing, Penpot, SEO | Canonical `/compare` — Miki vs Fresha (+ StoreHub footnote) |

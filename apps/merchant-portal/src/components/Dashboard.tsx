@@ -12,7 +12,6 @@ type DashboardProps = {
   onSelectBooking: (booking: BookingRecord) => void
   onViewAllBookings?: () => void
   onNewBooking?: () => void
-  onOpenCounter?: () => void
   onManageStaff?: () => void
 }
 
@@ -33,7 +32,6 @@ export function Dashboard({
   onSelectBooking,
   onViewAllBookings,
   onNewBooking,
-  onOpenCounter,
   onManageStaff,
 }: DashboardProps) {
   const { getTodayBookings, getQueueState } = useBookings()
@@ -51,7 +49,7 @@ export function Dashboard({
   }
 
   return (
-    <div className="mx-auto max-w-[1200px] rounded-xl border border-fog px-6 py-6">
+    <div className="w-full rounded-xl border border-fog px-4 py-4 sm:px-6 sm:py-6">
       <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-medium tracking-ui text-sky">Today</p>
@@ -110,7 +108,7 @@ export function Dashboard({
           onViewAll={onViewAllBookings}
         />
         <div className="flex flex-col gap-4">
-          <QueuePanel onOpenCounter={onOpenCounter} />
+          <QueuePanel />
           <StaffPanel vertical={vertical} onManage={onManageStaff} />
         </div>
       </section>

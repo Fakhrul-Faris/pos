@@ -10,8 +10,8 @@ import { Refunds } from './screens/Refunds'
 import { Subscriptions } from './screens/Subscriptions'
 import { Transactions } from './screens/Transactions'
 import { Reconciliation } from './screens/Reconciliation'
-import { Marketing } from './screens/Marketing'
-import { MarketingDetail } from './screens/MarketingDetail'
+import { Support } from './screens/Support'
+import { Accounting } from './screens/Accounting'
 import { AuditLog } from './screens/AuditLog'
 import { useAdminStore } from '@/data/store'
 import type { AdminScreen } from '@/data/types'
@@ -20,9 +20,6 @@ export function AdminApp() {
   const store = useAdminStore()
   const [screen, setScreen] = useState<AdminScreen>('dashboard')
   const [selectedMerchantId, setSelectedMerchantId] = useState<string | null>(
-    null,
-  )
-  const [selectedExperimentId, setSelectedExperimentId] = useState<string | null>(
     null,
   )
 
@@ -37,24 +34,23 @@ export function AdminApp() {
     const dualApprovals = store.payoutOverrides.filter(
       (p) => p.status === 'pending_first' || p.status === 'pending_second',
     ).length
-    return { refunds, suspensions, flagged, dualApprovals }
-  }, [store.refunds, store.merchants, store.transactions, store.payoutOverrides])
+    const support = store.support.filter((s) => s.status !== 'resolved').length
+    return { refunds, suspensions, flagged, dualApprovals, support }
+  }, [
+    store.refunds,
+    store.merchants,
+    store.transactions,
+    store.payoutOverrides,
+    store.support,
+  ])
 
   const openMerchant = (id: string) => {
     setSelectedMerchantId(id)
-    setSelectedExperimentId(null)
     setScreen('merchant-detail')
-  }
-
-  const openExperiment = (id: string) => {
-    setSelectedExperimentId(id)
-    setSelectedMerchantId(null)
-    setScreen('marketing-detail')
   }
 
   const navigate = (next: AdminScreen) => {
     if (next !== 'merchant-detail') setSelectedMerchantId(null)
-    if (next !== 'marketing-detail') setSelectedExperimentId(null)
     setScreen(next)
   }
 
@@ -76,7 +72,6 @@ export function AdminApp() {
           queueCounts={queueCounts}
           onNavigate={navigate}
           onOpenMerchant={openMerchant}
-          onOpenExperiment={openExperiment}
         />
       )}
       {screen === 'merchants' && (
@@ -99,15 +94,8 @@ export function AdminApp() {
       {screen === 'reconciliation' && (
         <Reconciliation onOpenMerchant={openMerchant} />
       )}
-      {screen === 'marketing' && (
-        <Marketing onOpenExperiment={openExperiment} />
-      )}
-      {screen === 'marketing-detail' && selectedExperimentId && (
-        <MarketingDetail
-          experimentId={selectedExperimentId}
-          onBack={() => navigate('marketing')}
-        />
-      )}
+      {screen === 'support' && <Support onOpenMerchant={openMerchant} />}
+      {screen === 'accounting' && <Accounting />}
       {screen === 'audit' && <AuditLog onOpenMerchant={openMerchant} />}
     </Shell>
   )

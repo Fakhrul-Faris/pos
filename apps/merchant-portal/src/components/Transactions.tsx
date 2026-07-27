@@ -142,7 +142,7 @@ export function Transactions({
   const activeFilters = filterCount(methodFilter, statusFilter, staffFilter)
 
   return (
-    <div className="mx-auto max-w-[1200px] rounded-xl border border-fog px-6 py-6">
+    <div className="w-full rounded-xl border border-fog px-4 py-4 sm:px-6 sm:py-6">
       <header className="mb-5 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-medium tracking-ui text-ash">Payments</p>
@@ -179,7 +179,7 @@ export function Transactions({
           </button>
 
           {filterOpen && (
-            <div className="absolute right-0 top-full z-50 mt-2 w-[360px] overflow-hidden rounded-xl border border-fog bg-paper-white shadow-panel">
+            <div className="absolute right-0 top-full z-50 mt-2 w-[360px] overflow-x-auto rounded-xl border border-fog bg-paper-white shadow-panel">
               <div className="flex items-center justify-between border-b border-fog px-4 py-3">
                 <p className="text-sm font-medium text-carbon">Filter</p>
                 <button
@@ -280,7 +280,7 @@ export function Transactions({
           )}
 
           {sortOpen && (
-            <div className="absolute right-0 top-full z-50 mt-2 w-[260px] overflow-hidden rounded-xl border border-fog bg-paper-white shadow-panel">
+            <div className="absolute right-0 top-full z-50 mt-2 w-[260px] overflow-x-auto rounded-xl border border-fog bg-paper-white shadow-panel">
               <div className="border-b border-fog px-4 py-3">
                 <p className="text-sm font-medium text-carbon">Sort</p>
               </div>
@@ -311,7 +311,7 @@ export function Transactions({
         </div>
       </header>
 
-      {/* Summary strip — precise mode, no card decoration */}
+      {/* Summary strip - precise mode, no card decoration */}
       <div className="mb-4 grid grid-cols-2 overflow-hidden rounded-lg border border-fog bg-paper-white lg:grid-cols-4">
         <SummaryCell label="Gross sales" value={formatMoney(summary.gross, false)} />
         <SummaryCell label="Platform fees" value={formatMoney(summary.fees)} hint="HitPay 2%" />
@@ -374,10 +374,10 @@ export function Transactions({
                     {formatMoney(txn.gross, false)}
                   </td>
                   <td className="tabular-nums px-4 py-2.5 text-right text-graphite">
-                    {txn.fee > 0 ? formatMoney(txn.fee) : '—'}
+                    {txn.fee > 0 ? formatMoney(txn.fee) : '-'}
                   </td>
                   <td className="tabular-nums px-4 py-2.5 text-right font-medium text-carbon">
-                    {txn.net > 0 ? formatMoney(txn.net) : '—'}
+                    {txn.net > 0 ? formatMoney(txn.net) : '-'}
                   </td>
                   <td className="px-4 py-2.5">
                     <TransactionStatusBadge status={txn.status} />

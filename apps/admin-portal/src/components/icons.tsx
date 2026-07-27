@@ -59,14 +59,25 @@ export function IconAudit({ className }: { className?: string }) {
   )
 }
 
-export function IconMegaphone({ className }: { className?: string }) {
+export function IconInbox({ className }: { className?: string }) {
   return (
     <svg className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-      <path d="m3 11 18-5v12L3 13v-2Z" />
-      <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+      <path d="M22 12h-6l-2 3h-4l-2-3H2" />
+      <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z" />
     </svg>
   )
 }
+
+export function IconLedger({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+      <path d="M8 7h8M8 11h8M8 15h5" />
+    </svg>
+  )
+}
+
 
 export function IconLogout({ className }: { className?: string }) {
   return (

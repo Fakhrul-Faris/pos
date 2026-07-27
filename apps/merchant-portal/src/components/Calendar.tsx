@@ -52,7 +52,7 @@ function formatWeekRange(weekStart: Date) {
     month: 'short',
     year: 'numeric',
   })
-  return `${startFmt.format(weekStart)} – ${endFmt.format(weekEnd)}`
+  return `${startFmt.format(weekStart)} - ${endFmt.format(weekEnd)}`
 }
 
 function formatSelectedDay(date: Date) {
@@ -99,7 +99,7 @@ export function Calendar({ vertical, onSelectBooking, onNewBooking, onDateChange
   }
 
   return (
-    <div className="mx-auto max-w-[1200px] rounded-xl border border-fog px-6 py-6">
+    <div className="w-full rounded-xl border border-fog px-4 py-4 sm:px-6 sm:py-6">
       <header className="mb-5 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-medium tracking-ui text-sky">Calendar</p>
@@ -109,7 +109,7 @@ export function Calendar({ vertical, onSelectBooking, onNewBooking, onDateChange
           <p className="mt-1 text-sm text-ash">
             {bookingCount} bookings
             {walkInBlocks > 0 ? ' · walk-in block active' : ''}
-            {' · '}shop open 9am–8pm
+            {' · '}shop open 9am-8pm
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -195,7 +195,7 @@ export function Calendar({ vertical, onSelectBooking, onNewBooking, onDateChange
                 {day.getDate()}
               </p>
               <p className="mt-0.5 text-[11px] text-ash">
-                {dayBookings > 0 ? `${dayBookings} apt` : '—'}
+                {dayBookings > 0 ? `${dayBookings} apt` : '-'}
               </p>
             </button>
           )

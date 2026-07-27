@@ -1,5 +1,11 @@
 'use client'
 
+/**
+ * Queue operate layout - removed from Merchant Portal L1 (IA).
+ * Keep for Shared POS. Design snapshot:
+ * `docs/design/component-refs/queue-component-design.png`
+ */
+
 import { useMemo } from 'react'
 import type { BookingRecord } from '../data/mock'
 import { minutesToDisplayTime } from '../data/mock'
@@ -109,7 +115,7 @@ export function QueueView({ onSelectBooking, onStartService }: QueueViewProps) {
   }, [queue.waiting])
 
   return (
-    <div className="mx-auto h-full max-w-[1200px] rounded-xl border border-fog px-6 py-6">
+    <div className="h-full w-full rounded-xl border border-fog px-4 py-4 sm:px-6 sm:py-6">
       <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-medium tracking-ui text-sky">Counter</p>
@@ -124,13 +130,13 @@ export function QueueView({ onSelectBooking, onStartService }: QueueViewProps) {
           <div className="text-right">
             <p className="text-xs text-ash">Avg wait</p>
             <p className="tabular-nums font-display text-lg font-medium text-carbon">
-              {queue.avgWaitMinutes > 0 ? `${queue.avgWaitMinutes}m` : '—'}
+              {queue.avgWaitMinutes > 0 ? `${queue.avgWaitMinutes}m` : '-'}
             </p>
           </div>
           <div className="text-right">
             <p className="text-xs text-ash">Longest</p>
             <p className="tabular-nums font-display text-lg font-medium text-carbon">
-              {queue.longestWaitMinutes > 0 ? `${queue.longestWaitMinutes}m` : '—'}
+              {queue.longestWaitMinutes > 0 ? `${queue.longestWaitMinutes}m` : '-'}
             </p>
           </div>
         </div>
@@ -161,7 +167,7 @@ export function QueueView({ onSelectBooking, onStartService }: QueueViewProps) {
                     Now serving
                   </p>
                   {serving.length === 0 ? (
-                    <EmptyColumn label="—" />
+                    <EmptyColumn label="-" />
                   ) : (
                     <div className="space-y-2">
                       {serving.map((t) => (

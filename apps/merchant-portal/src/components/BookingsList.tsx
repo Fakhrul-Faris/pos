@@ -104,7 +104,7 @@ export function BookingsList({ vertical, onSelectBooking, onNewBooking }: Bookin
   }, [allBookings, dateFilter])
 
   return (
-    <div className="mx-auto h-full max-w-[1200px] rounded-xl border border-fog px-6 py-6">
+    <div className="h-full w-full rounded-xl border border-fog px-4 py-4 sm:px-6 sm:py-6">
       <header className="mb-5 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-medium tracking-ui text-sky">Bookings</p>

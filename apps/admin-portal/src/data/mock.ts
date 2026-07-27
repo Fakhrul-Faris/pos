@@ -7,6 +7,7 @@ import type {
   PayoutOverride,
   ReconciliationRow,
   RefundRequest,
+  SupportSubmission,
   Transaction,
 } from './types'
 
@@ -23,133 +24,224 @@ export const INITIAL_MERCHANTS: Merchant[] = [
   {
     id: 'm-001',
     businessName: 'Fade Room KL',
-    ownerName: 'Amir Razak',
-    ownerEmail: 'amir@faderoom.my',
     vertical: 'Barbershop',
-    plan: 'ocelot',
     status: 'active',
     signupDate: '2026-04-12',
     lastActive: '2026-07-16',
-    mrr: 109,
-    outlets: 1,
-    bookingsThisMonth: 186,
-    bankAccountMasked: '****4281',
     notes: [
       {
         id: 'n-1',
         adminId: 'fakhrul',
         adminName: 'Fakhrul',
-        body: 'Founding barber — locked RM89 promo until Apr 2027.',
+        body: 'Founding barber - locked RM89 promo until Apr 2027.',
         createdAt: '2026-04-12T10:00:00+08:00',
       },
     ],
-    subscription: {
-      plan: 'ocelot',
-      status: 'active',
-      nextBillingDate: '2026-08-12',
-      lastPaymentDate: '2026-07-12',
-      lastPaymentAmount: 109,
-      graceEndsAt: null,
-      paymentHistory: [
-        { id: 'pay-1', date: '2026-07-12', amount: 109, status: 'paid' },
-        { id: 'pay-2', date: '2026-06-12', amount: 109, status: 'paid' },
-        { id: 'pay-3', date: '2026-05-12', amount: 109, status: 'paid' },
-      ],
-    },
+    owners: [
+      {
+        id: 'own-001',
+        name: 'Amir Razak',
+        email: 'amir@faderoom.my',
+        role: 'owner',
+        bankAccountMasked: 'Maybank .... 4281',
+      },
+    ],
+    brands: [
+      {
+        id: 'br-001',
+        organizationId: 'm-001',
+        name: 'Fade Room',
+        mrr: 109,
+        subscription: {
+          plan: 'ocelot',
+          status: 'active',
+          nextBillingDate: '2026-08-12',
+          lastPaymentDate: '2026-07-12',
+          lastPaymentAmount: 109,
+          graceEndsAt: null,
+          paymentHistory: [
+            { id: 'pay-1', date: '2026-07-12', amount: 109, status: 'paid' },
+            { id: 'pay-2', date: '2026-06-12', amount: 109, status: 'paid' },
+            { id: 'pay-3', date: '2026-05-12', amount: 109, status: 'paid' },
+          ],
+        },
+        branches: [
+          {
+            id: 'bh-001',
+            brandId: 'br-001',
+            name: 'Fade Room Bukit Bintang',
+            address: '12 Jalan Bukit Bintang',
+            city: 'Kuala Lumpur',
+            hoursSummary: 'Mon-Sat 10:00-20:00',
+            isHeadquarters: true,
+            isActive: true,
+          },
+        ],
+      },
+    ],
   },
   {
     id: 'm-002',
-    businessName: 'Clip & Co Bangsar',
-    ownerName: 'Siti Nur',
-    ownerEmail: 'siti@clipco.my',
+    businessName: 'Clip & Co Sdn Bhd',
     vertical: 'Barbershop',
-    plan: 'mantis',
     status: 'suspension_pending',
     signupDate: '2026-03-01',
     lastActive: '2026-07-14',
-    mrr: 199,
-    outlets: 2,
-    bookingsThisMonth: 312,
-    bankAccountMasked: '****9012',
     notes: [],
-    subscription: {
-      plan: 'mantis',
-      status: 'past_due',
-      nextBillingDate: '2026-07-01',
-      lastPaymentDate: '2026-06-01',
-      lastPaymentAmount: 199,
-      graceEndsAt: '2026-07-20',
-      paymentHistory: [
-        { id: 'pay-4', date: '2026-07-01', amount: 199, status: 'failed' },
-        { id: 'pay-5', date: '2026-06-01', amount: 199, status: 'paid' },
-        { id: 'pay-6', date: '2026-05-01', amount: 199, status: 'paid' },
-      ],
-    },
+    owners: [
+      {
+        id: 'own-002',
+        name: 'Siti Nur',
+        email: 'siti@clipco.my',
+        role: 'owner',
+        bankAccountMasked: 'CIMB .... 9012',
+      },
+    ],
+    brands: [
+      {
+        id: 'br-002',
+        organizationId: 'm-002',
+        name: 'Clip & Co',
+        mrr: 199,
+        subscription: {
+          plan: 'mantis',
+          status: 'past_due',
+          nextBillingDate: '2026-07-01',
+          lastPaymentDate: '2026-06-01',
+          lastPaymentAmount: 199,
+          graceEndsAt: '2026-07-20',
+          paymentHistory: [
+            { id: 'pay-4', date: '2026-07-01', amount: 199, status: 'failed' },
+            { id: 'pay-5', date: '2026-06-01', amount: 199, status: 'paid' },
+            { id: 'pay-6', date: '2026-05-01', amount: 199, status: 'paid' },
+          ],
+        },
+        branches: [
+          {
+            id: 'bh-002a',
+            brandId: 'br-002',
+            name: 'Clip & Co Bangsar',
+            address: '45 Jalan Telawi 3',
+            city: 'Kuala Lumpur',
+            hoursSummary: 'Daily 10:00-21:00',
+            isHeadquarters: true,
+            isActive: true,
+          },
+          {
+            id: 'bh-002b',
+            brandId: 'br-002',
+            name: 'Clip & Co Damansara',
+            address: '88 Persiaran Tropicana',
+            city: 'Petaling Jaya',
+            hoursSummary: 'Daily 11:00-20:00',
+            isHeadquarters: false,
+            isActive: true,
+          },
+        ],
+      },
+    ],
   },
   {
     id: 'm-003',
     businessName: 'Barber Bros PJ',
-    ownerName: 'Lim Wei',
-    ownerEmail: 'wei@barberbros.my',
     vertical: 'Barbershop',
-    plan: 'trial',
     status: 'active',
     signupDate: '2026-07-13',
     lastActive: '2026-07-16',
-    mrr: 0,
-    outlets: 1,
-    bookingsThisMonth: 42,
-    bankAccountMasked: '****3310',
     notes: [],
-    subscription: {
-      plan: 'trial',
-      status: 'active',
-      nextBillingDate: '2026-07-19',
-      lastPaymentDate: null,
-      lastPaymentAmount: null,
-      graceEndsAt: null,
-      paymentHistory: [],
-    },
+    owners: [
+      {
+        id: 'own-003',
+        name: 'Lim Wei',
+        email: 'wei@barberbros.my',
+        role: 'owner',
+        bankAccountMasked: 'Maybank .... 3310',
+      },
+    ],
+    brands: [
+      {
+        id: 'br-003',
+        organizationId: 'm-003',
+        name: 'Barber Bros',
+        mrr: 0,
+        subscription: {
+          plan: 'trial',
+          status: 'active',
+          nextBillingDate: '2026-07-19',
+          lastPaymentDate: null,
+          lastPaymentAmount: null,
+          graceEndsAt: null,
+          paymentHistory: [],
+        },
+        branches: [
+          {
+            id: 'bh-003',
+            brandId: 'br-003',
+            name: 'Barber Bros SS2',
+            address: '21 Jalan SS2/24',
+            city: 'Petaling Jaya',
+            hoursSummary: 'Tue-Sun 10:00-19:00',
+            isHeadquarters: true,
+            isActive: true,
+          },
+        ],
+      },
+    ],
   },
   {
     id: 'm-004',
     businessName: 'Sharp Edge Cheras',
-    ownerName: 'Hafiz Ali',
-    ownerEmail: 'hafiz@sharpedge.my',
     vertical: 'Barbershop',
-    plan: 'lite',
     status: 'active',
     signupDate: '2026-02-18',
     lastActive: '2026-07-10',
-    mrr: 0,
-    outlets: 1,
-    bookingsThisMonth: 21,
-    bankAccountMasked: '****7744',
     notes: [],
-    subscription: {
-      plan: 'lite',
-      status: 'active',
-      nextBillingDate: '—',
-      lastPaymentDate: null,
-      lastPaymentAmount: null,
-      graceEndsAt: null,
-      paymentHistory: [],
-    },
+    owners: [
+      {
+        id: 'own-004',
+        name: 'Hafiz Ali',
+        email: 'hafiz@sharpedge.my',
+        role: 'owner',
+        bankAccountMasked: 'RHB .... 7744',
+      },
+    ],
+    brands: [
+      {
+        id: 'br-004',
+        organizationId: 'm-004',
+        name: 'Sharp Edge',
+        mrr: 0,
+        subscription: {
+          plan: 'lite',
+          status: 'active',
+          nextBillingDate: '-',
+          lastPaymentDate: null,
+          lastPaymentAmount: null,
+          graceEndsAt: null,
+          paymentHistory: [],
+        },
+        branches: [
+          {
+            id: 'bh-004',
+            brandId: 'br-004',
+            name: 'Sharp Edge Cheras',
+            address: '3 Jalan Cheras Utama',
+            city: 'Kuala Lumpur',
+            hoursSummary: 'Wed-Mon 11:00-20:00',
+            isHeadquarters: true,
+            isActive: true,
+          },
+        ],
+      },
+    ],
   },
   {
     id: 'm-005',
     businessName: 'Queen Cuts Mont Kiara',
-    ownerName: 'Aisha Rahman',
-    ownerEmail: 'aisha@queencuts.my',
     vertical: 'Salon',
-    plan: 'ocelot',
     status: 'suspended',
     signupDate: '2026-01-20',
     lastActive: '2026-06-28',
-    mrr: 0,
-    outlets: 1,
-    bookingsThisMonth: 0,
-    bankAccountMasked: '****5520',
     notes: [
       {
         id: 'n-2',
@@ -159,53 +251,209 @@ export const INITIAL_MERCHANTS: Merchant[] = [
         createdAt: '2026-07-02T14:20:00+08:00',
       },
     ],
-    subscription: {
-      plan: 'ocelot',
-      status: 'cancelled',
-      nextBillingDate: '—',
-      lastPaymentDate: '2026-05-20',
-      lastPaymentAmount: 109,
-      graceEndsAt: null,
-      paymentHistory: [
-        { id: 'pay-7', date: '2026-06-20', amount: 109, status: 'failed' },
-        { id: 'pay-8', date: '2026-05-20', amount: 109, status: 'paid' },
-      ],
-    },
+    owners: [
+      {
+        id: 'own-005',
+        name: 'Aisha Rahman',
+        email: 'aisha@queencuts.my',
+        role: 'owner',
+        bankAccountMasked: 'Maybank .... 5520',
+      },
+    ],
+    brands: [
+      {
+        id: 'br-005',
+        organizationId: 'm-005',
+        name: 'Queen Cuts',
+        mrr: 0,
+        subscription: {
+          plan: 'ocelot',
+          status: 'cancelled',
+          nextBillingDate: '-',
+          lastPaymentDate: '2026-05-20',
+          lastPaymentAmount: 109,
+          graceEndsAt: null,
+          paymentHistory: [
+            { id: 'pay-7', date: '2026-06-20', amount: 109, status: 'failed' },
+            { id: 'pay-8', date: '2026-05-20', amount: 109, status: 'paid' },
+          ],
+        },
+        branches: [
+          {
+            id: 'bh-005',
+            brandId: 'br-005',
+            name: 'Queen Cuts Mont Kiara',
+            address: 'Plaza Mont Kiara, Lot 2-12',
+            city: 'Kuala Lumpur',
+            hoursSummary: 'Tue-Sun 10:00-19:00',
+            isHeadquarters: true,
+            isActive: false,
+          },
+        ],
+      },
+    ],
   },
   {
     id: 'm-006',
-    businessName: 'Trim Lab Ampang',
-    ownerName: 'Jason Tan',
-    ownerEmail: 'jason@trimlab.my',
+    businessName: 'Trim Lab Group',
     vertical: 'Barbershop',
-    plan: 'ocelot',
     status: 'active',
     signupDate: '2026-05-22',
     lastActive: '2026-07-15',
-    mrr: 109,
-    outlets: 1,
-    bookingsThisMonth: 98,
-    bankAccountMasked: '****1199',
     notes: [],
-    subscription: {
-      plan: 'ocelot',
-      status: 'active',
-      nextBillingDate: '2026-08-22',
-      lastPaymentDate: '2026-07-22',
-      lastPaymentAmount: 109,
-      graceEndsAt: null,
-      paymentHistory: [
-        { id: 'pay-9', date: '2026-07-22', amount: 109, status: 'paid' },
-        { id: 'pay-10', date: '2026-06-22', amount: 109, status: 'paid' },
-      ],
-    },
+    owners: [
+      {
+        id: 'own-006',
+        name: 'Jason Tan',
+        email: 'jason@trimlab.my',
+        role: 'owner',
+        bankAccountMasked: 'HSBC .... 1199',
+      },
+      {
+        id: 'own-006b',
+        name: 'Mei Ling',
+        email: 'mei@trimlab.my',
+        role: 'billing',
+        bankAccountMasked: 'HSBC .... 1199',
+      },
+    ],
+    brands: [
+      {
+        id: 'br-006a',
+        organizationId: 'm-006',
+        name: 'Trim Lab',
+        mrr: 109,
+        subscription: {
+          plan: 'ocelot',
+          status: 'active',
+          nextBillingDate: '2026-08-22',
+          lastPaymentDate: '2026-07-22',
+          lastPaymentAmount: 109,
+          graceEndsAt: null,
+          paymentHistory: [
+            { id: 'pay-9', date: '2026-07-22', amount: 109, status: 'paid' },
+            { id: 'pay-10', date: '2026-06-22', amount: 109, status: 'paid' },
+          ],
+        },
+        branches: [
+          {
+            id: 'bh-006a',
+            brandId: 'br-006a',
+            name: 'Trim Lab Ampang',
+            address: '9 Jalan Ampang',
+            city: 'Kuala Lumpur',
+            hoursSummary: 'Mon-Sat 10:00-20:00',
+            isHeadquarters: true,
+            isActive: true,
+          },
+        ],
+      },
+      {
+        id: 'br-006b',
+        organizationId: 'm-006',
+        name: 'Trim Lab Kids',
+        mrr: 0,
+        subscription: {
+          plan: 'lite',
+          status: 'active',
+          nextBillingDate: '-',
+          lastPaymentDate: null,
+          lastPaymentAmount: null,
+          graceEndsAt: null,
+          paymentHistory: [],
+        },
+        branches: [
+          {
+            id: 'bh-006b',
+            brandId: 'br-006b',
+            name: 'Trim Lab Kids Ampang',
+            address: '9 Jalan Ampang (unit B)',
+            city: 'Kuala Lumpur',
+            hoursSummary: 'Weekends 09:00-17:00',
+            isHeadquarters: true,
+            isActive: true,
+          },
+        ],
+      },
+    ],
   },
 ]
+
+/** Org display name */
+export function merchantName(merchants: Merchant[], id: string) {
+  return merchants.find((m) => m.id === id)?.businessName ?? id
+}
+
+export function orgMrr(m: Merchant) {
+  return m.brands.reduce((s, b) => s + b.mrr, 0)
+}
+
+export function branchCount(m: Merchant) {
+  return m.brands.reduce((s, b) => s + b.branches.length, 0)
+}
+
+export function primaryOwner(m: Merchant) {
+  return m.owners.find((o) => o.role === 'owner') ?? m.owners[0]
+}
+
+export function primaryBrand(m: Merchant) {
+  return m.brands[0]
+}
+
+export function allBrandRows(merchants: Merchant[]) {
+  return merchants.flatMap((m) =>
+    m.brands.map((b) => ({
+      organization: m,
+      brand: b,
+    })),
+  )
+}
+
+/** Resolve Brand / Branch labels for Finance context columns */
+export function brandName(merchants: Merchant[], merchantId: string, brandId?: string) {
+  if (!brandId) return null
+  const org = merchants.find((m) => m.id === merchantId)
+  return org?.brands.find((b) => b.id === brandId)?.name ?? brandId
+}
+
+export function branchName(
+  merchants: Merchant[],
+  merchantId: string,
+  brandId?: string,
+  branchId?: string,
+) {
+  if (!branchId) return null
+  const org = merchants.find((m) => m.id === merchantId)
+  if (!org) return branchId
+  for (const b of org.brands) {
+    if (brandId && b.id !== brandId) continue
+    const bh = b.branches.find((x) => x.id === branchId)
+    if (bh) return bh.name
+  }
+  return branchId
+}
+
+export function financeContextLabel(
+  merchants: Merchant[],
+  merchantId: string,
+  brandId?: string,
+  branchId?: string,
+) {
+  const brand = brandName(merchants, merchantId, brandId)
+  const branch = branchName(merchants, merchantId, brandId, branchId)
+  if (brand && branch) return `${brand} · ${branch}`
+  if (brand) return brand
+  if (branch) return branch
+  return null
+}
+
 
 export const INITIAL_REFUNDS: RefundRequest[] = [
   {
     id: 'rf-001',
     merchantId: 'm-001',
+    brandId: 'br-001',
+    branchId: 'bh-001',
     receiptId: 'RCP-88421',
     amount: 45,
     reason: 'Customer charged twice for same cut',
@@ -219,9 +467,11 @@ export const INITIAL_REFUNDS: RefundRequest[] = [
   {
     id: 'rf-002',
     merchantId: 'm-006',
+    brandId: 'br-006a',
+    branchId: 'bh-006a',
     receiptId: 'RCP-90102',
     amount: 80,
-    reason: 'Service not completed — walkout',
+    reason: 'Service not completed - walkout',
     notes: '',
     status: 'pending_first',
     loggedBy: 'helmi',
@@ -230,6 +480,8 @@ export const INITIAL_REFUNDS: RefundRequest[] = [
   {
     id: 'rf-003',
     merchantId: 'm-002',
+    brandId: 'br-002',
+    branchId: 'bh-002a',
     receiptId: 'RCP-77210',
     amount: 120,
     reason: 'Wrong amount on dynamic QR',
@@ -249,6 +501,8 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   {
     id: 'tx-1001',
     merchantId: 'm-001',
+    brandId: 'br-001',
+    branchId: 'bh-001',
     amount: 45,
     surcharge: 0.9,
     settlementAmount: 44.1,
@@ -259,17 +513,21 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   {
     id: 'tx-1002',
     merchantId: 'm-002',
+    brandId: 'br-002',
+    branchId: 'bh-002b',
     amount: 200,
     surcharge: 4,
     settlementAmount: 196,
     timestamp: '2026-07-16T09:05:00+08:00',
     method: 'duitnow_qr',
     status: 'flagged',
-    hitpayFlagReason: 'Unusual velocity — 8 payments in 12 minutes',
+    hitpayFlagReason: 'Unusual velocity - 8 payments in 12 minutes',
   },
   {
     id: 'tx-1003',
     merchantId: 'm-006',
+    brandId: 'br-006a',
+    branchId: 'bh-006a',
     amount: 35,
     surcharge: 0.7,
     settlementAmount: 34.3,
@@ -280,6 +538,8 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   {
     id: 'tx-1004',
     merchantId: 'm-001',
+    brandId: 'br-001',
+    branchId: 'bh-001',
     amount: 60,
     surcharge: 1.2,
     settlementAmount: 58.8,
@@ -291,6 +551,8 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   {
     id: 'tx-1005',
     merchantId: 'm-003',
+    brandId: 'br-003',
+    branchId: 'bh-003',
     amount: 40,
     surcharge: 0,
     settlementAmount: 40,
@@ -301,6 +563,8 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   {
     id: 'tx-1006',
     merchantId: 'm-002',
+    brandId: 'br-002',
+    branchId: 'bh-002a',
     amount: 150,
     surcharge: 3,
     settlementAmount: 147,
@@ -358,6 +622,65 @@ export const INITIAL_PAYOUT_OVERRIDES: PayoutOverride[] = [
     status: 'pending_first',
     loggedBy: 'haziq',
     loggedAt: '2026-07-16T08:00:00+08:00',
+  },
+]
+
+export const INITIAL_SUPPORT: SupportSubmission[] = [
+  {
+    id: 'cs-101',
+    merchantId: 'm-001',
+    subject: 'Payment stuck after HitPay QR',
+    type: 'payment',
+    channel: 'in_app',
+    priority: 'high',
+    status: 'open',
+    submittedAt: '2026-07-22T09:14:00+08:00',
+    body: 'Customer paid via QR but booking still shows unpaid. Receipt TXN-88421.',
+    customerName: 'Ahmad R.',
+    resolutionNotes: '',
+    resolvedAt: null,
+  },
+  {
+    id: 'cs-102',
+    merchantId: 'm-002',
+    subject: 'Cannot log in to Owner portal',
+    type: 'access',
+    channel: 'email',
+    priority: 'normal',
+    status: 'in_progress',
+    submittedAt: '2026-07-21T16:40:00+08:00',
+    body: 'Reset link expires immediately. Using Chrome on Mac.',
+    customerName: 'Siti N.',
+    resolutionNotes: 'Asked for screenshot of reset email. Waiting.',
+    resolvedAt: null,
+  },
+  {
+    id: 'cs-103',
+    merchantId: 'm-003',
+    subject: 'Request invoice PDF for June',
+    type: 'billing',
+    channel: 'web',
+    priority: 'low',
+    status: 'open',
+    submittedAt: '2026-07-20T11:02:00+08:00',
+    body: 'Need branded invoice for accounting.',
+    customerName: 'Lee W.',
+    resolutionNotes: '',
+    resolvedAt: null,
+  },
+  {
+    id: 'cs-104',
+    merchantId: 'm-006',
+    subject: 'Roster not syncing across branches',
+    type: 'product',
+    channel: 'in_app',
+    priority: 'high',
+    status: 'open',
+    submittedAt: '2026-07-22T14:20:00+08:00',
+    body: 'Trim Lab Ampang roster edits do not show on Kids brand staff view.',
+    customerName: 'Jason T.',
+    resolutionNotes: '',
+    resolvedAt: null,
   },
 ]
 
@@ -551,13 +874,6 @@ export const INITIAL_POSTS: MarketingPost[] = [
   },
 ]
 
-export function merchantName(
-  merchants: Merchant[],
-  id: string,
-): string {
-  return merchants.find((m) => m.id === id)?.businessName ?? id
-}
-
 export function formatRM(n: number): string {
   return `RM ${n.toLocaleString('en-MY', {
     minimumFractionDigits: n % 1 === 0 ? 0 : 2,
@@ -566,7 +882,7 @@ export function formatRM(n: number): string {
 }
 
 export function formatDate(iso: string): string {
-  if (!iso || iso === '—') return '—'
+  if (!iso || iso === '-' || iso === '\u2014') return '-'
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
   return d.toLocaleDateString('en-MY', {
