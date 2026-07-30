@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { MotionPresenceShell } from '@/components/motion/MotionOverlay'
 import { useStore } from '../data/store'
 
 type ReassignBarberDrawerProps = {
@@ -26,9 +27,14 @@ export function ReassignBarberDrawer({ bookingId, onClose, onReassigned }: Reass
   if (!booking) return null
 
   return (
-    <div className="fixed inset-0 z-[55] flex justify-end">
-      <button type="button" aria-label="Close" className="absolute inset-0 bg-carbon/20" onClick={onClose} />
-      <aside className="relative flex h-full w-full max-w-md flex-col border-l border-fog bg-paper-white shadow-panel">
+    <MotionPresenceShell
+      variant="drawer-right"
+      onClose={onClose}
+      zClass="z-[55]"
+      backdropClassName="bg-carbon/20"
+      panelClassName="flex h-full w-full max-w-md flex-col border-l border-fog bg-paper-white shadow-panel"
+      aria-label="Reassign barber"
+    >
         <header className="border-b border-fog px-5 py-4">
           <p className="text-xs font-medium tracking-ui text-ash">Reassign barber</p>
           <h2 className="font-display mt-1 text-lg font-medium tracking-ui text-carbon">
@@ -61,7 +67,6 @@ export function ReassignBarberDrawer({ bookingId, onClose, onReassigned }: Reass
             Cancel
           </button>
         </footer>
-      </aside>
-    </div>
+    </MotionPresenceShell>
   )
 }

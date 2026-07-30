@@ -3,6 +3,8 @@
 Counter tablet app for **P-xx POS screens** — floor board, booking detail, walk-in, payment, receipt.
 
 **Spec:** [`docs/modules/barbershop/ui.md`](../../docs/modules/barbershop/ui.md) · Part 2  
+**UI design:** [`docs/design/staff-pos-ui-design.md`](../../docs/design/staff-pos-ui-design.md)  
+**IA:** [`docs/design/staff-pos-ia.md`](../../docs/design/staff-pos-ia.md)  
 **Capabilities:** [`prototype/staff-pos/README.md`](../../prototype/staff-pos/README.md)  
 **Theme:** [`docs/design/themes/visitors-design.md`](../../docs/design/themes/visitors-design.md)
 

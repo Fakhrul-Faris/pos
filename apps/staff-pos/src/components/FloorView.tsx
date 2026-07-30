@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { fade } from '@/lib/motion'
 import { actingLabel, type BookingStatus, type FloorBooking } from '../data/mock'
 import { useStore } from '../data/store'
 
@@ -10,62 +12,45 @@ function minutesToLabel(minutes: number) {
   return `${h % 12 || 12}:${String(m).padStart(2, '0')}${h < 12 ? 'am' : 'pm'}`
 }
 
-function Badge({ label, className }: { label: string; className?: string }) {
-  return (
-    <span
-      className={`rounded-full bg-mist px-2.5 py-1 text-[11px] font-medium text-ash ${className ?? ''}`}
-    >
-      {label}
-    </span>
-  )
-}
-
-function statusCardClass(status: BookingStatus, late?: boolean, source?: FloorBooking['source']) {
-  const sourceTint =
-    source === 'walk-in' ? 'bg-sky/[0.04]' : source === 'online' ? 'bg-linen' : 'bg-paper-white'
-  if (late) return `${sourceTint} border-fog border-l-4 border-l-ember`
+function statusCardClass(status: BookingStatus, late?: boolean) {
+  if (late) return 'border-fog border-l-[3px] border-l-ember bg-paper-white'
   const accents: Record<BookingStatus, string> = {
-    confirmed: 'border-fog border-l-4 border-l-sky',
-    'checked-in': 'border-fog border-l-4 border-l-amber',
-    'in-service': 'border-fog border-l-4 border-l-lavender',
-    completed: 'border-fog border-l-4 border-l-mint',
-    'no-show': 'border-fog border-l-4 border-l-ash/40 opacity-60',
-    cancelled: 'border-fog border-l-4 border-l-ash/30 opacity-50',
+    confirmed: 'border-fog border-l-[3px] border-l-sky bg-paper-white',
+    'checked-in': 'border-fog border-l-[3px] border-l-amber bg-paper-white',
+    'in-service': 'border-fog border-l-[3px] border-l-lavender bg-paper-white',
+    completed: 'border-fog border-l-[3px] border-l-mint bg-paper-white',
+    'no-show': 'border-fog border-l-[3px] border-l-ash/40 bg-mist/50 opacity-60',
+    cancelled: 'border-fog border-l-[3px] border-l-ash/30 bg-mist/50 opacity-50',
   }
-  return `${sourceTint} ${accents[status]}`
+  return accents[status]
 }
 
-function statusLabel(status: BookingStatus): { label: string; className: string } | null {
-  const map: Partial<Record<BookingStatus, { label: string; className: string }>> = {
-    confirmed: { label: 'Upcoming', className: 'bg-sky/10 text-sky' },
-    'checked-in': { label: 'Arrived', className: 'bg-[#fff4e0] text-amber' },
-    'in-service': { label: 'In chair', className: 'bg-lavender/15 text-lavender' },
-    completed: { label: 'Done', className: 'bg-mint-wash text-mint' },
-    'no-show': { label: 'No-show', className: 'bg-mist text-ash' },
-    cancelled: { label: 'Cancelled', className: 'bg-mist text-ash' },
-  }
-  return map[status] ?? null
-}
-
-function BookingCard({
+function ColumnBookingCard({
   b,
-  actions,
   late,
   selected,
   onPress,
+  trailing,
+  draggable,
+  onDragStart,
+  onDragEnd,
 }: {
   b: FloorBooking
-  actions?: React.ReactNode
   late?: boolean
   selected?: boolean
   onPress?: () => void
+  trailing?: React.ReactNode
+  draggable?: boolean
+  onDragStart?: (e: React.DragEvent) => void
+  onDragEnd?: () => void
 }) {
-  const status = statusLabel(b.status)
-
   return (
     <div
       role={onPress ? 'button' : undefined}
       tabIndex={onPress ? 0 : undefined}
+      draggable={draggable}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
       onClick={onPress}
       onKeyDown={
         onPress
@@ -77,29 +62,36 @@ function BookingCard({
             }
           : undefined
       }
-      className={`rounded-xl border px-4 py-3 ${statusCardClass(b.status, late, b.source)} ${
-        selected ? 'ring-2 ring-lavender/40' : ''
-      } ${onPress ? 'min-h-12 cursor-pointer transition-colors hover:border-lavender/40' : ''}`}
+      className={`rounded-xl border px-3 py-2.5 ${statusCardClass(b.status, late)} ${
+        selected ? 'ring-2 ring-barber' : ''
+      } ${onPress ? 'min-h-12 cursor-pointer transition-shadow hover:shadow-sm' : ''} ${
+        draggable ? 'cursor-grab active:cursor-grabbing' : ''
+      }`}
     >
-      <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
+      <div className="flex items-start gap-2.5">
+        {b.queueNumber ? (
+          <span className="font-display shrink-0 text-xl font-semibold tabular-nums tracking-ui text-carbon">
+            #{b.queueNumber}
+          </span>
+        ) : (
+          <span className="font-display shrink-0 text-sm font-medium text-ash">—</span>
+        )}
+        <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-carbon">{b.customer}</p>
           <p className="truncate text-xs text-ash">
-            {b.services} · {minutesToLabel(b.startMinutes)} · RM {b.amount}
+            {b.services} · {minutesToLabel(b.startMinutes)}
           </p>
-          {late && <p className="mt-0.5 text-[11px] font-medium text-ember">15+ min late</p>}
+          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+            {b.isParty ? (
+              <span className="text-[10px] font-medium uppercase tracking-ui text-lavender">
+                Party {b.partySize}
+              </span>
+            ) : null}
+            {late ? <span className="text-[10px] font-medium text-ember">Late</span> : null}
+            {b.source === 'walk-in' ? <span className="text-[10px] text-sky">Walk-in</span> : null}
+          </div>
         </div>
-        <div className="flex shrink-0 flex-wrap items-center justify-end gap-1.5">
-          {status && <Badge label={status.label} className={status.className} />}
-          {b.queueNumber ? <Badge label={`#${b.queueNumber}`} /> : null}
-          {b.isParty ? <Badge label={`Party ${b.partySize}`} className="bg-mist text-lavender" /> : null}
-          {b.source === 'walk-in' ? (
-            <Badge label="Walk-in" className="bg-sky/10 text-sky" />
-          ) : (
-            <Badge label="Online" className="bg-linen text-graphite" />
-          )}
-          {actions}
-        </div>
+        {trailing}
       </div>
     </div>
   )
@@ -114,9 +106,17 @@ function StatusBadge({ status }: { status: 'available' | 'busy' | 'break' | 'off
   } as const
   const cfg = map[status]
   return (
-    <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-medium ${cfg.className}`}>
+    <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${cfg.className}`}>
       {cfg.label}
     </span>
+  )
+}
+
+function EmptySlot({ label }: { label: string }) {
+  return (
+    <p className="rounded-lg border border-dashed border-fog bg-linen/40 px-2 py-4 text-center text-xs text-ash">
+      {label}
+    </p>
   )
 }
 
@@ -125,11 +125,15 @@ export function FloorView({
   onSelectBooking,
   onPromptNoShow,
   onToast,
+  viewMode: viewModeProp,
+  onViewModeChange,
 }: {
   selectedBookingId?: string | null
   onSelectBooking: (id: string) => void
   onPromptNoShow?: (id: string) => void
   onToast?: (t: { kind: 'success' | 'info' | 'error'; title: string; message?: string }) => void
+  viewMode?: 'lanes' | 'timeline'
+  onViewModeChange?: (mode: 'lanes' | 'timeline') => void
 }) {
   const {
     lanes,
@@ -142,8 +146,16 @@ export function FloorView({
     getReassignOptions,
   } = useStore()
   const [staffFilter, setStaffFilter] = useState<string>('all')
-  const [viewMode, setViewMode] = useState<'lanes' | 'timeline'>('lanes')
+  const [viewModeInternal, setViewModeInternal] = useState<'lanes' | 'timeline'>('lanes')
+  const [dragOverStaffId, setDragOverStaffId] = useState<string | null>(null)
+  const [draggingId, setDraggingId] = useState<string | null>(null)
+  const viewMode = viewModeProp ?? viewModeInternal
+  const setViewMode = (mode: 'lanes' | 'timeline') => {
+    onViewModeChange?.(mode)
+    if (viewModeProp === undefined) setViewModeInternal(mode)
+  }
   const promptedLateRef = useRef<Set<string>>(new Set())
+  const columnsRef = useRef<HTMLDivElement>(null)
 
   const filteredLanes = useMemo(
     () => (staffFilter === 'all' ? lanes : lanes.filter((l) => l.staff.id === staffFilter)),
@@ -162,6 +174,16 @@ export function FloorView({
       onPromptNoShow?.(next.id)
     }
   }, [lateBookings, onPromptNoShow])
+
+  useEffect(() => {
+    if (viewMode !== 'lanes' || staffFilter !== 'all') return
+    const el = columnsRef.current
+    if (!el) return
+    const actingIndex = filteredLanes.findIndex((l) => l.staff.id === actingStaffId)
+    if (actingIndex < 0) return
+    const column = el.children[actingIndex] as HTMLElement | undefined
+    column?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+  }, [actingStaffId, filteredLanes, staffFilter, viewMode])
 
   const timelineHours = useMemo(() => {
     const hours: Array<{ label: string; minutes: number; items: FloorBooking[] }> = []
@@ -195,10 +217,34 @@ export function FloorView({
     return items.sort((a, b) => (a.queueNumber ?? 0) - (b.queueNumber ?? 0))
   }, [lanes])
 
+  const nowServing = useMemo(() => {
+    const inChair = bookings
+      .filter((b) => b.status === 'in-service' && b.queueNumber != null)
+      .sort((a, b) => (a.queueNumber ?? 0) - (b.queueNumber ?? 0))
+    if (inChair[0]?.queueNumber != null) return inChair[0].queueNumber
+    if (allWaiting[0]?.queueNumber != null) return allWaiting[0].queueNumber
+    const upcoming = bookings
+      .filter((b) => b.status === 'confirmed' && b.queueNumber != null)
+      .sort((a, b) => (a.queueNumber ?? 0) - (b.queueNumber ?? 0))
+    return upcoming[0]?.queueNumber ?? null
+  }, [bookings, allWaiting])
+
+  const totals = useMemo(() => {
+    const now = lanes.reduce((n, l) => n + l.now.length, 0)
+    const waiting = lanes.reduce((n, l) => n + l.waiting.length, 0)
+    const upcoming = lanes.reduce((n, l) => n + l.upcoming.length, 0)
+    return { now, waiting, upcoming }
+  }, [lanes])
+
   function canTakeBooking(booking: FloorBooking) {
     if (booking.staffId === actingStaffId) return false
     const option = getReassignOptions(booking.id).find((o) => o.staffId === actingStaffId)
     return option?.available ?? false
+  }
+
+  function canDragBooking(booking: FloorBooking) {
+    if (booking.isParty) return false
+    return booking.status === 'confirmed' || booking.status === 'checked-in'
   }
 
   function handleTake(bookingId: string, customer: string) {
@@ -218,258 +264,346 @@ export function FloorView({
     }
   }
 
-  function waitingActions(b: FloorBooking, assignedName: string) {
-    const isYours = b.staffId === actingStaffId
-    return (
-      <>
-        <Badge label={isYours ? 'Yours' : assignedName} className={isYours ? 'bg-mint-wash text-mint' : undefined} />
-        {canTakeBooking(b) && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation()
-              handleTake(b.id, b.customer)
-            }}
-            className="min-h-10 rounded-full bg-lavender px-3 py-1.5 text-[11px] font-medium text-paper-white transition-colors hover:bg-iris"
-          >
-            Take
-          </button>
-        )}
-      </>
-    )
+  function handleDropOnLane(staffId: string, bookingId: string) {
+    const booking = bookings.find((b) => b.id === bookingId)
+    if (!booking || booking.staffId === staffId) return
+    const result = reassignBarber(bookingId, staffId)
+    const name = staff.find((s) => s.id === staffId)?.name ?? 'barber'
+    if (result.ok) {
+      onToast?.({
+        kind: 'success',
+        title: `Moved to ${name}`,
+        message: booking.customer,
+      })
+    } else {
+      onToast?.({
+        kind: 'error',
+        title: 'Cannot move',
+        message: result.reason ?? 'Unavailable',
+      })
+    }
   }
 
-  const partyBookings = useMemo(() => {
-    const seen = new Set<string>()
-    const parties: FloorBooking[] = []
-    for (const lane of lanes) {
-      for (const p of lane.parties) {
-        if (!seen.has(p.id)) {
-          seen.add(p.id)
-          parties.push(p)
-        }
-      }
-    }
-    return parties
-  }, [lanes])
-
-  const totals = useMemo(() => {
-    const now = lanes.reduce((n, l) => n + l.now.length, 0)
-    const waiting = lanes.reduce((n, l) => n + l.waiting.length, 0)
-    const upcoming = lanes.reduce((n, l) => n + l.upcoming.length, 0)
-    const done = lanes.reduce((n, l) => n + l.done.length, 0)
-    return { now, waiting, upcoming, done }
-  }, [lanes])
-
   const chipClass = (active: boolean) =>
-    `min-h-12 rounded-full px-4 text-sm font-medium transition-colors ${
-      active ? 'bg-carbon text-paper-white' : 'bg-mist text-graphite hover:bg-fog'
+    `shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+      active ? 'bg-barber text-barber-fg' : 'bg-mist text-graphite hover:bg-fog'
     }`
 
-  return (
-    <div className="mx-auto w-full max-w-none lg:max-w-none">
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-medium tracking-ui text-ash">Today board</p>
-          <p className="mt-1 text-sm text-graphite">
-            {totals.waiting} waiting · {totals.now} in chair · {totals.upcoming} upcoming · {totals.done}{' '}
-            done
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <button type="button" onClick={() => setViewMode('lanes')} className={chipClass(viewMode === 'lanes')}>
-            Lanes
-          </button>
-          <button type="button" onClick={() => setViewMode('timeline')} className={chipClass(viewMode === 'timeline')}>
-            Timeline
-          </button>
-        </div>
-      </div>
+  const reduce = useReducedMotion()
+  const boardMotion = reduce
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+        transition: { duration: 0.01 },
+      }
+    : {
+        initial: { opacity: 0, y: 6 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -4 },
+        transition: fade.micro,
+      }
 
-      <div className="mb-3 flex flex-wrap gap-2">
-        <button type="button" onClick={() => setStaffFilter('all')} className={chipClass(staffFilter === 'all')}>
-          All barbers
+  const staffFilterRow = (
+    <div className="flex shrink-0 gap-2 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <button type="button" onClick={() => setStaffFilter('all')} className={chipClass(staffFilter === 'all')}>
+        All
+      </button>
+      {staff.map((s) => (
+        <button
+          key={s.id}
+          type="button"
+          onClick={() => setStaffFilter(s.id)}
+          className={chipClass(staffFilter === s.id)}
+        >
+          {s.name}
         </button>
-        {staff.map((s) => (
-          <button
-            key={s.id}
-            type="button"
-            onClick={() => setStaffFilter(s.id)}
-            className={chipClass(staffFilter === s.id)}
-          >
-            {s.name}
-          </button>
-        ))}
-      </div>
-
-      {lateBookings.length > 0 && (
-        <div className="mb-3 rounded-xl border border-ember/30 bg-[#fff4e0]/60 px-4 py-3 text-sm text-carbon">
-          {lateBookings.length} upcoming booking{lateBookings.length === 1 ? '' : 's'} 15+ min late — review for
-          no-show.
-        </div>
-      )}
-
+      ))}
       {viewMode === 'timeline' && (
-        <div className="mb-4 space-y-2">
-          {timelineHours.map((hour) => (
-            <div key={hour.minutes} className="flex gap-3">
-              <div className="w-14 shrink-0 pt-3 text-right text-xs font-medium text-ash">{hour.label}</div>
-              <div className="min-h-12 flex-1 space-y-2 border-l border-fog pl-3">
-                {hour.items.length === 0 ? (
-                  <p className="py-3 text-xs text-ash">—</p>
-                ) : (
-                  hour.items.map((b) => (
-                    <BookingCard
-                      key={b.id}
-                      b={b}
-                      late={isLateBooking(b)}
-                      selected={b.id === selectedBookingId}
-                      onPress={() => onSelectBooking(b.id)}
-                    />
-                  ))
-                )}
-              </div>
+        <button
+          type="button"
+          onClick={() => setViewMode('lanes')}
+          className="ml-auto shrink-0 rounded-full px-3 py-1.5 text-xs font-medium text-barber hover:bg-mist"
+        >
+          Chairs
+        </button>
+      )}
+    </div>
+  )
+
+  return (
+    <div className="flex h-full min-h-0 flex-col gap-3">
+      {/* Status row */}
+      <div className="flex shrink-0 flex-wrap items-stretch gap-3">
+        <div className="flex min-w-[9.5rem] flex-1 items-center rounded-2xl border border-barber bg-barber-muted px-4 py-3 sm:flex-none">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-ui text-barber">Now serving</p>
+            <p className="font-display text-3xl font-semibold tabular-nums leading-none tracking-ui text-carbon">
+              {nowServing != null ? `#${nowServing}` : '—'}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-[2] items-stretch gap-0 overflow-x-auto rounded-2xl border border-fog bg-paper-white px-1 py-1">
+          {(
+            [
+              { key: 'now', label: 'In chair', value: totals.now, tone: 'text-lavender' },
+              { key: 'wait', label: 'Waiting', value: totals.waiting, tone: 'text-amber' },
+              { key: 'up', label: 'Upcoming', value: totals.upcoming, tone: 'text-sky' },
+            ] as const
+          ).map((stat, i) => (
+            <div
+              key={stat.key}
+              className={`flex min-w-[4.5rem] flex-1 flex-col items-center justify-center rounded-xl px-2 py-2 ${
+                i > 0 ? 'border-l border-fog' : ''
+              }`}
+            >
+              <p className={`font-display text-2xl font-semibold tabular-nums leading-none ${stat.tone}`}>
+                {stat.value}
+              </p>
+              <p className="mt-1 text-[10px] font-medium uppercase tracking-ui text-ash">{stat.label}</p>
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Queue alerts: late + waiting */}
+      {viewMode === 'lanes' && (lateBookings.length > 0 || allWaiting.length > 0) && (
+        <div className="shrink-0 overflow-hidden rounded-2xl border border-fog bg-paper-white shadow-sm">
+          {lateBookings.length > 0 && (
+            <div className="flex items-center gap-2 border-b border-ember/20 bg-[#fff4e0]/60 px-4 py-2.5">
+              <span className="flex h-2 w-2 shrink-0 rounded-full bg-ember" aria-hidden />
+              <p className="text-sm font-medium text-carbon">
+                {lateBookings.length} late — review for no-show
+              </p>
+            </div>
+          )}
+
+          <div className="px-4 py-3">
+            <div className="mb-2 flex items-baseline justify-between gap-2">
+              <p className="text-[10px] font-bold uppercase tracking-ui text-barber">Waiting queue</p>
+              <p className="text-xs text-ash">{allWaiting.length} in queue</p>
+            </div>
+            <div className="flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {allWaiting.length === 0 ? (
+                <p className="py-1 text-sm text-ash">Queue clear — take walk-ins</p>
+              ) : (
+                allWaiting.map((b) => {
+                  const takeable = canTakeBooking(b)
+                  return (
+                    <div
+                      key={b.id}
+                      draggable={canDragBooking(b)}
+                      onDragStart={(e) => {
+                        if (!canDragBooking(b)) return
+                        e.dataTransfer.setData('text/booking-id', b.id)
+                        e.dataTransfer.effectAllowed = 'move'
+                        setDraggingId(b.id)
+                      }}
+                      onDragEnd={() => {
+                        setDraggingId(null)
+                        setDragOverStaffId(null)
+                      }}
+                      className={`flex shrink-0 items-center gap-2 rounded-2xl border px-3 py-2 ${
+                        b.id === selectedBookingId
+                          ? 'border-barber bg-barber-muted'
+                          : 'border-fog bg-linen/50'
+                      } ${draggingId === b.id ? 'opacity-50' : ''} ${
+                        canDragBooking(b) ? 'cursor-grab active:cursor-grabbing' : ''
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => onSelectBooking(b.id)}
+                        className="flex min-h-11 items-center gap-2.5 text-left"
+                      >
+                        <span className="font-display text-2xl font-semibold tabular-nums leading-none text-carbon">
+                          #{b.queueNumber}
+                        </span>
+                        <span className="max-w-[7rem] truncate text-sm text-graphite">{b.customer}</span>
+                      </button>
+                      {takeable ? (
+                        <button
+                          type="button"
+                          onClick={() => handleTake(b.id, b.customer)}
+                          className="min-h-9 shrink-0 rounded-full bg-barber px-3 text-[11px] font-semibold text-barber-fg"
+                        >
+                          Take
+                        </button>
+                      ) : (
+                        <span className="shrink-0 rounded-full bg-mist px-2.5 py-1 text-[10px] font-medium text-ash">
+                          {b.assignedName}
+                        </span>
+                      )}
+                    </div>
+                  )
+                })
+              )}
+            </div>
+          </div>
+        </div>
       )}
 
-      {viewMode === 'lanes' && (
-        <>
-          {allWaiting.length > 0 && (
-            <div className="mb-3">
-              <p className="mb-2 text-xs font-medium uppercase tracking-ui text-lavender">Waiting queue</p>
-              <p className="mb-2 text-xs text-ash">
-                Shop-wide — any barber can take a guest onto their chair
-              </p>
-              <div className="grid gap-2 md:grid-cols-2">
-                {allWaiting.map((b) => (
-                  <BookingCard
-                    key={b.id}
-                    b={b}
-                    selected={b.id === selectedBookingId}
-                    onPress={() => onSelectBooking(b.id)}
-                    actions={
-                      <>
-                        {b.queueNumber ? <Badge label={`#${b.queueNumber}`} /> : null}
-                        {waitingActions(b, b.assignedName)}
-                      </>
-                    }
-                  />
-                ))}
+      <AnimatePresence mode="wait" initial={false}>
+      {viewMode === 'timeline' ? (
+        <motion.div
+          key="timeline"
+          className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-fog bg-paper-white"
+          {...boardMotion}
+        >
+          <div className="shrink-0 border-b border-fog px-4 py-3">{staffFilterRow}</div>
+          <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
+            {timelineHours.map((hour) => (
+              <div key={hour.minutes} className="flex gap-3">
+                <div className="w-12 shrink-0 pt-2 text-right text-xs font-medium text-ash">{hour.label}</div>
+                <div className="min-h-10 flex-1 space-y-2 border-l border-fog pl-3">
+                  {hour.items.length === 0 ? (
+                    <p className="py-2 text-xs text-ash">—</p>
+                  ) : (
+                    hour.items.map((b) => (
+                      <ColumnBookingCard
+                        key={b.id}
+                        b={b}
+                        late={isLateBooking(b)}
+                        selected={b.id === selectedBookingId}
+                        onPress={() => onSelectBooking(b.id)}
+                      />
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-
-          {partyBookings.length > 0 && (
-            <div className="mb-3">
-              <p className="mb-2 text-xs font-medium uppercase tracking-ui text-lavender">Parties</p>
-              <div className="grid gap-2 md:grid-cols-2">
-                {partyBookings.map((p) => (
-                  <button key={p.id} type="button" onClick={() => onSelectBooking(p.id)} className="text-left">
-                    <BookingCard b={p} late={isLateBooking(p)} selected={p.id === selectedBookingId} />
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {filteredLanes.map((lane) => (
+            ))}
+          </div>
+        </motion.div>
+      ) : (
+        <motion.div
+          key="lanes"
+          className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-fog bg-paper-white"
+          {...boardMotion}
+        >
+          <div className="shrink-0 border-b border-fog px-4 py-3">{staffFilterRow}</div>
+          <div
+            ref={columnsRef}
+            className="flex min-h-0 flex-1 gap-3 overflow-x-auto overflow-y-hidden p-4 [-ms-overflow-style:none] [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-fog"
+          >
+          {filteredLanes.map((lane) => {
+            const isDropTarget = dragOverStaffId === lane.staff.id
+            return (
               <section
                 key={lane.staff.id}
-                className={`flex min-h-[360px] flex-col overflow-hidden rounded-2xl border bg-paper-white transition-shadow duration-200 ${
-                  lane.staff.id === actingStaffId
-                    ? 'border-lavender ring-2 ring-lavender/25 shadow-panel'
-                    : 'border-fog'
+                onDragOver={(e) => {
+                  if (!draggingId) return
+                  e.preventDefault()
+                  e.dataTransfer.dropEffect = 'move'
+                  setDragOverStaffId(lane.staff.id)
+                }}
+                onDragLeave={() => {
+                  setDragOverStaffId((id) => (id === lane.staff.id ? null : id))
+                }}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  const id = e.dataTransfer.getData('text/booking-id')
+                  setDragOverStaffId(null)
+                  setDraggingId(null)
+                  if (id) handleDropOnLane(lane.staff.id, id)
+                }}
+                className={`flex h-full w-[min(17.5rem,78vw)] shrink-0 flex-col overflow-hidden rounded-2xl border bg-paper-white transition-all ${
+                  isDropTarget
+                    ? 'border-barber ring-2 ring-barber scale-[1.01]'
+                    : lane.staff.id === actingStaffId
+                      ? 'border-barber ring-2 ring-barber'
+                      : 'border-fog'
                 }`}
               >
-                <div className="border-b border-fog px-3 py-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (lane.staff.id === actingStaffId) return
-                      setActingStaffId(lane.staff.id)
-                      onToast?.({
-                        kind: 'info',
-                        title: `Now acting as ${actingLabel(lane.staff.id, staff)}`,
-                      })
-                    }}
-                    className={`flex min-h-12 w-full items-center justify-between gap-3 rounded-xl px-1 py-1 text-left transition-colors hover:bg-mist/60 ${
-                      lane.staff.id === actingStaffId ? 'cursor-default' : 'cursor-pointer'
-                    }`}
-                    aria-label={
-                      lane.staff.id === actingStaffId
-                        ? `${lane.staff.name}, currently acting`
-                        : `Act as ${lane.staff.name}`
-                    }
-                  >
-                    <div className="flex min-w-0 items-center gap-2.5">
-                      <span
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${lane.staff.headerClass}`}
-                      >
-                        {lane.staff.name.charAt(0)}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="truncate font-display text-sm font-medium tracking-ui text-carbon">
-                          {lane.staff.name}
-                          {lane.staff.id === actingStaffId && (
-                            <span className="ml-1.5 text-[10px] font-medium uppercase tracking-ui text-lavender">
-                              You
-                            </span>
-                          )}
-                        </p>
-                        <p className="text-xs text-ash">
-                          {lane.waiting.length} waiting · {lane.now.length} in chair · {lane.upcoming.length}{' '}
-                          upcoming
-                        </p>
-                      </div>
-                    </div>
-                    <StatusBadge status={lane.staffStatus} />
-                  </button>
-                </div>
-
-                <div className="flex-1 space-y-3 p-3">
-                  <div>
-                    <p className="mb-2 text-xs font-medium uppercase tracking-ui text-ash">Now</p>
-                    {lane.now.length === 0 ? (
-                      <p className="rounded-xl border border-dashed border-fog bg-linen/50 px-3 py-6 text-center text-sm text-ash">
-                        —
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (lane.staff.id === actingStaffId) return
+                    setActingStaffId(lane.staff.id)
+                    onToast?.({
+                      kind: 'info',
+                      title: `Now acting as ${actingLabel(lane.staff.id, staff)}`,
+                    })
+                  }}
+                  className={`flex min-h-12 shrink-0 items-center justify-between gap-2 border-b border-fog px-3 py-2 text-left ${
+                    lane.staff.id === actingStaffId ? 'bg-barber-muted' : 'hover:bg-mist/50'
+                  }`}
+                >
+                  <div className="flex min-w-0 items-center gap-2">
+                    <span
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${lane.staff.headerClass}`}
+                    >
+                      {lane.staff.name.charAt(0)}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-carbon">
+                        {lane.staff.name}
+                        {lane.staff.id === actingStaffId && (
+                          <span className="ml-1 text-[10px] font-medium uppercase text-barber">You</span>
+                        )}
                       </p>
+                      {isDropTarget && (
+                        <p className="text-[10px] font-medium text-barber">Drop to assign</p>
+                      )}
+                    </div>
+                  </div>
+                  <StatusBadge status={lane.staffStatus} />
+                </button>
+
+                <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-2.5">
+                  <div>
+                    <p className="mb-1.5 text-[10px] font-medium uppercase tracking-ui text-ash">Now</p>
+                    {lane.now.length === 0 ? (
+                      <EmptySlot label="Empty chair" />
                     ) : (
                       <div className="space-y-2">
                         {lane.now.map((b) => (
-                          <button key={b.id} type="button" onClick={() => onSelectBooking(b.id)} className="w-full text-left">
-                            <BookingCard
-                              b={b}
-                              selected={b.id === selectedBookingId}
-                              actions={<Badge label={b.queueNumber ? `#${b.queueNumber}` : 'Now'} />}
-                            />
-                          </button>
+                          <ColumnBookingCard
+                            key={b.id}
+                            b={b}
+                            selected={b.id === selectedBookingId}
+                            onPress={() => onSelectBooking(b.id)}
+                          />
                         ))}
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <p className="mb-2 text-xs font-medium uppercase tracking-ui text-ash">Waiting</p>
+                    <p className="mb-1.5 text-[10px] font-medium uppercase tracking-ui text-ash">Waiting</p>
                     {lane.waiting.length === 0 ? (
-                      <p className="rounded-xl border border-dashed border-fog bg-linen/50 px-3 py-6 text-center text-sm text-ash">
-                        Queue clear
-                      </p>
+                      <EmptySlot label={isDropTarget ? 'Drop here' : 'Clear'} />
                     ) : (
                       <div className="space-y-2">
                         {lane.waiting.map((b) => (
-                          <BookingCard
+                          <ColumnBookingCard
                             key={b.id}
                             b={b}
                             selected={b.id === selectedBookingId}
                             onPress={() => onSelectBooking(b.id)}
-                            actions={
-                              <>
-                                {b.queueNumber ? <Badge label={`#${b.queueNumber}`} /> : null}
-                                {waitingActions(b, lane.staff.name)}
-                              </>
+                            draggable={canDragBooking(b)}
+                            onDragStart={(e) => {
+                              e.dataTransfer.setData('text/booking-id', b.id)
+                              e.dataTransfer.effectAllowed = 'move'
+                              setDraggingId(b.id)
+                            }}
+                            onDragEnd={() => {
+                              setDraggingId(null)
+                              setDragOverStaffId(null)
+                            }}
+                            trailing={
+                              canTakeBooking(b) ? (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleTake(b.id, b.customer)
+                                  }}
+                                  className="min-h-8 shrink-0 rounded-full bg-barber px-2 text-[10px] font-medium text-barber-fg"
+                                >
+                                  Take
+                                </button>
+                              ) : undefined
                             }
                           />
                         ))}
@@ -478,38 +612,41 @@ export function FloorView({
                   </div>
 
                   <div>
-                    <p className="mb-2 text-xs font-medium uppercase tracking-ui text-ash">Upcoming</p>
+                    <p className="mb-1.5 text-[10px] font-medium uppercase tracking-ui text-ash">Upcoming</p>
                     {lane.upcoming.length === 0 ? (
-                      <p className="rounded-xl border border-dashed border-fog bg-linen/50 px-3 py-6 text-center text-sm text-ash">
-                        —
-                      </p>
+                      <EmptySlot label="—" />
                     ) : (
                       <div className="space-y-2">
-                        {lane.upcoming.slice(0, 3).map((b) => (
-                          <button key={b.id} type="button" onClick={() => onSelectBooking(b.id)} className="w-full text-left">
-                            <BookingCard
-                              b={b}
-                              late={isLateBooking(b)}
-                              selected={b.id === selectedBookingId}
-                              actions={<Badge label={minutesToLabel(b.startMinutes)} />}
-                            />
-                          </button>
+                        {lane.upcoming.slice(0, 4).map((b) => (
+                          <ColumnBookingCard
+                            key={b.id}
+                            b={b}
+                            late={isLateBooking(b)}
+                            selected={b.id === selectedBookingId}
+                            onPress={() => onSelectBooking(b.id)}
+                            draggable={canDragBooking(b)}
+                            onDragStart={(e) => {
+                              e.dataTransfer.setData('text/booking-id', b.id)
+                              e.dataTransfer.effectAllowed = 'move'
+                              setDraggingId(b.id)
+                            }}
+                            onDragEnd={() => {
+                              setDraggingId(null)
+                              setDragOverStaffId(null)
+                            }}
+                          />
                         ))}
                       </div>
                     )}
                   </div>
-
-                  {lane.done.length > 0 && (
-                    <div className="pt-1">
-                      <p className="text-xs text-ash">Done today: {lane.done.length}</p>
-                    </div>
-                  )}
                 </div>
               </section>
-            ))}
+            )
+          })}
           </div>
-        </>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   )
 }

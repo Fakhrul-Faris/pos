@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { MotionPresenceShell } from '@/components/motion/MotionOverlay'
 import { useStore } from '../data/store'
 
 type PartyAssignDrawerProps = {
@@ -50,9 +51,14 @@ export function PartyAssignDrawer({
   }
 
   return (
-    <div className="fixed inset-0 z-[55] flex justify-end">
-      <button type="button" aria-label="Close" className="absolute inset-0 bg-carbon/20" onClick={onClose} />
-      <aside className="relative flex h-full w-full max-w-lg flex-col border-l border-fog bg-paper-white shadow-panel">
+    <MotionPresenceShell
+      variant="drawer-right"
+      onClose={onClose}
+      zClass="z-[55]"
+      backdropClassName="bg-carbon/20"
+      panelClassName="flex h-full w-full max-w-lg flex-col border-l border-fog bg-paper-white shadow-panel"
+      aria-label="Assign chairs"
+    >
         <header className="border-b border-fog px-5 py-4">
           <p className="text-xs font-medium tracking-ui text-lavender">Assign chairs</p>
           <h2 className="font-display mt-1 text-lg font-medium tracking-ui text-carbon">
@@ -165,7 +171,6 @@ export function PartyAssignDrawer({
             Back to floor
           </button>
         </footer>
-      </aside>
-    </div>
+    </MotionPresenceShell>
   )
 }

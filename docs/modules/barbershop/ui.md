@@ -70,9 +70,11 @@ QR Landing → Book (multi-step) → Confirmation + bookmark URL
 ### POS (single machine)
 ```
 Login → Barber picker (persistent header)
-     → Today | Walk-in | Calendar peek | More
+     → Bottom pill: Today | Walk-in | Calendar peek | More
 Today → Booking card → Detail → [Add service] → Start → Complete → Pay
+More → Search · My day · End session
 ```
+**IA detail:** [`../../design/staff-pos-ia.md`](../../design/staff-pos-ia.md) §3 Bottom nav pill.
 
 ### Merchant Portal (Owner sidebar)
 
@@ -274,7 +276,9 @@ C-01-01 Landing
 # Part 2 — POS (Shared Counter)
 
 **Audience:** Barber / owner operating **one shared machine**  
-**Device:** Tablet or PC at counter (web app or RN — designer choice; optimise landscape)
+**Device:** Tablet or PC at counter (web app or RN — designer choice; optimise landscape)  
+**UI design authority:** [`../../design/staff-pos-ui-design.md`](../../design/staff-pos-ui-design.md) — personality, layout, components, status language, composition rules.  
+**IA (screen map):** [`../../design/staff-pos-ia.md`](../../design/staff-pos-ia.md) — screen-by-screen components & layouts.
 
 ---
 

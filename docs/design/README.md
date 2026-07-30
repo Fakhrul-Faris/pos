@@ -7,6 +7,8 @@
 | Document | Purpose |
 | :--- | :--- |
 | [**portal-personality-brief.md**](portal-personality-brief.md) | **Merchant Portal** — direction sentence, personality, visual rules |
+| [**staff-pos-ui-design.md**](staff-pos-ui-design.md) | **Staff POS** — UI design authority (personality, layout, components, states, P-xx composition) |
+| [**staff-pos-ia.md**](staff-pos-ia.md) | **Staff POS IA** — screen-by-screen map, components, layout regions (no sidebar) |
 | [**../prototype/merchant-portal/README.md**](../prototype/merchant-portal/README.md) | **Dashboard prototype** — live iteration (`npm run dev` → :5174) |
 | [**../prototype/staff-pos/README.md**](../prototype/staff-pos/README.md) | **Staff POS prototype** — counter tablet P-xx capabilities (`npm run dev:pos` → :3002) |
 | [**copy-style.md**](copy-style.md) | **Copy style guide** — voice, structure, replication checklist |

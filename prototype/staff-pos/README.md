@@ -41,11 +41,13 @@ npm run dev
 - **Barber switcher** — avatar rail in header; tap to switch acting barber; **Manager** mode for owner actions
 - **Floor tap-to-switch** — tap a lane header to set acting barber
 - **Switch toast** — “Now acting as …” feedback on change
-- **End session** — return to login with confirmation
+- **Bottom nav pill** — floating: **Today · Walk-in · Calendar · More**
+- **More sheet** — Search, My day, End session, offline toggle (demo), staff tools
+- **End session** — from More → confirm → login
 
 ### P-06 Today board
 - **Per-barber lanes** — Now / Waiting / Upcoming with queue numbers
-- **Lanes vs Timeline** — toggle between lane view and hourly time-axis view
+- **Lanes vs Timeline** — board toggle + **Calendar** pill switches to timeline
 - **Landscape split** — on wide screens (`lg+`), board left + booking detail panel right; portrait uses full-screen drawer
 - **Staff filter** — All barbers or single barber view
 - **Shop-wide waiting queue** — cross-lane queue with **Take** to assign to acting barber
@@ -54,8 +56,8 @@ npm run dev
 - **Source tinting** — Online vs walk-in card treatment
 - **Late indicator** — 15+ min late on upcoming cards + summary banner
 - **Auto no-show prompt** — late upcoming bookings open no-show confirm modal
-- **Search** — find booking by customer, service, staff, or queue #
-- **Walk-in** — name, optional phone, service, **Anyone available** or specific barber + walk-in slot picker
+- **Search** — via More → find booking by customer, service, staff, or queue #
+- **Walk-in** — via pill → name, optional phone, service, **Anyone available** or specific barber + walk-in slot picker
 - **Booking detail** — mark arrived, start cut, cancel, no-show, reassign, tap-to-call phone
 - **Add service** — in-chair add-ons with overlap warning
 - **Party check-in** — per-guest Here / No-show
@@ -69,6 +71,7 @@ npm run dev
 - **HitPay card screen** — terminal mockup + “Hold card near terminal…”
 - **HitPay timeout** — “Payment issue?” → timeout screen with Retry / other method / record cash
 - **Pay button morph** — brief visual feedback on method selection
+- **Nav pill hidden** — during payment / receipt / no-show / end-session confirms
 
 ### P-08 Receipt handoff
 - **Animated receipt ticket** — confetti, checkmark, dashed dividers, payment row
@@ -77,12 +80,12 @@ npm run dev
 - **Actions** — New walk-in · Done
 
 ### P-09 Quick stats
-- **My day** — cuts + revenue for acting barber (shop-wide totals when acting as Manager)
+- **My day** — via More → cuts + revenue for acting barber (shop-wide totals when acting as Manager)
 - **Recent transactions** — last payments for the session
 
 ### P-10 Offline
 - **Offline banner** — “Offline — saving locally (N pending)”
-- **Online / Offline toggle** — header control for demo; works with browser connectivity
+- **Online / Offline toggle** — More sheet (demo); works with browser connectivity
 - **Pending count** — mutations while offline increment queue
 - **Sync toast** — “Synced N pending changes” when returning online
 
@@ -90,11 +93,11 @@ npm run dev
 
 ## Prototype controls
 
-Accessible from the **Demo** button in the header (keeps the main UI clean):
+Accessible from **More → Staff tools** (Demo time slider):
 
 - **Demo time slider** — shifts upcoming vs late on the floor (9am–8pm, 15-min steps)
 
-Header also includes:
+More sheet also includes:
 
 - **Online / Offline toggle** — simulates P-10 queue behaviour
 
@@ -109,6 +112,7 @@ Header also includes:
 | Touch targets 48dp+ | Primary controls `min-h-12` |
 | Status colours | Sky / amber / lavender / mint accents on cards |
 | P-01-02 avatars | Avatar rail + Manager chip |
+| Bottom pill | Today · Walk-in · Calendar · More; hidden on pay/receipt/confirms |
 
 ---
 
@@ -128,7 +132,7 @@ These are **out of scope** for the UI prototype — backend/production work:
 
 | Area | Components |
 |------|------------|
-| Shell | `PosApp`, `LoginScreen`, `OfflineBanner`, `BarberSwitcher`, `PrototypeControls` |
+| Shell | `PosApp`, `LoginScreen`, `OfflineBanner`, `BarberSwitcher`, `BottomNavPill`, `MoreSheet`, `PrototypeControls` |
 | Floor | `FloorView` |
 | Booking | `BookingDrawer` (drawer + panel modes), drawers for party/reassign/add-service |
 | Payment | `PaymentDrawer`, `ReceiptSuccessDrawer`, `ReceiptTicket`, `QrCode` |

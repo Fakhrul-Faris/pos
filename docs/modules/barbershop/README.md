@@ -40,6 +40,8 @@ BARBERSHOP MODULE (this folder)
 | [**pricing-funnel.md**](pricing-funnel.md) | Product, marketing, finance | Trial → Lite → paid in plain language (barbershop numbers) |
 | [**features-and-pricing.md**](features-and-pricing.md) | Product, design, eng | Feature catalog + Ocelot/Mantis/Patriot matrix + RM prices |
 | [**ui.md**](ui.md) | Design, frontend | Screen specs (C-xx, P-xx, O-xx). **Merchant Portal nav IA:** [`../../platform/Miki Merchant Portal — Designer IA Brief.md`](../../platform/Miki%20Merchant%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md) |
+| [**staff-pos-ui-design.md**](../../design/staff-pos-ui-design.md) | Design, frontend | **Staff POS UI design** — personality, layout, components, status language, P-xx composition |
+| [**staff-pos-ia.md**](../../design/staff-pos-ia.md) | Design | **Staff POS IA** — screen-by-screen components & layouts |
 | [**motion-prototype.md**](../../design/motion-prototype.md) | Design, frontend | Coded motion demos + party flow reference |
 | [**marketing.md**](marketing.md) | Marketing, Penpot | Canonical `/barbershop` landing copy |
 | [**compare.md**](compare.md) | Marketing, Penpot, SEO | Canonical `/compare` — Miki vs Fresha (+ StoreHub footnote) |

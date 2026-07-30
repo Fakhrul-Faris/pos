@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { MotionPresenceShell } from '@/components/motion/MotionOverlay'
 import { useStore } from '../data/store'
 
 type PartyCheckInDrawerProps = {
@@ -40,9 +41,14 @@ export function PartyCheckInDrawer({ bookingId, onClose, onConfirmed }: PartyChe
   if (!booking?.partyMembers) return null
 
   return (
-    <div className="fixed inset-0 z-[55] flex justify-end">
-      <button type="button" aria-label="Close" className="absolute inset-0 bg-carbon/20" onClick={onClose} />
-      <aside className="relative flex h-full w-full max-w-md flex-col border-l border-fog bg-paper-white shadow-panel">
+    <MotionPresenceShell
+      variant="drawer-right"
+      onClose={onClose}
+      zClass="z-[55]"
+      backdropClassName="bg-carbon/20"
+      panelClassName="flex h-full w-full max-w-md flex-col border-l border-fog bg-paper-white shadow-panel"
+      aria-label="Party check-in"
+    >
         <header className="border-b border-fog px-5 py-4">
           <p className="text-xs font-medium tracking-ui text-lavender">Party check-in</p>
           <h2 className="font-display mt-1 text-lg font-medium tracking-ui text-carbon">
@@ -102,7 +108,6 @@ export function PartyCheckInDrawer({ bookingId, onClose, onConfirmed }: PartyChe
             Confirm arrival ({arrivedCount})
           </button>
         </footer>
-      </aside>
-    </div>
+    </MotionPresenceShell>
   )
 }

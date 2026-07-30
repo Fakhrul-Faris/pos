@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo } from 'react'
+import { MotionPresenceShell } from '@/components/motion/MotionOverlay'
 import type { FloorBooking } from '../data/mock'
 import { actingLabel } from '../data/mock'
 import { useStore } from '../data/store'
@@ -105,13 +106,9 @@ export function BookingDrawer({
   const canReassign = !booking.isParty && booking.status !== 'in-service' && booking.status !== 'completed'
   const isParty = booking.isParty && booking.partyMembers
 
-  const panel = (
-    <aside
-      className={`relative flex h-full w-full flex-col bg-paper-white ${
-        isPanel ? '' : 'max-w-md border-l border-fog shadow-panel'
-      }`}
-    >
-      <header className="flex items-start justify-between gap-3 border-b border-fog px-5 py-4">
+  const content = (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <header className="flex shrink-0 items-start justify-between gap-3 border-b border-fog px-5 py-4">
         <div>
           <p className="text-xs font-medium tracking-ui text-ash">
             {booking.queueNumber ? `#${booking.queueNumber}` : 'Booking'}
@@ -258,7 +255,7 @@ export function BookingDrawer({
         {!isParty && booking.status === 'in-service' && (
           <>
             <button type="button" onClick={() => onOpenPayment(booking.id)} className="btn-primary min-h-12 w-full px-4 py-3">
-              Complete & take payment
+              Complete & pay
             </button>
             <button type="button" onClick={() => onOpenAddService(booking.id)} className="btn-ghost min-h-12 w-full px-4 py-3">
               Add service
@@ -286,20 +283,27 @@ export function BookingDrawer({
           </button>
         )}
       </footer>
-    </aside>
+    </div>
   )
 
-  if (isPanel) return panel
+  if (isPanel) {
+    return (
+      <aside className="relative flex h-full w-full flex-col bg-paper-white">
+        {content}
+      </aside>
+    )
+  }
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
-      <button
-        type="button"
-        aria-label="Close booking drawer"
-        className="absolute inset-0 bg-carbon/20"
-        onClick={onClose}
-      />
-      {panel}
-    </div>
+    <MotionPresenceShell
+      onClose={onClose}
+      variant="sheet-bottom"
+      zClass="z-50"
+      panelClassName="flex max-h-[min(88vh,42rem)] w-full max-w-xl flex-col overflow-hidden rounded-t-3xl border border-fog bg-paper-white shadow-panel"
+      aria-label="Booking detail"
+    >
+      <div className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-fog" aria-hidden />
+      {content}
+    </MotionPresenceShell>
   )
 }

@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'motion/react'
+import { fade, spring } from '@/lib/motion'
 import { useStore } from '../data/store'
 
 export function LoginScreen() {
@@ -10,12 +12,21 @@ export function LoginScreen() {
   const [stayLoggedIn, setStayLoggedIn] = useState(true)
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-linen p-6">
-      <div className="w-full max-w-sm rounded-2xl border border-fog bg-paper-white p-8 shadow-panel">
+    <motion.div
+      className="flex min-h-dvh items-center justify-center bg-linen p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={fade.soft}
+    >
+      <motion.div
+        className="w-full max-w-sm rounded-2xl border border-fog bg-paper-white p-8 shadow-panel"
+        initial={{ opacity: 0, y: 16, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={spring.gentle}
+      >
         <p className="text-xs font-medium tracking-ui text-ash">Staff POS</p>
-        <h1 className="font-display mt-2 text-2xl font-medium tracking-ui text-carbon">
-          Shop login
-        </h1>
+        <h1 className="font-display mt-2 text-2xl font-medium tracking-ui text-carbon">Shop login</h1>
         <p className="mt-2 text-sm text-ash">Start terminal session for this device.</p>
 
         <form
@@ -56,9 +67,7 @@ export function LoginScreen() {
             Start session
           </button>
         </form>
-
-        <p className="mt-4 text-center text-[11px] text-ash">Demo shop — use any credentials</p>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }

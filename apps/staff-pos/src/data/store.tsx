@@ -11,11 +11,14 @@ import {
 } from 'react'
 import {
   initialBookings,
+  initialTransactions,
+  initialWalkInBlocks,
   MANAGER_ACTING_ID,
   serviceAmountFromIds,
   serviceDurationFromIds,
   serviceLabelFromIds,
   serviceOptions,
+  productOptions,
   staff,
   type BookingStatus,
   type FloorBooking,
@@ -81,6 +84,8 @@ export type WalkInSlot = {
   available: boolean
   reason?: string
   isNextFree?: boolean
+  /** Walk-in-only timetable block (manager-painted; online can't book) */
+  isWalkInBlock?: boolean
 }
 
 type StoreValue = {
@@ -105,6 +110,7 @@ type StoreValue = {
   reassignBarber: (bookingId: string, staffId: string) => { ok: boolean; reason?: string }
   getReassignOptions: (bookingId: string) => ReassignOption[]
   addService: (bookingId: string, serviceId: string) => OverlapWarning | null
+  addProduct: (bookingId: string, productId: string) => void
   getOverlapWarning: (bookingId: string) => OverlapWarning | null
   confirmPartyArrival: (
     bookingId: string,
@@ -136,7 +142,7 @@ type StoreValue = {
 
 const Ctx = createContext<StoreValue | null>(null)
 
-let nextQueue = 28
+let nextQueue = 34
 let nextBookingId = 100
 let nextTxnId = 1
 let nextTxnRef = 91000
@@ -155,23 +161,6 @@ function getBookingDuration(booking: FloorBooking) {
   return serviceDurationFromIds(getServiceIds(booking))
 }
 
-function hasSlotConflict(
-  bookings: FloorBooking[],
-  staffId: string,
-  startMinutes: number,
-  durationMinutes: number,
-) {
-  return bookings.some(
-    (b) =>
-      b.staffId === staffId &&
-      b.status !== 'cancelled' &&
-      b.status !== 'no-show' &&
-      b.status !== 'completed' &&
-      startMinutes < b.startMinutes + b.durationMinutes &&
-      startMinutes + durationMinutes > b.startMinutes,
-  )
-}
-
 function bumpPending(setter: React.Dispatch<React.SetStateAction<number>>, isOffline: boolean) {
   if (isOffline) setter((n) => n + 1)
 }
@@ -182,7 +171,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [staffOverrides, setStaffOverrides] = useState<Record<string, Extract<StaffStatus, 'break' | 'off'>>>({
     s3: 'break',
   })
-  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [transactions, setTransactions] = useState<Transaction[]>(() => [...initialTransactions])
   const [loggedIn, setLoggedIn] = useState(false)
   const [actingStaffId, setActingStaffId] = useState(staff[0]?.id ?? 's1')
   const [demoOffline, setDemoOffline] = useState(false)
@@ -386,7 +375,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (currentIds.includes(serviceId)) return null
       const nextIds = [...currentIds, serviceId]
       const durationMinutes = serviceDurationFromIds(nextIds)
-      const amount = serviceAmountFromIds(nextIds)
+      const serviceAmount = serviceAmountFromIds(nextIds)
+      const retailTotal = (booking.retailItems ?? []).reduce((s, r) => s + r.amount, 0)
       const warning = findOverlap(booking, durationMinutes)
       mutateBookings((prev) =>
         prev.map((b) =>
@@ -396,7 +386,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
                 actualServiceIds: nextIds,
                 services: serviceLabelFromIds(nextIds),
                 durationMinutes,
-                amount,
+                amount: serviceAmount + retailTotal,
               }
             : b,
         ),
@@ -404,6 +394,31 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       return warning
     },
     [findOverlap, getBookingById, mutateBookings],
+  )
+
+  const addProduct = useCallback(
+    (bookingId: string, productId: string) => {
+      const booking = getBookingById(bookingId)
+      if (!booking || booking.isParty) return
+      const product = productOptions.find((p) => p.id === productId)
+      if (!product) return
+      const line = {
+        id: `r-${productId}-${Date.now()}`,
+        productId,
+        label: product.label,
+        amount: product.price,
+      }
+      mutateBookings((prev) =>
+        prev.map((b) => {
+          if (b.id !== bookingId) return b
+          const retailItems = [...(b.retailItems ?? []), line]
+          const serviceAmount = serviceAmountFromIds(getServiceIds(b))
+          const retailTotal = retailItems.reduce((s, r) => s + r.amount, 0)
+          return { ...b, retailItems, amount: serviceAmount + retailTotal }
+        }),
+      )
+    },
+    [getBookingById, mutateBookings],
   )
 
   const confirmPartyArrival = useCallback(
@@ -516,7 +531,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const booking = getBookingById(bookingId)
       if (!booking) return []
       if (booking.isParty && booking.partyMembers) {
-        return booking.partyMembers
+        const partyLines = booking.partyMembers
           .filter((m) => m.status === 'done')
           .map((m) => ({
             id: m.id,
@@ -524,9 +539,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             sublabel: `${m.services} · ${staff.find((s) => s.id === m.staffId)?.name ?? '—'}`,
             amount: m.amount,
           }))
+        const retail = (booking.retailItems ?? []).map((r) => ({
+          id: r.id,
+          label: r.label,
+          sublabel: 'Product',
+          amount: r.amount,
+        }))
+        return [...partyLines, ...retail]
       }
       const ids = getServiceIds(booking)
-      return ids.map((id) => {
+      const serviceLines = ids.map((id) => {
         const svc = serviceOptions.find((s) => s.id === id)!
         return {
           id,
@@ -535,6 +557,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           amount: svc.price,
         }
       })
+      const retail = (booking.retailItems ?? []).map((r) => ({
+        id: r.id,
+        label: r.label,
+        sublabel: 'Product',
+        amount: r.amount,
+      }))
+      return [...serviceLines, ...retail]
     },
     [getBookingById],
   )
@@ -629,32 +658,35 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     (serviceId: string): WalkInSlot[] => {
       const service = serviceOptions.find((s) => s.id === serviceId) ?? serviceOptions[0]
       const duration = service.durationMinutes
-      const slotStarts = [demoNowMinutes, demoNowMinutes + 15, demoNowMinutes + 30]
       const slots: WalkInSlot[] = []
 
-      const rankedStaff = staff
+      const activeStaff = staff
         .map((s) => {
           const override = staffOverrides[s.id]
           const waiting = bookings.filter(
             (b) => b.staffId === s.id && b.status === 'checked-in',
           ).length
           const unavailable = override === 'off' || override === 'break'
-          const conflict = hasSlotConflict(bookings, s.id, demoNowMinutes, duration)
-          return { staff: s, waiting, unavailable, conflict, override }
+          return { staff: s, waiting, unavailable, override }
         })
-        .filter((r) => !r.unavailable && !r.conflict)
+        .filter((r) => !r.unavailable)
         .sort((a, b) => a.waiting - b.waiting)
 
-      const nextFree = rankedStaff[0]
+      // Hybrid queue: walk-ins join a barber queue without stealing booked calendar slots.
+      const nextFree = activeStaff[0]
       if (nextFree) {
         slots.push({
           id: 'next-free',
           staffId: nextFree.staff.id,
           staffName: nextFree.staff.name,
           startMinutes: demoNowMinutes,
-          label: `Anyone available → ${nextFree.staff.name}`,
+          label: `Join queue → ${nextFree.staff.name}`,
           available: true,
           isNextFree: true,
+          reason:
+            nextFree.waiting > 0
+              ? `${nextFree.waiting} waiting · shortest queue`
+              : 'Shortest queue right now',
         })
       } else {
         slots.push({
@@ -662,32 +694,54 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           staffId: staff[0]?.id ?? 's1',
           staffName: '—',
           startMinutes: demoNowMinutes,
-          label: 'Anyone available',
+          label: 'Join queue',
           available: false,
-          reason: 'No barber free right now',
+          reason: 'All barbers on break / off',
           isNextFree: true,
         })
       }
 
-      for (const start of slotStarts) {
-        for (const s of staff) {
-          const override = staffOverrides[s.id]
-          const unavailable = override === 'off' || override === 'break'
-          const conflict = hasSlotConflict(bookings, s.id, start, duration)
+      // Explicit “join this barber’s queue” (same hybrid path)
+      for (const r of activeStaff) {
+        slots.push({
+          id: `queue-${r.staff.id}`,
+          staffId: r.staff.id,
+          staffName: r.staff.name,
+          startMinutes: demoNowMinutes,
+          label: `${r.staff.name} · join queue`,
+          available: true,
+          reason: r.waiting > 0 ? `${r.waiting} already waiting` : 'Queue clear',
+        })
+      }
+
+      // Manager-painted walk-in-only blocks — preferred POS fill path (spec)
+      const openBlocks = initialWalkInBlocks.filter((b) => b.endMinutes > demoNowMinutes)
+      for (const block of openBlocks) {
+        const start = Math.max(demoNowMinutes, block.startMinutes)
+        if (start + duration > block.endMinutes) continue
+        for (const r of activeStaff) {
+          // Only conflict with other walk-ins / in-chair occupying this start window —
+          // online bookings do not own walk-in-only capacity.
+          const walkInConflict = bookings.some(
+            (b) =>
+              b.staffId === r.staff.id &&
+              b.source === 'walk-in' &&
+              b.status !== 'cancelled' &&
+              b.status !== 'no-show' &&
+              b.status !== 'completed' &&
+              start < b.startMinutes + b.durationMinutes &&
+              start + duration > b.startMinutes,
+          )
+          if (walkInConflict) continue
           slots.push({
-            id: `${s.id}-${start}`,
-            staffId: s.id,
-            staffName: s.name,
+            id: `${block.id}-${r.staff.id}-${start}`,
+            staffId: r.staff.id,
+            staffName: r.staff.name,
             startMinutes: start,
-            label: `${minutesToTimeLabel(start)} · ${s.name}`,
-            available: !unavailable && !conflict,
-            reason: unavailable
-              ? override === 'break'
-                ? 'On break'
-                : 'Off shift'
-              : conflict
-                ? 'Slot taken'
-                : undefined,
+            label: `${minutesToTimeLabel(start)} · ${r.staff.name}`,
+            available: true,
+            isWalkInBlock: true,
+            reason: `${block.label} · walk-in only`,
           })
         }
       }
@@ -774,6 +828,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     reassignBarber,
     getReassignOptions,
     addService,
+    addProduct,
     getOverlapWarning,
     confirmPartyArrival,
     assignPartyMemberStaff,

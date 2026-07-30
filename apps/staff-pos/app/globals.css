@@ -14,3 +14,91 @@
 .pos-receipt-slide {
   animation: pos-receipt-slide 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* Barber identity tokens — set on .pos-shell via data-acting-barber */
+:root,
+[data-acting-barber="s1"] {
+  --barber-accent: #918df6;
+  --barber-accent-hover: #7a75e8;
+  --barber-surface: #ebe9fe;
+  --barber-muted: rgba(145, 141, 246, 0.1);
+  --barber-soft: rgba(145, 141, 246, 0.15);
+  --barber-border: rgba(145, 141, 246, 0.3);
+  --barber-ring: rgba(145, 141, 246, 0.4);
+  --barber-accent-fg: #ffffff;
+}
+
+[data-acting-barber="s2"] {
+  --barber-accent: #2c78fc;
+  --barber-accent-hover: #1a65e8;
+  --barber-surface: #e8f1ff;
+  --barber-muted: rgba(44, 120, 252, 0.1);
+  --barber-soft: rgba(44, 120, 252, 0.15);
+  --barber-border: rgba(44, 120, 252, 0.3);
+  --barber-ring: rgba(44, 120, 252, 0.4);
+  --barber-accent-fg: #ffffff;
+}
+
+[data-acting-barber="s3"] {
+  --barber-accent: #ffa600;
+  --barber-accent-hover: #e69500;
+  --barber-surface: #fff4e0;
+  --barber-muted: rgba(255, 166, 0, 0.12);
+  --barber-soft: rgba(255, 166, 0, 0.18);
+  --barber-border: rgba(255, 166, 0, 0.35);
+  --barber-ring: rgba(255, 166, 0, 0.45);
+  --barber-accent-fg: #181925;
+}
+
+[data-acting-barber="manager"] {
+  --barber-accent: #181925;
+  --barber-accent-hover: #2a2b38;
+  --barber-surface: #f0f0f2;
+  --barber-muted: rgba(24, 25, 37, 0.06);
+  --barber-soft: rgba(24, 25, 37, 0.1);
+  --barber-border: rgba(24, 25, 37, 0.15);
+  --barber-ring: rgba(24, 25, 37, 0.2);
+  --barber-accent-fg: #ffffff;
+}
+
+.pos-shell {
+  background-color: var(--barber-surface);
+  transition: background-color 200ms ease-out;
+}
+
+.text-barber {
+  color: var(--barber-accent);
+}
+
+.bg-barber {
+  background-color: var(--barber-accent);
+}
+
+.bg-barber-muted {
+  background-color: var(--barber-muted);
+}
+
+.bg-barber-soft {
+  background-color: var(--barber-soft);
+}
+
+.text-barber-fg {
+  color: var(--barber-accent-fg);
+}
+
+.border-barber {
+  border-color: var(--barber-border);
+}
+
+.ring-barber {
+  --tw-ring-color: var(--barber-ring);
+}
+
+.pos-shell .btn-primary {
+  background: var(--barber-accent);
+  color: var(--barber-accent-fg);
+}
+
+.pos-shell .btn-primary:hover {
+  background: var(--barber-accent-hover);
+}

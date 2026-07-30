@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { MotionOverlay } from '@/components/motion/MotionOverlay'
 import type { PaymentMethod } from '../data/mock'
 import { ReceiptTicket } from './ReceiptTicket'
 
@@ -36,13 +37,17 @@ export function ReceiptSuccessDrawer({
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [open, onDone])
 
-  if (!open) return null
-
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto p-4">
-      <button type="button" aria-label="Close" className="absolute inset-0 bg-carbon/30" onClick={onDone} />
-
-      <div className="pos-receipt-slide relative flex w-full max-w-sm flex-col gap-4">
+    <MotionOverlay
+      open={open}
+      onClose={onDone}
+      variant="modal"
+      zClass="z-[70]"
+      backdropClassName="bg-carbon/30"
+      panelClassName="flex w-full max-w-sm flex-col gap-4"
+      aria-label="Payment receipt"
+    >
+      <div className="pos-receipt-slide relative flex w-full flex-col gap-4">
         <div className="mx-auto mb-1 h-3 w-40 rounded-full bg-carbon shadow-inner" aria-hidden />
         <ReceiptTicket
           receiptRef={receiptRef}
@@ -66,6 +71,6 @@ export function ReceiptSuccessDrawer({
           </button>
         </div>
       </div>
-    </div>
+    </MotionOverlay>
   )
 }
