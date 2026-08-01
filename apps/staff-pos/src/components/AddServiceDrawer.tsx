@@ -74,7 +74,7 @@ export function AddServiceDrawer({
           <h2 className="font-display mt-1 text-lg font-medium tracking-ui text-carbon">
             {booking.customer}
           </h2>
-          <div className="mt-3 flex gap-1 rounded-full bg-mist p-1">
+          <div className="mt-3 flex gap-1 rounded-md bg-mist p-1">
             {(
               [
                 { id: 'services' as const, label: 'Services' },
@@ -88,7 +88,7 @@ export function AddServiceDrawer({
                   setTab(t.id)
                   setSelectedIds([])
                 }}
-                className={`min-h-9 flex-1 rounded-full text-xs font-medium transition-colors ${
+                className={`min-h-9 flex-1 rounded-md text-xs font-medium transition-colors ${
                   tab === t.id ? 'bg-paper-white text-carbon shadow-sm' : 'text-graphite'
                 }`}
               >

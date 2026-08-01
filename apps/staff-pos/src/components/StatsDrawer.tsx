@@ -55,13 +55,13 @@ export function StatsDrawer({ open, onClose }: StatsDrawerProps) {
 
       <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-2xl border border-fog bg-linen p-4">
+          <div className="rounded-lg border border-fog bg-linen p-4">
             <p className="text-xs text-ash">Cuts today</p>
             <p className="font-display tabular-nums mt-1 text-3xl font-medium tracking-ui text-carbon">
               {stats.cuts}
             </p>
           </div>
-          <div className="rounded-2xl border border-fog bg-linen p-4">
+          <div className="rounded-lg border border-fog bg-linen p-4">
             <p className="text-xs text-ash">Revenue today</p>
             <p className="font-display tabular-nums mt-1 text-3xl font-medium tracking-ui text-carbon">
               RM {stats.revenue.toFixed(0)}

@@ -31,13 +31,7 @@ function toPaymentMethod(method: CashierMethod): PaymentMethod {
 }
 
 function CashierBarberRail() {
-  return (
-    <div className="pointer-events-none fixed left-1/2 top-3 z-[80] -translate-x-1/2">
-      <div className="pointer-events-auto">
-        <BarberSwitcher compact />
-      </div>
-    </div>
-  )
+  return <BarberSwitcher />
 }
 
 export function CashierScreen({
@@ -239,7 +233,7 @@ export function CashierScreen({
             {!booking ? (
               <>
                 <CashierBarberRail />
-                <header className="flex shrink-0 items-center justify-between px-5 pb-4 pt-14">
+                <header className="flex shrink-0 items-center justify-between px-5 pb-4 pt-3">
                   <div>
                     <p className="text-xs font-medium uppercase tracking-ui text-ash">Cashier</p>
                     <h1 className="font-display text-xl font-medium tracking-ui text-carbon">
@@ -252,7 +246,7 @@ export function CashierScreen({
                 </header>
                 <div className="flex-1 overflow-y-auto px-5 pb-8">
                   {readyBookings.length === 0 ? (
-                    <div className="rounded-3xl border border-fog bg-paper-white/90 p-8 text-center shadow-panel">
+                    <div className="rounded-lg border border-fog bg-paper-white/90 p-8 text-center shadow-panel">
                       <p className="font-display text-lg text-carbon">Nothing ready to pay</p>
                       <p className="mt-2 text-sm text-graphite">
                         Complete a cut first, then open Cashier.
@@ -316,7 +310,7 @@ export function CashierScreen({
 
                   {!timedOut ? (
                     method === 'card' ? (
-                      <div className="flex w-full max-w-sm flex-col items-center rounded-3xl border border-white/60 bg-paper-white p-8 shadow-panel">
+                      <div className="flex w-full max-w-sm flex-col items-center rounded-lg border border-white/60 bg-paper-white p-8 shadow-panel">
                         <div className="relative flex h-36 w-36 items-center justify-center">
                           <span className="absolute inset-0 animate-ping rounded-full bg-barber-muted opacity-60" />
                           <span className="absolute inset-3 rounded-full border-2 border-dashed border-barber/50" />
@@ -335,7 +329,7 @@ export function CashierScreen({
                         </div>
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center rounded-3xl border border-white/60 bg-paper-white p-6 shadow-panel">
+                      <div className="flex flex-col items-center rounded-lg border border-white/60 bg-paper-white p-6 shadow-panel">
                         <QrCode value={payUrl} size={220} label="Payment QR" />
                         <p className="mt-5 text-base font-medium text-carbon">Scan to pay</p>
                         <div className="mt-3 flex items-center gap-2 text-xs text-ash">
@@ -345,7 +339,7 @@ export function CashierScreen({
                       </div>
                     )
                   ) : (
-                    <div className="w-full max-w-sm rounded-3xl border border-ember/30 bg-paper-white p-6 text-center shadow-panel">
+                    <div className="w-full max-w-sm rounded-lg border border-ember/30 bg-paper-white p-6 text-center shadow-panel">
                       <p className="text-base font-medium text-carbon">Still waiting?</p>
                       <p className="mt-1 text-sm text-graphite">
                         No confirmation yet. Retry or switch method.
@@ -386,7 +380,7 @@ export function CashierScreen({
             ) : (
               <>
                 <CashierBarberRail />
-                <header className="flex shrink-0 items-center justify-between gap-3 px-5 pb-3 pt-14">
+                <header className="flex shrink-0 items-center justify-between gap-3 px-5 pb-3 pt-3">
                   <div className="min-w-0">
                     <p className="text-[10px] font-medium uppercase tracking-ui text-ash">Cashier</p>
                     <p className="truncate text-sm font-medium text-carbon">
@@ -397,14 +391,14 @@ export function CashierScreen({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="min-h-11 rounded-full px-4 text-sm font-medium text-graphite hover:bg-paper-white/50"
+                    className="min-h-11 rounded-md px-4 text-sm font-medium text-graphite hover:bg-paper-white/50"
                   >
                     Close
                   </button>
                 </header>
 
                 <div className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col gap-4 px-4 pb-5 lg:flex-row lg:gap-6 lg:px-6">
-                  <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-3xl border border-white/60 bg-paper-white shadow-panel lg:max-w-[46%]">
+                  <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-white/60 bg-paper-white shadow-panel lg:max-w-[46%]">
                     <div className="shrink-0 border-b border-fog px-5 py-4">
                       <p className="font-display text-xl font-medium tracking-ui text-carbon">
                         {booking.queueNumber ? `#${booking.queueNumber}` : 'Ticket'}{' '}
@@ -446,7 +440,7 @@ export function CashierScreen({
                           <button
                             type="button"
                             onClick={() => onAddItem?.(booking.id)}
-                            className="flex min-h-12 w-full items-center justify-center gap-1.5 rounded-full border border-dashed border-barber bg-barber-muted text-sm font-semibold text-barber transition-colors hover:bg-barber-soft"
+                            className="flex min-h-12 w-full items-center justify-center gap-1.5 rounded-md border border-dashed border-fog bg-barber-muted text-sm font-semibold text-barber transition-colors hover:bg-barber-soft"
                           >
                             <span className="text-lg leading-none" aria-hidden>
                               +
@@ -497,7 +491,7 @@ export function CashierScreen({
                             setMethod(m.id)
                             if (m.id !== 'cash') setTenderRaw('')
                           }}
-                          className={`min-h-11 min-w-11 rounded-full px-5 text-sm font-medium transition-colors ${
+                          className={`min-h-11 min-w-11 rounded-md px-5 text-sm font-medium transition-colors ${
                             method === m.id
                               ? 'bg-carbon text-paper-white'
                               : 'border border-fog/80 bg-paper-white/70 text-graphite hover:bg-paper-white'
@@ -552,7 +546,7 @@ export function CashierScreen({
                       </div>
                     ) : (
                       <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-2">
-                        <div className="w-full max-w-md rounded-3xl border border-white/60 bg-paper-white/90 px-6 py-8 text-center shadow-panel sm:px-8 sm:py-10">
+                        <div className="w-full max-w-md rounded-lg border border-white/60 bg-paper-white/90 px-6 py-8 text-center shadow-panel sm:px-8 sm:py-10">
                           <p className="text-[10px] font-medium uppercase tracking-ui text-ash">
                             {method === 'qr' ? 'Customer scans' : 'Customer taps'}
                           </p>
@@ -587,7 +581,7 @@ export function CashierScreen({
                         type="button"
                         disabled={shortfall || waiting}
                         onClick={handlePay}
-                        className="min-h-14 flex-[1.4] rounded-full bg-paper-white text-base font-semibold text-carbon shadow-panel transition-transform enabled:active:scale-[0.98] disabled:opacity-40"
+                        className="min-h-14 flex-[1.4] rounded-md bg-paper-white text-base font-semibold text-carbon shadow-panel transition-transform enabled:active:scale-[0.98] disabled:opacity-40"
                         style={{ boxShadow: '0 8px 28px var(--barber-soft)' }}
                       >
                         {payLabel}

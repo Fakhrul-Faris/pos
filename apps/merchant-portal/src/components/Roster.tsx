@@ -272,7 +272,8 @@ export function Roster({ vertical }: RosterProps) {
             </tbody>
           </table>
           <p className="border-t border-fog px-4 py-2 text-xs text-ash">
-            Showing attendance for {dayLabel(weekDates[0])} (week start / today anchor).
+            Showing attendance for {dayLabel(weekDates[0])} (week start / today anchor). Clock times
+            sync from Staff POS when barbers start or end a shift.
           </p>
         </div>
       )}

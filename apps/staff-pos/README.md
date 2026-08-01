@@ -20,3 +20,5 @@ npm run dev:pos
 ## Stack
 
 Next.js 15 · React 19 · Tailwind v4 via `@miki/ui` · in-memory mock store (no backend).
+
+**Shifts:** Tap off-shift barber → Start shift (clock-in). Attendance syncs to Merchant Portal Roster via `localStorage` (`miki.pos.shifts`).

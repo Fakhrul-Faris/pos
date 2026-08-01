@@ -47,7 +47,7 @@ export function SearchModal({ open, onClose, onSelectBooking }: SearchModalProps
       zClass="z-50"
       shellClassName="flex items-start justify-center p-6 pt-[12vh]"
       backdropClassName="bg-carbon/20"
-      panelClassName="w-full max-w-[720px] overflow-hidden rounded-2xl border border-fog bg-paper-white shadow-panel"
+      panelClassName="w-full max-w-[720px] overflow-hidden rounded-lg border border-fog bg-paper-white shadow-panel"
       aria-label="Search"
     >
       <div className="border-b border-fog p-4">
@@ -87,11 +87,11 @@ export function SearchModal({ open, onClose, onSelectBooking }: SearchModalProps
                     </span>
                     <span className="flex shrink-0 items-center gap-2">
                       {b.queueNumber ? (
-                        <span className="rounded-full bg-mist px-2 py-0.5 text-[11px] font-medium text-ash">
+                        <span className="rounded-md bg-mist px-2 py-0.5 text-[11px] font-medium text-ash">
                           #{b.queueNumber}
                         </span>
                       ) : null}
-                      <span className="rounded-full bg-mist px-2 py-0.5 text-[11px] font-medium text-ash">
+                      <span className="rounded-md bg-mist px-2 py-0.5 text-[11px] font-medium text-ash">
                         {b.status}
                       </span>
                     </span>

@@ -1,5 +1,12 @@
 @import "@miki/ui/globals.css";
 
+/*
+  Staff POS — Vercel-inspired app chrome
+  canvas #fff · canvas-soft #fafafa · hairline #ebebeb · ink #171717
+  App radius ~6–8px · stacked hairline shadows · ink CTAs
+  Barber hue = avatar mark only
+*/
+
 @keyframes pos-receipt-slide {
   from {
     opacity: 0;
@@ -15,55 +22,108 @@
   animation: pos-receipt-slide 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Barber identity tokens — set on .pos-shell via data-acting-barber */
+:root {
+  --pos-canvas: #ffffff;
+  --pos-canvas-soft: #fafafa;
+  --pos-canvas-muted: #f5f5f5;
+  --pos-hairline: #ebebeb;
+  --pos-ink: #171717;
+  --pos-body: #4d4d4d;
+  --pos-mute: #888888;
+  --pos-radius-sm: 6px;
+  --pos-radius-md: 8px;
+  --pos-radius-lg: 12px;
+  --shadow-pos: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-pos-float: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04),
+    0 12px 24px rgba(0, 0, 0, 0.06);
+}
+
+html,
+body {
+  background-color: var(--pos-canvas-soft) !important;
+  color: var(--pos-ink);
+}
+
+/* Barber identity — accents for rings / avatars / CTAs; surfaces stay neutral */
 :root,
-[data-acting-barber="s1"] {
-  --barber-accent: #918df6;
-  --barber-accent-hover: #7a75e8;
-  --barber-surface: #ebe9fe;
-  --barber-muted: rgba(145, 141, 246, 0.1);
-  --barber-soft: rgba(145, 141, 246, 0.15);
-  --barber-border: rgba(145, 141, 246, 0.3);
-  --barber-ring: rgba(145, 141, 246, 0.4);
+[data-acting-barber='s1'] {
+  --barber-accent: #171717;
+  --barber-accent-hover: #000000;
+  --barber-surface: var(--pos-canvas-soft);
+  --barber-muted: rgba(23, 23, 23, 0.04);
+  --barber-soft: rgba(23, 23, 23, 0.06);
+  --barber-border: rgba(23, 23, 23, 0.1);
+  --barber-ring: rgba(23, 23, 23, 0.16);
   --barber-accent-fg: #ffffff;
+  --barber-mark: #6b67d8;
 }
 
-[data-acting-barber="s2"] {
-  --barber-accent: #2c78fc;
-  --barber-accent-hover: #1a65e8;
-  --barber-surface: #e8f1ff;
-  --barber-muted: rgba(44, 120, 252, 0.1);
-  --barber-soft: rgba(44, 120, 252, 0.15);
-  --barber-border: rgba(44, 120, 252, 0.3);
-  --barber-ring: rgba(44, 120, 252, 0.4);
-  --barber-accent-fg: #ffffff;
+[data-acting-barber='s2'] {
+  --barber-mark: #2563eb;
 }
 
-[data-acting-barber="s3"] {
-  --barber-accent: #ffa600;
-  --barber-accent-hover: #e69500;
-  --barber-surface: #fff4e0;
-  --barber-muted: rgba(255, 166, 0, 0.12);
-  --barber-soft: rgba(255, 166, 0, 0.18);
-  --barber-border: rgba(255, 166, 0, 0.35);
-  --barber-ring: rgba(255, 166, 0, 0.45);
-  --barber-accent-fg: #181925;
+[data-acting-barber='s3'] {
+  --barber-mark: #d97706;
 }
 
-[data-acting-barber="manager"] {
-  --barber-accent: #181925;
-  --barber-accent-hover: #2a2b38;
-  --barber-surface: #f0f0f2;
-  --barber-muted: rgba(24, 25, 37, 0.06);
-  --barber-soft: rgba(24, 25, 37, 0.1);
-  --barber-border: rgba(24, 25, 37, 0.15);
-  --barber-ring: rgba(24, 25, 37, 0.2);
+[data-acting-barber='s4'] {
+  --barber-mark: #0d9488;
+}
+
+[data-acting-barber='s5'] {
+  --barber-mark: #db2777;
+}
+
+[data-acting-barber='s6'] {
+  --barber-mark: #7c3aed;
+}
+
+[data-acting-barber='s7'] {
+  --barber-mark: #0891b2;
+}
+
+[data-acting-barber='s8'] {
+  --barber-mark: #65a30d;
+}
+
+[data-acting-barber='s9'] {
+  --barber-mark: #e11d48;
+}
+
+[data-acting-barber='s10'] {
+  --barber-mark: #57534e;
+}
+
+[data-acting-barber='manager'] {
+  --barber-accent: #171717;
+  --barber-accent-hover: #000000;
+  --barber-surface: var(--pos-canvas-soft);
+  --barber-muted: rgba(23, 23, 23, 0.04);
+  --barber-soft: rgba(23, 23, 23, 0.06);
+  --barber-border: rgba(23, 23, 23, 0.1);
+  --barber-ring: rgba(23, 23, 23, 0.16);
   --barber-accent-fg: #ffffff;
+  --barber-mark: #171717;
 }
 
 .pos-shell {
-  background-color: var(--barber-surface);
+  background-color: var(--pos-canvas-soft);
+  color: var(--pos-ink);
   transition: background-color 200ms ease-out;
+  /* Remap shared Visitors tokens inside POS */
+  --color-linen: var(--pos-canvas-soft);
+  --color-mist: var(--pos-canvas-muted);
+  --color-fog: var(--pos-hairline);
+  --color-carbon: var(--pos-ink);
+  --color-ash: var(--pos-mute);
+  --color-graphite: var(--pos-body);
+  --color-paper-white: var(--pos-canvas);
+  --shadow-subtle: var(--shadow-pos);
+  --shadow-subtle-2: var(--shadow-pos);
+  --shadow-subtle-3: var(--shadow-pos-float);
+  --radius-card: var(--pos-radius-lg);
+  --radius-table: var(--pos-radius-lg);
+  --radius-input: var(--pos-radius-md);
 }
 
 .text-barber {
@@ -82,6 +142,10 @@
   background-color: var(--barber-soft);
 }
 
+.bg-barber-mark {
+  background-color: var(--barber-mark);
+}
+
 .text-barber-fg {
   color: var(--barber-accent-fg);
 }
@@ -94,11 +158,52 @@
   --tw-ring-color: var(--barber-ring);
 }
 
-.pos-shell .btn-primary {
-  background: var(--barber-accent);
-  color: var(--barber-accent-fg);
+/* Type — Geist-like weight ceiling + tracking */
+.pos-shell .font-display,
+.font-display {
+  font-weight: 600;
+  letter-spacing: -0.04em;
 }
 
-.pos-shell .btn-primary:hover {
-  background: var(--barber-accent-hover);
+.pos-shell .tracking-ui,
+.tracking-ui {
+  letter-spacing: -0.02em;
+}
+
+.pos-shell .shadow-panel,
+.shadow-panel {
+  box-shadow: var(--shadow-pos-float);
+}
+
+.pos-shell .btn-primary,
+.btn-primary {
+  border-radius: var(--pos-radius-sm);
+  background: var(--pos-ink);
+  color: #ffffff;
+  box-shadow: none;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.pos-shell .btn-primary:hover,
+.btn-primary:hover {
+  background: #000000;
+}
+
+.pos-shell .btn-ghost,
+.btn-ghost {
+  border-radius: var(--pos-radius-sm);
+}
+
+/* Login CTA — fill lives on inner span so UA/button resets cannot paint over it */
+.login-cta {
+  background-color: #2c78fc !important;
+  color: #ffffff !important;
+  border: none;
+  box-shadow: none;
+}
+
+.login-cta:hover {
+  background-color: #1a65e8 !important;
+  color: #ffffff !important;
 }

@@ -37,7 +37,7 @@ export function Toast({
   return (
     <div className="pointer-events-none fixed bottom-5 right-5 z-[60] w-[340px] max-w-[calc(100vw-40px)]">
       <MotionToastHost open={toast.open} className="pointer-events-auto">
-        <div className="overflow-hidden rounded-2xl border border-fog bg-paper-white shadow-panel">
+        <div className="overflow-hidden rounded-lg border border-fog bg-paper-white shadow-panel">
           <div className={`h-1.5 w-full ${accent}`} aria-hidden />
           <div className="p-4">
             <p className="text-sm font-medium text-carbon">{toast.title}</p>

@@ -329,7 +329,7 @@ Full viewport · linen canvas
 
 | | |
 | :--- | :--- |
-| **Purpose** | Set acting barber / Manager without logout |
+| **Purpose** | Set acting barber / Manager without logout; **start POS shift (clock-in)** |
 | **Placement** | Shell region C |
 
 **Layout**
@@ -337,6 +337,7 @@ Full viewport · linen canvas
 ```
 [ Avatar ] [ Avatar ] [ Avatar ] [ Manager ]
     ● active ring on current
+    ○ off-shift dimmed — tap → Start shift confirm
 ```
 
 **Components**
@@ -344,10 +345,19 @@ Full viewport · linen canvas
 | Component | Notes |
 | :--- | :--- |
 | `BarberSwitcher` | Horizontal avatar rail |
-| Avatar button | ≥48px hit; initial or photo |
-| Manager chip | Distinct from barber avatars |
-| Toast | “Now acting as …” on change |
-| Lane header tap | Also switches acting (FloorView) |
+| Avatar button | ≥48px hit; initial or photo; dimmed when off shift |
+| Start shift modal | Off-shift tap → confirm → clock in + act as |
+| Manager chip | PIN-gated; no shift created |
+| Toast | “Shift started · …” / “Now acting as …” |
+| Lane header tap | Also switches acting when already on shift |
+
+**Rules**
+
+- Off-shift barber → **PIN pad** → Start shift (attendance → merchant Roster). Demo PINs: Hafiz `1111`, Ivan `2222`, Amir `3333`.
+- On-shift → tap switches acting only (no PIN — already verified at clock-in).
+- Break / end shift live in **More** (not on switcher).
+- **After End shift:** hand acting context to another barber still on shift; if none, show **Clocked out** gate over the board (not their live dashboard) until someone clocks in.
+- Biometrics deferred: shared tablet + wet hands; PIN is the v1 identity gate (same pattern as Manager).
 
 ---
 
@@ -718,12 +728,15 @@ Scrim · “Mark no-show?” · [Mark no-show] · [They just arrived]
 │ Search →                       │
 │ My day →                       │
 │ ─────────────────              │
-│ End session                    │
-│ Online · N pending (if any)    │
+│ Shift · {acting} (barber)      │
+│ On break / End shift           │
+│ ─────────────────              │
+│ Manager only ↓                 │
+│ End session / Offline / Tools  │
 └────────────────────────────────┘
 ```
 
-**Components:** list rows (≥48px), navigates to Search / My day / End session.
+**Components:** list rows (≥48px). Search / My day for all. Shift controls for acting barber. **End session, offline toggle, Staff tools** only when acting as Manager (PIN). Close control is a labeled **Done** pill (≥48×72px), not a tiny ×.
 
 ---
 

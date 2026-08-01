@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { fade } from '@/lib/motion'
 import { AddServiceDrawer } from '@/components/AddServiceDrawer'
-import { BarberSwitcher } from '@/components/BarberSwitcher'
 import { BookingDrawer } from '@/components/BookingDrawer'
 import { BottomNavPill, type BottomNavTab } from '@/components/BottomNavPill'
 import { CashierScreen } from '@/components/CashierScreen'
@@ -23,6 +22,7 @@ import { StatsDrawer } from '@/components/StatsDrawer'
 import { Toast, type ToastState } from '@/components/Toast'
 import { WalkInDrawer } from '@/components/WalkInDrawer'
 import type { PaymentMethod } from '@/data/mock'
+import { MANAGER_ACTING_ID, actingLabel } from '@/data/mock'
 import { useStore } from '@/data/store'
 
 type ReceiptState = {
@@ -35,7 +35,7 @@ type ReceiptState = {
 }
 
 export function PosApp() {
-  const { loggedIn, logout, getBookingById, actingStaffId } = useStore()
+  const { loggedIn, logout, getBookingById, actingStaffId, isOnShift, staff } = useStore()
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null)
   const [cashierBookingId, setCashierBookingId] = useState<string | null | undefined>(undefined)
   const [reassignId, setReassignId] = useState<string | null>(null)
@@ -54,6 +54,11 @@ export function PosApp() {
 
   const cashierOpen = cashierBookingId !== undefined
   const cashierBooking = cashierBookingId ? getBookingById(cashierBookingId) : null
+  const actingIsBarber = actingStaffId !== MANAGER_ACTING_ID
+  const clockedOut =
+    loggedIn && actingIsBarber && !isOnShift(actingStaffId)
+  const clockedOutName =
+    staff.find((s) => s.id === actingStaffId)?.name ?? actingLabel(actingStaffId, staff)
 
   const hidePill =
     cashierOpen ||
@@ -113,24 +118,13 @@ export function PosApp() {
     >
       <OfflineBanner />
 
-      <div className="pointer-events-none fixed left-1/2 top-3 z-30 -translate-x-1/2">
-        <div className="pointer-events-auto">
-          <BarberSwitcher
-            compact
-            onActingChange={(name) =>
-              setToast({ open: true, kind: 'info', title: `Now acting as ${name}` })
-            }
-          />
-        </div>
-      </div>
-
       <MotionOverlay
         open={endSessionOpen}
         onClose={() => setEndSessionOpen(false)}
         variant="modal"
         zClass="z-[60]"
         backdropClassName="bg-carbon/30"
-        panelClassName="w-full max-w-sm rounded-2xl border border-fog bg-paper-white p-6 shadow-panel"
+        panelClassName="w-full max-w-sm rounded-lg border border-fog bg-paper-white p-6 shadow-panel"
         aria-label="End session"
       >
         <h2 className="font-display text-lg font-medium tracking-ui text-carbon">End session?</h2>
@@ -159,7 +153,7 @@ export function PosApp() {
         </div>
       </MotionOverlay>
 
-      <main className="flex min-h-0 flex-1 flex-col overflow-hidden px-3 pb-28 pt-14">
+      <main className="relative flex min-h-0 flex-1 flex-col overflow-hidden px-3 pb-28 pt-3">
         <FloorView
           selectedBookingId={selectedBookingId}
           onSelectBooking={(id) => setSelectedBookingId(id)}
@@ -168,6 +162,27 @@ export function PosApp() {
           viewMode={boardView}
           onViewModeChange={setBoardView}
         />
+        {clockedOut ? (
+          <div
+            className="absolute inset-x-3 bottom-28 top-3 z-20 flex items-center justify-center rounded-lg bg-[var(--pos-canvas-soft)]/95 px-6 backdrop-blur-[2px]"
+            role="status"
+            aria-live="polite"
+          >
+            <div className="max-w-sm text-center">
+              <p className="text-[10px] font-semibold uppercase tracking-ui text-ash">Clocked out</p>
+              <h2 className="font-display mt-2 text-2xl font-medium tracking-ui text-carbon">
+                Shift ended
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-graphite">
+                {clockedOutName} is off the floor. Tap the barber control and enter a PIN to clock
+                in, or switch to someone already on shift.
+              </p>
+              <p className="mt-4 text-xs text-ash">
+                Device logout is Manager-only (More → End session).
+              </p>
+            </div>
+          </div>
+        ) : null}
       </main>
 
       <BottomNavPill
@@ -178,10 +193,28 @@ export function PosApp() {
           setBoardView('lanes')
         }}
         onWalkIn={() => {
+          if (clockedOut) {
+            setToast({
+              open: true,
+              kind: 'info',
+              title: 'Clock in to continue',
+              message: 'Start a shift from the barber switcher first.',
+            })
+            return
+          }
           setMoreOpen(false)
           setWalkInOpen(true)
         }}
         onCashier={() => {
+          if (clockedOut) {
+            setToast({
+              open: true,
+              kind: 'info',
+              title: 'Clock in to continue',
+              message: 'Start a shift from the barber switcher first.',
+            })
+            return
+          }
           setMoreOpen(false)
           setSelectedBookingId(null)
           setCashierBookingId(null)
@@ -199,6 +232,7 @@ export function PosApp() {
         onSearch={() => setSearchOpen(true)}
         onMyDay={() => setStatsOpen(true)}
         onEndSession={() => setEndSessionOpen(true)}
+        onToast={(t) => setToast({ open: true, ...t })}
         onToggleOffline={(goingOffline, pendingCount) => {
           if (!goingOffline && pendingCount > 0) {
             setToast({

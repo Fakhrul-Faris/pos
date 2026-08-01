@@ -36,7 +36,7 @@ export function NoShowConfirmModal({
       variant="modal"
       zClass="z-[60]"
       backdropClassName="bg-carbon/30"
-      panelClassName="w-full max-w-sm rounded-2xl border border-fog bg-paper-white p-6 shadow-panel"
+      panelClassName="w-full max-w-sm rounded-lg border border-fog bg-paper-white p-6 shadow-panel"
       aria-label="Mark no-show"
     >
       {booking ? (

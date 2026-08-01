@@ -181,7 +181,7 @@ export function WalkInDrawer({ open, onClose, onCreated }: WalkInDrawerProps) {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-fog bg-linen p-4">
+        <div className="rounded-lg border border-fog bg-linen p-4">
           <p className="text-xs text-ash">Quoted</p>
           <p className="font-display mt-1 text-2xl font-medium tracking-ui text-carbon">
             RM {service.price}

@@ -16,6 +16,16 @@ export type StaffMember = {
 
 export type StaffStatus = 'available' | 'busy' | 'break' | 'off'
 
+export type ShiftSource = 'POS_START' | 'POS_SWITCH' | 'MANUAL_END' | 'AUTO_EOD'
+
+export type Shift = {
+  id: string
+  staffId: string
+  startedAt: string
+  endedAt: string | null
+  source: ShiftSource
+}
+
 export const MANAGER_ACTING_ID = 'manager'
 
 export function actingLabel(staffId: string, staffList: StaffMember[]): string {
@@ -79,9 +89,33 @@ export type FloorBooking = {
 }
 
 export const staff: StaffMember[] = [
-  { id: 's1', name: 'Hafiz', headerClass: 'bg-lavender text-paper-white' },
-  { id: 's2', name: 'Ivan', headerClass: 'bg-sky text-paper-white' },
-  { id: 's3', name: 'Amir', headerClass: 'bg-amber text-carbon' },
+  { id: 's1', name: 'Hafiz', headerClass: 'bg-[#6b67d8] text-paper-white' },
+  { id: 's2', name: 'Ivan', headerClass: 'bg-[#2563eb] text-paper-white' },
+  { id: 's3', name: 'Amir', headerClass: 'bg-[#d97706] text-carbon' },
+  { id: 's4', name: 'Rizal', headerClass: 'bg-[#0d9488] text-paper-white' },
+  { id: 's5', name: 'Kenji', headerClass: 'bg-[#db2777] text-paper-white' },
+  { id: 's6', name: 'Farid', headerClass: 'bg-[#7c3aed] text-paper-white' },
+  { id: 's7', name: 'Wei', headerClass: 'bg-[#0891b2] text-paper-white' },
+  { id: 's8', name: 'Daniel', headerClass: 'bg-[#65a30d] text-paper-white' },
+  { id: 's9', name: 'Omar', headerClass: 'bg-[#e11d48] text-paper-white' },
+  { id: 's10', name: 'Lucas', headerClass: 'bg-[#57534e] text-paper-white' },
+]
+
+function todayAt(hours: number, minutes: number): string {
+  const d = new Date()
+  d.setHours(hours, minutes, 0, 0)
+  return d.toISOString()
+}
+
+/** Demo: most of the floor clocked in; last three off until Start shift. */
+export const initialShifts: Shift[] = [
+  { id: 'sh1', staffId: 's1', startedAt: todayAt(9, 55), endedAt: null, source: 'POS_START' },
+  { id: 'sh2', staffId: 's2', startedAt: todayAt(10, 18), endedAt: null, source: 'POS_START' },
+  { id: 'sh3', staffId: 's3', startedAt: todayAt(9, 40), endedAt: null, source: 'POS_START' },
+  { id: 'sh4', staffId: 's4', startedAt: todayAt(10, 5), endedAt: null, source: 'POS_START' },
+  { id: 'sh5', staffId: 's5', startedAt: todayAt(10, 12), endedAt: null, source: 'POS_START' },
+  { id: 'sh6', staffId: 's6', startedAt: todayAt(9, 50), endedAt: null, source: 'POS_START' },
+  { id: 'sh7', staffId: 's7', startedAt: todayAt(10, 22), endedAt: null, source: 'POS_START' },
 ]
 
 export const serviceOptions: ServiceOption[] = [
@@ -130,6 +164,24 @@ export const initialWalkInBlocks: WalkInBlock[] = [
 
 /** Demo manager PIN for acting as Manager (void/refund / manager mode). */
 export const MANAGER_PIN = '2468'
+
+/** Per-barber clock-in PINs (shared tablet — proves identity without biometrics). */
+export const STAFF_PINS: Record<string, string> = {
+  s1: '1111', // Hafiz
+  s2: '2222', // Ivan
+  s3: '3333', // Amir
+  s4: '4444', // Rizal
+  s5: '5555', // Kenji
+  s6: '6666', // Farid
+  s7: '7777', // Wei
+  s8: '8888', // Daniel
+  s9: '9999', // Omar
+  s10: '0000', // Lucas
+}
+
+export function staffPinFor(staffId: string): string | undefined {
+  return STAFF_PINS[staffId]
+}
 
 export function serviceLabelFromIds(ids: string[]) {
   return ids
@@ -432,6 +484,108 @@ export const initialBookings: FloorBooking[] = [
     serviceIds: ['skin-fade'],
     status: 'confirmed',
     amount: 55,
+    source: 'online',
+  },
+  // —— Extra chairs (10-barber floor stress) ——
+  {
+    id: 'c21',
+    queueNumber: 33,
+    staffId: 's4',
+    startMinutes: 10 * 60,
+    durationMinutes: 45,
+    customer: 'Arif Z.',
+    services: 'Haircut',
+    serviceIds: ['haircut'],
+    status: 'in-service',
+    amount: 45,
+    source: 'online',
+  },
+  {
+    id: 'c22',
+    queueNumber: 34,
+    staffId: 's4',
+    startMinutes: 10 * 60 + 50,
+    durationMinutes: 30,
+    customer: 'Ben T.',
+    services: 'Buzz cut',
+    serviceIds: ['buzz'],
+    status: 'checked-in',
+    amount: 30,
+    source: 'walk-in',
+  },
+  {
+    id: 'c23',
+    queueNumber: 35,
+    staffId: 's5',
+    startMinutes: 10 * 60 + 20,
+    durationMinutes: 60,
+    customer: 'Marcus L.',
+    services: 'Skin fade',
+    serviceIds: ['skin-fade'],
+    status: 'in-service',
+    amount: 55,
+    source: 'online',
+  },
+  {
+    id: 'c24',
+    staffId: 's5',
+    startMinutes: 11 * 60 + 30,
+    durationMinutes: 45,
+    customer: 'Joel K.',
+    services: 'Haircut',
+    serviceIds: ['haircut'],
+    status: 'confirmed',
+    amount: 45,
+    source: 'online',
+  },
+  {
+    id: 'c25',
+    queueNumber: 36,
+    staffId: 's6',
+    startMinutes: 10 * 60 + 35,
+    durationMinutes: 25,
+    customer: 'Rafi M.',
+    services: 'Beard trim',
+    serviceIds: ['beard-trim'],
+    status: 'checked-in',
+    amount: 25,
+    source: 'walk-in',
+  },
+  {
+    id: 'c26',
+    staffId: 's6',
+    startMinutes: 11 * 60 + 15,
+    durationMinutes: 50,
+    customer: 'Nazri H.',
+    services: 'Wash + cut',
+    serviceIds: ['wash-cut'],
+    status: 'confirmed',
+    amount: 55,
+    source: 'online',
+  },
+  {
+    id: 'c27',
+    queueNumber: 37,
+    staffId: 's7',
+    startMinutes: 10 * 60 + 10,
+    durationMinutes: 45,
+    customer: 'Chris P.',
+    services: 'Haircut',
+    serviceIds: ['haircut'],
+    status: 'in-service',
+    amount: 45,
+    source: 'online',
+  },
+  {
+    id: 'c28',
+    staffId: 's7',
+    startMinutes: 12 * 60,
+    durationMinutes: 60,
+    customer: 'Adrian S.',
+    services: 'Skin fade + beard',
+    serviceIds: ['fade-beard'],
+    status: 'confirmed',
+    amount: 65,
     source: 'online',
   },
 

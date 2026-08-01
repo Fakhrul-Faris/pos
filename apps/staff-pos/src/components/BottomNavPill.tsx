@@ -93,7 +93,7 @@ export function BottomNavPill({
           exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
           transition={reduce ? { duration: 0.01 } : spring.playful}
         >
-      <div className="pointer-events-auto flex w-full max-w-[28rem] items-center gap-0.5 rounded-full border border-fog bg-paper-white/95 p-1.5 shadow-panel backdrop-blur-sm">
+      <div className="pointer-events-auto flex w-full max-w-[28rem] items-center gap-0.5 rounded-full border border-fog bg-paper-white p-1.5 shadow-panel backdrop-blur-sm">
         <button type="button" onClick={onToday} className={itemClass(active === 'today')} aria-current={active === 'today' ? 'page' : undefined}>
           <NavIcon name="today" />
           Today
@@ -106,11 +106,7 @@ export function BottomNavPill({
         <button
           type="button"
           onClick={onCashier}
-          className={`-mt-5 flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full shadow-panel transition-transform hover:scale-105 ${
-            active === 'cashier'
-              ? 'bg-carbon text-paper-white ring-4 ring-paper-white'
-              : 'bg-barber text-barber-fg ring-4 ring-paper-white'
-          }`}
+          className="-mt-5 flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full bg-carbon text-paper-white ring-4 ring-paper-white shadow-panel transition-transform hover:scale-105"
           aria-label="Cashier"
           aria-current={active === 'cashier' ? 'page' : undefined}
         >

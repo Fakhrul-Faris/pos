@@ -4,11 +4,20 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from 'react'
 import { calendarToday } from './mock'
+import {
+  attendanceStatusFromClockIn,
+  isoToClockHm,
+  latestShiftForStaff,
+  readShiftsFromBridge,
+  SHIFT_BRIDGE_KEY,
+  type BridgeShift,
+} from '../lib/shiftBridge'
 
 export type ShiftTemplate = {
   id: string
@@ -157,24 +166,16 @@ const seedAssignments: ShiftAssignment[] = [
   },
 ]
 
+/** Base rows without POS clock times — POS bridge fills clock in/out. */
 const seedAttendance: AttendanceRecord[] = [
   {
-    id: 'att1',
-    staffId: 's1',
+    id: 'att3',
+    staffId: 's3',
     date: calendarToday,
-    status: 'present',
-    clockIn: '09:55',
+    status: 'absent',
+    clockIn: null,
     clockOut: null,
     notes: '',
-  },
-  {
-    id: 'att2',
-    staffId: 's2',
-    date: calendarToday,
-    status: 'late',
-    clockIn: '10:18',
-    clockOut: null,
-    notes: 'Traffic',
   },
 ]
 
@@ -190,12 +191,73 @@ const seedOt: OvertimeRequest[] = [
   },
 ]
 
+const POS_STAFF_IDS = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10'] as const
+
+function mergeAttendanceFromShifts(
+  base: AttendanceRecord[],
+  shifts: BridgeShift[],
+  date: string,
+): AttendanceRecord[] {
+  let next = [...base]
+  for (const staffId of POS_STAFF_IDS) {
+    // Demo: portal "today" is a frozen calendar date; map any POS shift onto that row.
+    const shift = latestShiftForStaff(shifts, staffId)
+    if (!shift) continue
+    const clockIn = isoToClockHm(shift.startedAt)
+    const clockOut = shift.endedAt ? isoToClockHm(shift.endedAt) : null
+    const status = attendanceStatusFromClockIn(shift.startedAt)
+    const existing = next.find((a) => a.staffId === staffId && a.date === date)
+    if (existing) {
+      next = next.map((a) =>
+        a.id === existing.id
+          ? {
+              ...a,
+              status,
+              clockIn,
+              clockOut,
+              notes: a.notes.includes('POS') ? a.notes : a.notes || 'From POS',
+            }
+          : a,
+      )
+    } else {
+      next.push({
+        id: uid('att'),
+        staffId,
+        date,
+        status,
+        clockIn,
+        clockOut,
+        notes: 'From POS',
+      })
+    }
+  }
+  return next
+}
+
 export function RosterProvider({ children }: { children: ReactNode }) {
   const [templates, setTemplates] = useState(seedTemplates)
   const [assignments, setAssignments] = useState(seedAssignments)
   const [attendance, setAttendanceState] = useState(seedAttendance)
   const [overtime, setOvertime] = useState(seedOt)
   const weekDates = weekDatesSeed
+
+  const hydrateFromPos = useCallback(() => {
+    const shifts = readShiftsFromBridge()
+    setAttendanceState((prev) => mergeAttendanceFromShifts(prev, shifts, calendarToday))
+  }, [])
+
+  useEffect(() => {
+    hydrateFromPos()
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === SHIFT_BRIDGE_KEY || e.key === null) hydrateFromPos()
+    }
+    window.addEventListener('storage', onStorage)
+    const poll = window.setInterval(hydrateFromPos, 2000)
+    return () => {
+      window.removeEventListener('storage', onStorage)
+      window.clearInterval(poll)
+    }
+  }, [hydrateFromPos])
 
   const assignShift = useCallback((staffId: string, date: string, templateId: string) => {
     setAssignments((prev) => {

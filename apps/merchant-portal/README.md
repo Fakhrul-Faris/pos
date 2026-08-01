@@ -19,3 +19,5 @@ npm run dev:portal
 ## Stack
 
 Next.js 15 · React 19 · Tailwind v4 via `@miki/ui` · in-memory mock state (no backend).
+
+**Attendance:** Roster → Attendance clock times hydrate from Staff POS shifts via `localStorage` key `miki.pos.shifts` (same browser).

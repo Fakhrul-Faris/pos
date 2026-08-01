@@ -11,6 +11,7 @@ import {
 } from 'react'
 import {
   initialBookings,
+  initialShifts,
   initialTransactions,
   initialWalkInBlocks,
   MANAGER_ACTING_ID,
@@ -27,9 +28,12 @@ import {
   type PartyPhase,
   type PaymentMethod,
   type ServiceOption,
+  type Shift,
+  type ShiftSource,
   type StaffMember,
   type StaffStatus,
 } from './mock'
+import { writeShiftsToBridge } from '@/lib/shiftBridge'
 
 export type FloorLane = {
   staff: StaffMember
@@ -136,6 +140,14 @@ type StoreValue = {
   getWalkInSlots: (serviceId: string) => WalkInSlot[]
   getBookingById: (id: string) => FloorBooking | null
   setStaffOverride: (staffId: string, status: Extract<StaffStatus, 'break' | 'off'> | null) => void
+  shifts: Shift[]
+  getOpenShift: (staffId: string) => Shift | null
+  isOnShift: (staffId: string) => boolean
+  startShift: (staffId: string) => Shift | null
+  endShift: (
+    staffId: string,
+    source?: Extract<ShiftSource, 'MANUAL_END' | 'AUTO_EOD' | 'POS_SWITCH'>,
+  ) => { handedOffTo: { id: string; name: string } | null }
   getMyDayStats: (staffId: string) => { cuts: number; revenue: number }
   isLateBooking: (booking: FloorBooking) => boolean
 }
@@ -146,6 +158,7 @@ let nextQueue = 34
 let nextBookingId = 100
 let nextTxnId = 1
 let nextTxnRef = 91000
+let nextShiftId = 10
 
 function minutesToTimeLabel(minutes: number) {
   const h = Math.floor(minutes / 60)
@@ -165,12 +178,17 @@ function bumpPending(setter: React.Dispatch<React.SetStateAction<number>>, isOff
   if (isOffline) setter((n) => n + 1)
 }
 
+function findOpenShift(shifts: Shift[], staffId: string): Shift | null {
+  return shifts.find((s) => s.staffId === staffId && s.endedAt == null) ?? null
+}
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [demoNowMinutes, setDemoNowMinutes] = useState(10 * 60 + 45)
   const [bookings, setBookings] = useState<FloorBooking[]>(() => [...initialBookings])
-  const [staffOverrides, setStaffOverrides] = useState<Record<string, Extract<StaffStatus, 'break' | 'off'>>>({
-    s3: 'break',
-  })
+  const [staffOverrides, setStaffOverrides] = useState<
+    Record<string, Extract<StaffStatus, 'break' | 'off'>>
+  >({})
+  const [shifts, setShifts] = useState<Shift[]>(() => [...initialShifts])
   const [transactions, setTransactions] = useState<Transaction[]>(() => [...initialTransactions])
   const [loggedIn, setLoggedIn] = useState(false)
   const [actingStaffId, setActingStaffId] = useState(staff[0]?.id ?? 's1')
@@ -180,6 +198,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   )
   const isOffline = demoOffline || networkOffline
   const [pendingSyncCount, setPendingSyncCount] = useState(0)
+
+  useEffect(() => {
+    writeShiftsToBridge(shifts)
+  }, [shifts])
 
   useEffect(() => {
     const syncConnectivity = () => {
@@ -238,12 +260,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       )
 
       const override = staffOverrides[s.id]
-      const staffStatus: StaffStatus =
-        override ? override : now.length > 0 ? 'busy' : 'available'
+      const onShift = !!findOpenShift(shifts, s.id)
+      const staffStatus: StaffStatus = !onShift
+        ? 'off'
+        : override === 'break'
+          ? 'break'
+          : override === 'off'
+            ? 'off'
+            : now.length > 0
+              ? 'busy'
+              : 'available'
 
       return { staff: s, staffStatus, now, waiting, upcoming, done, parties }
     })
-  }, [bookings, demoNowMinutes, staffOverrides])
+  }, [bookings, demoNowMinutes, staffOverrides, shifts])
 
   const getBookingById = useCallback(
     (id: string) => bookings.find((b) => b.id === id) ?? null,
@@ -330,6 +360,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         if (s.id === booking.staffId) {
           return { staffId: s.id, name: s.name, available: false, reason: 'Current barber' }
         }
+        if (!findOpenShift(shifts, s.id)) {
+          return { staffId: s.id, name: s.name, available: false, reason: 'Off shift' }
+        }
         const override = staffOverrides[s.id]
         if (override === 'off') {
           return { staffId: s.id, name: s.name, available: false, reason: 'Off shift' }
@@ -345,7 +378,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         return { staffId: s.id, name: s.name, available: true }
       })
     },
-    [findOverlap, getBookingById, staffOverrides],
+    [findOverlap, getBookingById, staffOverrides, shifts],
   )
 
   const reassignBarber = useCallback(
@@ -666,7 +699,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           const waiting = bookings.filter(
             (b) => b.staffId === s.id && b.status === 'checked-in',
           ).length
-          const unavailable = override === 'off' || override === 'break'
+          const onShift = !!findOpenShift(shifts, s.id)
+          const unavailable = !onShift || override === 'off' || override === 'break'
           return { staff: s, waiting, unavailable, override }
         })
         .filter((r) => !r.unavailable)
@@ -748,7 +782,74 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
       return slots
     },
-    [bookings, demoNowMinutes, staff, staffOverrides],
+    [bookings, demoNowMinutes, staff, staffOverrides, shifts],
+  )
+
+  const getOpenShift = useCallback(
+    (staffId: string) => findOpenShift(shifts, staffId),
+    [shifts],
+  )
+
+  const isOnShift = useCallback(
+    (staffId: string) => !!findOpenShift(shifts, staffId),
+    [shifts],
+  )
+
+  const startShift = useCallback((staffId: string) => {
+    if (staffId === MANAGER_ACTING_ID) return null
+    let created: Shift | null = null
+    setShifts((prev) => {
+      const existing = findOpenShift(prev, staffId)
+      if (existing) {
+        created = existing
+        return prev
+      }
+      created = {
+        id: `sh${nextShiftId++}`,
+        staffId,
+        startedAt: new Date().toISOString(),
+        endedAt: null,
+        source: 'POS_START',
+      }
+      return [...prev, created]
+    })
+    setStaffOverrides((prev) => {
+      if (!prev[staffId]) return prev
+      const next = { ...prev }
+      delete next[staffId]
+      return next
+    })
+    return created
+  }, [])
+
+  const endShift = useCallback(
+    (
+      staffId: string,
+      source: Extract<ShiftSource, 'MANUAL_END' | 'AUTO_EOD' | 'POS_SWITCH'> = 'MANUAL_END',
+    ) => {
+      const now = new Date().toISOString()
+      setShifts((prev) =>
+        prev.map((s) =>
+          s.staffId === staffId && s.endedAt == null ? { ...s, endedAt: now, source } : s,
+        ),
+      )
+      setStaffOverrides((prev) => {
+        if (!prev[staffId]) return prev
+        const next = { ...prev }
+        delete next[staffId]
+        return next
+      })
+
+      // Hand floor to another barber still on shift so we don't leave a clocked-out "dashboard".
+      const handoff =
+        staff.find((s) => s.id !== staffId && !!findOpenShift(shifts, s.id)) ?? null
+      if (handoff) {
+        setActingStaffId(handoff.id)
+        return { handedOffTo: { id: handoff.id, name: handoff.name } }
+      }
+      return { handedOffTo: null }
+    },
+    [shifts, staff],
   )
 
   const setStaffOverride = useCallback(
@@ -842,6 +943,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     getWalkInSlots,
     getBookingById,
     setStaffOverride,
+    shifts,
+    getOpenShift,
+    isOnShift,
+    startShift,
+    endShift,
     getMyDayStats,
     isLateBooking,
   }
