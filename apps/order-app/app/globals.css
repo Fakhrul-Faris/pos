@@ -1,0 +1,25 @@
+@import "@miki/ui/globals.css";
+
+:root {
+  --order-canvas: #f9f9f8;
+  --order-ink: #1c1c1c;
+  --order-mute: #0000008a;
+  --order-accent: #38ce87;
+  --order-accent-deep: #1a7a4c;
+}
+
+html,
+body {
+  background-color: var(--order-canvas);
+  color: var(--order-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

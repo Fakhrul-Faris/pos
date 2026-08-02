@@ -10,10 +10,12 @@
     "dev:portal": "npm run dev -w @miki/merchant-portal",
     "dev:admin": "npm run dev -w @miki/admin-portal",
     "dev:pos": "npm run dev -w @miki/staff-pos",
+    "dev:order": "npm run dev -w @miki/order-app",
     "build:landing": "npm run build -w @miki/landing",
     "build:portal": "npm run build -w @miki/merchant-portal",
     "build:admin": "npm run build -w @miki/admin-portal",
     "build:pos": "npm run build -w @miki/staff-pos",
-    "build": "npm run build:landing && npm run build:portal && npm run build:admin && npm run build:pos"
+    "build:order": "npm run build -w @miki/order-app",
+    "build": "npm run build:landing && npm run build:portal && npm run build:admin && npm run build:pos && npm run build:order"
   }
 }

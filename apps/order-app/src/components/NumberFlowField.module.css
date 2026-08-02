@@ -1,0 +1,104 @@
+.field {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.prefix {
+  flex: none;
+  font-family: "Instrument Sans", "IBM Plex Sans", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: inherit;
+  user-select: none;
+  /* Prefix sits on baseline, slightly smaller than digits */
+  align-self: baseline;
+  transform: translateY(0.06em);
+}
+
+.input {
+  flex: none;
+  font-family: "Instrument Sans", "IBM Plex Sans", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: inherit;
+  line-height: 1;
+  min-width: 0.55em;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.field:not(.readOnly):focus-within {
+  outline: 2px solid rgba(56, 206, 135, 0.45);
+  outline-offset: 6px;
+  border-radius: 8px;
+}
+
+.input[data-placeholder]:empty::before {
+  color: rgba(0, 0, 0, 0.25);
+}
+
+/* Large - payment total */
+.lg {
+  color: #1a7a4c;
+}
+
+.lg .prefix {
+  font-size: 1.65rem;
+  margin-right: 0.35rem;
+}
+
+.lg .input {
+  font-size: 3rem;
+}
+
+/* Extra large - queue number */
+.xl {
+  color: #1c1c1c;
+}
+
+.xl .prefix {
+  font-size: 2.25rem;
+  margin-right: 0.2rem;
+}
+
+.xl .input {
+  font-size: 4.5rem;
+}
+
+/* Medium - party size */
+.md {
+  color: #1c1c1c;
+}
+
+.md .prefix,
+.md .input {
+  font-size: 2.25rem;
+}
+
+.readOnly .input {
+  pointer-events: none;
+}
+
+.light,
+.light .input {
+  color: #fff;
+}
+
+.light .prefix {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.light .input[data-placeholder]:empty::before {
+  color: rgba(255, 255, 255, 0.3);
+}
