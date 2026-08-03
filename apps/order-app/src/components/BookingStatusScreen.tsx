@@ -5,12 +5,14 @@ import { motion } from 'motion/react'
 import { QueueNumber } from './QueueNumber'
 import { LoyaltySheet } from './LoyaltySheet'
 import { EditBookingWarnSheet } from './EditBookingWarnSheet'
+import { CancelBookingWarnSheet } from './CancelBookingWarnSheet'
 import {
   afterPaidStamp,
   lookupLoyalty,
   type LoyaltyProfile,
 } from '@/lib/loyaltyMock'
 import {
+  canCancelBooking,
   canEditBooking,
   memberServicesLabel,
   type LifecycleStatus,
@@ -22,6 +24,8 @@ type BookingStatusScreenProps = {
   onBack: () => void
   onDone?: () => void
   onEdit?: () => void
+  /** After cancel → book again / leave to welcome */
+  onCancelled?: () => void
 }
 
 const STATUS_CHIP: Record<
@@ -33,6 +37,7 @@ const STATUS_CHIP: Record<
   IN_SERVICE: { label: 'In chair', bg: '#7B61FF1A', color: '#5B45D1' },
   PAID: { label: 'Paid', bg: '#14832B1A', color: '#14832B' },
   NO_SHOW: { label: 'No-show', bg: '#00000014', color: '#666' },
+  CANCELLED: { label: 'Cancelled', bg: '#00000014', color: '#666' },
 }
 
 export function BookingStatusScreen({
@@ -40,12 +45,14 @@ export function BookingStatusScreen({
   onBack,
   onDone,
   onEdit,
+  onCancelled,
 }: BookingStatusScreenProps) {
   const [lifecycle, setLifecycle] = useState<LifecycleStatus>(booking.lifecycleStatus)
   const [loyalty, setLoyalty] = useState<LoyaltyProfile>(() => lookupLoyalty(booking.phone))
   const [stampsAfterPay, setStampsAfterPay] = useState<number | null>(null)
   const [celebrateOpen, setCelebrateOpen] = useState(false)
   const [editWarnOpen, setEditWarnOpen] = useState(false)
+  const [cancelWarnOpen, setCancelWarnOpen] = useState(false)
 
   useEffect(() => {
     setLifecycle(booking.lifecycleStatus)
@@ -53,10 +60,13 @@ export function BookingStatusScreen({
     setStampsAfterPay(null)
     setCelebrateOpen(false)
     setEditWarnOpen(false)
+    setCancelWarnOpen(false)
   }, [booking.id, booking.queueNumber, booking.lifecycleStatus, booking.phone])
 
   const editable = canEditBooking(lifecycle) && !!onEdit
+  const cancellable = canCancelBooking(lifecycle)
   const chip = STATUS_CHIP[lifecycle]
+  const leaveAfterCancel = onCancelled ?? onDone
 
   function simulatePaid() {
     const next = afterPaidStamp(loyalty)
@@ -64,6 +74,11 @@ export function BookingStatusScreen({
     setStampsAfterPay(next.stamps)
     setLifecycle('PAID')
     setCelebrateOpen(true)
+  }
+
+  function confirmCancel() {
+    setCancelWarnOpen(false)
+    setLifecycle('CANCELLED')
   }
 
   return (
@@ -101,48 +116,62 @@ export function BookingStatusScreen({
           </span>
         </div>
 
-        <div className="rounded-2xl bg-[#1C1C1C] p-6 text-center text-white">
-          <p className="text-xs text-white/50">Your number</p>
-          <div className="mt-2 flex justify-center">
-            <QueueNumber value={booking.queueNumber} tone="light" />
-          </div>
-          {booking.previousQueueNumber != null ? (
-            <p className="mt-1 text-xs text-white/40">Was #{booking.previousQueueNumber}</p>
-          ) : null}
-          <p className="mt-3 text-sm text-white/60">
-            {lifecycle === 'PAID' ? (
-              <>Thanks. See you next time</>
-            ) : lifecycle === 'IN_SERVICE' ? (
-              <>You’re in the chair</>
-            ) : (
-              <>
-                Now serving:{' '}
-                <span className="font-semibold text-white">#{booking.nowServing}</span>
-              </>
-            )}
-          </p>
-        </div>
-
-        {booking.partySize > 1 && lifecycle !== 'PAID' && lifecycle !== 'NO_SHOW' && (
-          <div className="mt-4 rounded-xl border border-[#38CE87]/20 bg-[#38CE87]/5 p-4 text-sm">
-            <p className="text-xs font-medium uppercase tracking-wide text-[#1A7A4C]">
-              Party progress
+        {lifecycle === 'CANCELLED' ? (
+          <div className="rounded-2xl border border-black/[0.06] bg-[#F9F9F8] p-6 text-center">
+            <p className="font-[family-name:var(--font-display)] text-lg font-bold text-[#1C1C1C]">
+              Booking cancelled
             </p>
-            <ul className="mt-2 space-y-2">
-              {booking.members.map((member) => (
-                <li key={member.name} className="flex items-center justify-between gap-2">
-                  <span className="text-black/55">{member.name}</span>
-                  <span className="text-xs font-medium text-black/35">
-                    {lifecycle === 'IN_SERVICE' ? 'In chair / waiting' : 'Waiting'}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-2 text-xs text-black/40">
-              Barber may assign chairs at counter · still one #{booking.queueNumber}
+            <p className="mt-2 text-sm text-black/45">
+              #{booking.queueNumber} · {booking.dateLabel} · {booking.timeLabel} is released.
+            </p>
+          </div>
+        ) : (
+          <div className="rounded-2xl bg-[#1C1C1C] p-6 text-center text-white">
+            <p className="text-xs text-white/50">Your number</p>
+            <div className="mt-2 flex justify-center">
+              <QueueNumber value={booking.queueNumber} tone="light" />
+            </div>
+            {booking.previousQueueNumber != null ? (
+              <p className="mt-1 text-xs text-white/40">Was #{booking.previousQueueNumber}</p>
+            ) : null}
+            <p className="mt-3 text-sm text-white/60">
+              {lifecycle === 'PAID' ? (
+                <>Thanks. See you next time</>
+              ) : lifecycle === 'IN_SERVICE' ? (
+                <>You’re in the chair</>
+              ) : (
+                <>
+                  Now serving:{' '}
+                  <span className="font-semibold text-white">#{booking.nowServing}</span>
+                </>
+              )}
             </p>
           </div>
         )}
+
+        {booking.partySize > 1 &&
+          lifecycle !== 'PAID' &&
+          lifecycle !== 'NO_SHOW' &&
+          lifecycle !== 'CANCELLED' && (
+            <div className="mt-4 rounded-xl border border-[#38CE87]/20 bg-[#38CE87]/5 p-4 text-sm">
+              <p className="text-xs font-medium uppercase tracking-wide text-[#1A7A4C]">
+                Party progress
+              </p>
+              <ul className="mt-2 space-y-2">
+                {booking.members.map((member) => (
+                  <li key={member.name} className="flex items-center justify-between gap-2">
+                    <span className="text-black/55">{member.name}</span>
+                    <span className="text-xs font-medium text-black/35">
+                      {lifecycle === 'IN_SERVICE' ? 'In chair / waiting' : 'Waiting'}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-2 text-xs text-black/40">
+                Barber may assign chairs at counter · still one #{booking.queueNumber}
+              </p>
+            </div>
+          )}
 
         <div className="mt-4 space-y-3 rounded-xl border border-black/[0.06] p-4 text-sm">
           <Row label="Contact">{booking.nickname}</Row>
@@ -173,54 +202,92 @@ export function BookingStatusScreen({
           <Row label="Total">
             <span className="font-bold text-[#1A7A4C]">RM {booking.total}</span>
           </Row>
-          <Row label="Stamps">
-            {stampsAfterPay ?? loyalty.stamps} / {loyalty.goal}
-          </Row>
+          {lifecycle !== 'CANCELLED' ? (
+            <Row label="Stamps">
+              {stampsAfterPay ?? loyalty.stamps} / {loyalty.goal}
+            </Row>
+          ) : null}
         </div>
       </div>
 
       <div className="shrink-0 space-y-2 border-t border-black/[0.06] px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-        {editable ? (
-          <motion.button
-            type="button"
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setEditWarnOpen(true)}
-            className="w-full rounded-xl border border-black/[0.08] bg-white py-3.5 text-sm font-semibold text-[#1C1C1C]"
-          >
-            Edit booking
-          </motion.button>
-        ) : null}
+        {lifecycle === 'CANCELLED' ? (
+          <>
+            {leaveAfterCancel ? (
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.98 }}
+                onClick={leaveAfterCancel}
+                className="w-full rounded-xl bg-[#38CE87] py-3.5 text-sm font-semibold text-[#1C1C1C]"
+              >
+                Book again
+              </motion.button>
+            ) : null}
+            {onDone && leaveAfterCancel !== onDone ? (
+              <button
+                type="button"
+                onClick={onDone}
+                className="w-full py-2 text-center text-sm text-black/40"
+              >
+                Done
+              </button>
+            ) : null}
+          </>
+        ) : (
+          <>
+            {editable ? (
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setEditWarnOpen(true)}
+                className="w-full rounded-xl border border-black/[0.08] bg-white py-3.5 text-sm font-semibold text-[#1C1C1C]"
+              >
+                Edit booking
+              </motion.button>
+            ) : null}
 
-        {lifecycle === 'IN_SERVICE' ? (
-          <p className="text-center text-xs text-black/40">
-            In chair. Ask the barber to change services.
-          </p>
-        ) : null}
+            {lifecycle === 'IN_SERVICE' ? (
+              <p className="text-center text-xs text-black/40">
+                In chair. Ask the barber to change services.
+              </p>
+            ) : null}
 
-        {lifecycle === 'BOOKED' || lifecycle === 'ARRIVED' ? (
-          <motion.button
-            type="button"
-            whileTap={{ scale: 0.98 }}
-            onClick={simulatePaid}
-            className="w-full rounded-xl border border-black/[0.08] bg-[#F9F9F8] py-3.5 text-sm font-semibold text-[#1C1C1C]"
-          >
-            Simulate payment (prototype)
-          </motion.button>
-        ) : lifecycle === 'PAID' ? (
-          <p className="text-center text-xs text-black/40">
-            Receipt available at the counter · stamp added to your card
-          </p>
-        ) : null}
+            {lifecycle === 'BOOKED' || lifecycle === 'ARRIVED' ? (
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.98 }}
+                onClick={simulatePaid}
+                className="w-full rounded-xl border border-black/[0.08] bg-[#F9F9F8] py-3.5 text-sm font-semibold text-[#1C1C1C]"
+              >
+                Simulate payment (prototype)
+              </motion.button>
+            ) : lifecycle === 'PAID' ? (
+              <p className="text-center text-xs text-black/40">
+                Receipt available at the counter · stamp added to your card
+              </p>
+            ) : null}
 
-        {onDone ? (
-          <button
-            type="button"
-            onClick={onDone}
-            className="w-full py-2 text-center text-sm text-black/40"
-          >
-            Done
-          </button>
-        ) : null}
+            {cancellable ? (
+              <button
+                type="button"
+                onClick={() => setCancelWarnOpen(true)}
+                className="w-full py-2.5 text-center text-sm font-medium text-[#C62828]"
+              >
+                Cancel booking
+              </button>
+            ) : null}
+
+            {onDone ? (
+              <button
+                type="button"
+                onClick={onDone}
+                className="w-full py-2 text-center text-sm text-black/40"
+              >
+                Done
+              </button>
+            ) : null}
+          </>
+        )}
       </div>
 
       <LoyaltySheet
@@ -238,6 +305,13 @@ export function BookingStatusScreen({
           setEditWarnOpen(false)
           onEdit?.()
         }}
+      />
+      <CancelBookingWarnSheet
+        open={cancelWarnOpen}
+        queueNumber={booking.queueNumber}
+        timeLabel={`${booking.dateLabel} · ${booking.timeLabel}`}
+        onKeep={() => setCancelWarnOpen(false)}
+        onConfirm={confirmCancel}
       />
     </div>
   )

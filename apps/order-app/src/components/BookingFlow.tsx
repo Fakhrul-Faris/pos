@@ -8,6 +8,7 @@ import { FloatingInput } from './FloatingInput'
 import { LoyaltySheet } from './LoyaltySheet'
 import { QueueNumber } from './QueueNumber'
 import { EditBookingWarnSheet } from './EditBookingWarnSheet'
+import { CancelBookingWarnSheet } from './CancelBookingWarnSheet'
 import {
   afterPaidStamp,
   DEMO_RETURNING_PHONE,
@@ -21,6 +22,7 @@ import {
   BOOKING_SERVICES,
   buildLookupDates,
   canEditBooking,
+  canCancelBooking,
   formatBookingDateLabel,
   needsNewQueueNumber,
   nextQueueNumber,
@@ -80,7 +82,7 @@ const OCCUPIED: Record<string, [number, number][]> = {
 
 type Step = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
-type BookingStatus = 'BOOKED' | 'PAID'
+type BookingStatus = 'BOOKED' | 'PAID' | 'CANCELLED'
 
 export type BookingFlowProps = {
   onExit: () => void
@@ -268,6 +270,7 @@ export function BookingFlow({
   const [baselineQueue, setBaselineQueue] = useState(() => initial?.queueNumber ?? 42)
   const [queueReissued, setQueueReissued] = useState(false)
   const [editWarnOpen, setEditWarnOpen] = useState(false)
+  const [cancelWarnOpen, setCancelWarnOpen] = useState(false)
   const bookingIdRef = useRef(initial?.id ?? `bk-local-${Date.now()}`)
 
   const isEditing = isEditProp || editingFromStatus
@@ -470,6 +473,8 @@ export function BookingFlow({
     setDisplayQueue(undefined)
     setPreviousQueue(undefined)
     setQueueReissued(false)
+    setEditWarnOpen(false)
+    setCancelWarnOpen(false)
     setBaselinePartySize(1)
     setBaselineDurationMin(30)
     setBaselineQueue(42)
@@ -557,7 +562,10 @@ export function BookingFlow({
 
   const detailsValid = nickname.trim().length >= 2 && isValidMyMobile(phone)
   const progress = progressIndex(step)
-  const statusEditable = canEditBooking(bookingStatus === 'PAID' ? 'PAID' : 'BOOKED')
+  const statusEditable =
+    bookingStatus === 'BOOKED' && canEditBooking('BOOKED')
+  const statusCancellable =
+    bookingStatus === 'BOOKED' && canCancelBooking('BOOKED')
 
   return (
     <div className="flex h-full min-h-0 w-full min-w-0 flex-col overflow-x-hidden">
@@ -1043,37 +1051,68 @@ export function BookingFlow({
               direction={1}
               footer={
                 <div className="space-y-2">
-                  {statusEditable ? (
-                    <motion.button
-                      type="button"
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => setEditWarnOpen(true)}
-                      className="w-full rounded-xl border border-black/[0.08] bg-white py-3.5 text-sm font-semibold text-[#1C1C1C]"
-                    >
-                      Edit booking
-                    </motion.button>
-                  ) : null}
-                  {bookingStatus === 'BOOKED' ? (
-                    <motion.button
-                      type="button"
-                      whileTap={{ scale: 0.98 }}
-                      onClick={simulatePaid}
-                      className="w-full rounded-xl border border-black/[0.08] bg-[#F9F9F8] py-3.5 text-sm font-semibold text-[#1C1C1C]"
-                    >
-                      Simulate payment (prototype)
-                    </motion.button>
+                  {bookingStatus === 'CANCELLED' ? (
+                    <>
+                      <motion.button
+                        type="button"
+                        whileTap={{ scale: 0.98 }}
+                        onClick={restartDemo}
+                        className="w-full rounded-xl bg-[#38CE87] py-3.5 text-sm font-semibold text-[#1C1C1C]"
+                      >
+                        Book again
+                      </motion.button>
+                      <button
+                        type="button"
+                        onClick={onExit}
+                        className="w-full py-2 text-center text-sm text-black/40"
+                      >
+                        Done
+                      </button>
+                    </>
                   ) : (
-                    <p className="text-center text-xs text-black/40">
-                      Receipt available at the counter · stamp added to your card
-                    </p>
+                    <>
+                      {statusEditable ? (
+                        <motion.button
+                          type="button"
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => setEditWarnOpen(true)}
+                          className="w-full rounded-xl border border-black/[0.08] bg-white py-3.5 text-sm font-semibold text-[#1C1C1C]"
+                        >
+                          Edit booking
+                        </motion.button>
+                      ) : null}
+                      {bookingStatus === 'BOOKED' ? (
+                        <motion.button
+                          type="button"
+                          whileTap={{ scale: 0.98 }}
+                          onClick={simulatePaid}
+                          className="w-full rounded-xl border border-black/[0.08] bg-[#F9F9F8] py-3.5 text-sm font-semibold text-[#1C1C1C]"
+                        >
+                          Simulate payment (prototype)
+                        </motion.button>
+                      ) : (
+                        <p className="text-center text-xs text-black/40">
+                          Receipt available at the counter · stamp added to your card
+                        </p>
+                      )}
+                      {statusCancellable ? (
+                        <button
+                          type="button"
+                          onClick={() => setCancelWarnOpen(true)}
+                          className="w-full py-2.5 text-center text-sm font-medium text-[#C62828]"
+                        >
+                          Cancel booking
+                        </button>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={restartDemo}
+                        className="w-full py-2 text-center text-sm text-black/40"
+                      >
+                        Restart demo
+                      </button>
+                    </>
                   )}
-                  <button
-                    type="button"
-                    onClick={restartDemo}
-                    className="w-full py-2 text-center text-sm text-black/40"
-                  >
-                    Restart demo
-                  </button>
                 </div>
               }
             >
@@ -1090,31 +1129,48 @@ export function BookingFlow({
                     style={
                       bookingStatus === 'PAID'
                         ? { backgroundColor: '#14832B1A', color: '#14832B' }
-                        : { backgroundColor: '#5B8DEF1A', color: '#5B8DEF' }
+                        : bookingStatus === 'CANCELLED'
+                          ? { backgroundColor: '#00000014', color: '#666' }
+                          : { backgroundColor: '#5B8DEF1A', color: '#5B8DEF' }
                     }
                   >
-                    {bookingStatus === 'PAID' ? 'Paid' : 'Booked'}
+                    {bookingStatus === 'PAID'
+                      ? 'Paid'
+                      : bookingStatus === 'CANCELLED'
+                        ? 'Cancelled'
+                        : 'Booked'}
                   </span>
                 </div>
 
-                <div className="rounded-2xl bg-[#1C1C1C] p-6 text-center text-white">
-                  <p className="text-xs text-white/50">Your number</p>
-                  <div className="mt-2 flex justify-center">
-                    <QueueNumber value={displayQueue ?? 42} tone="light" />
+                {bookingStatus === 'CANCELLED' ? (
+                  <div className="rounded-2xl border border-black/[0.06] bg-[#F9F9F8] p-6 text-center">
+                    <p className="font-[Instrument_Sans] text-lg font-bold text-[#1C1C1C]">
+                      Booking cancelled
+                    </p>
+                    <p className="mt-2 text-sm text-black/45">
+                      #{displayQueue ?? 42} · {selectedDateLabel} · {selectedTimeLabel} is released.
+                    </p>
                   </div>
-                  {previousQueue != null ? (
-                    <p className="mt-1 text-xs text-white/40">Was #{previousQueue}</p>
-                  ) : null}
-                  <p className="mt-3 text-sm text-white/60">
-                    {bookingStatus === 'PAID' ? (
-                      <>Thanks. See you next time</>
-                    ) : (
-                      <>
-                        Now serving: <span className="font-semibold text-white">#40</span>
-                      </>
-                    )}
-                  </p>
-                </div>
+                ) : (
+                  <div className="rounded-2xl bg-[#1C1C1C] p-6 text-center text-white">
+                    <p className="text-xs text-white/50">Your number</p>
+                    <div className="mt-2 flex justify-center">
+                      <QueueNumber value={displayQueue ?? 42} tone="light" />
+                    </div>
+                    {previousQueue != null ? (
+                      <p className="mt-1 text-xs text-white/40">Was #{previousQueue}</p>
+                    ) : null}
+                    <p className="mt-3 text-sm text-white/60">
+                      {bookingStatus === 'PAID' ? (
+                        <>Thanks. See you next time</>
+                      ) : (
+                        <>
+                          Now serving: <span className="font-semibold text-white">#40</span>
+                        </>
+                      )}
+                    </p>
+                  </div>
+                )}
 
                 {partySize > 1 && bookingStatus === 'BOOKED' && (
                   <div className="mt-4 rounded-xl border border-[#38CE87]/20 bg-[#38CE87]/5 p-4 text-sm">
@@ -1203,6 +1259,16 @@ export function BookingFlow({
         onConfirm={() => {
           setEditWarnOpen(false)
           startEditFromStatus()
+        }}
+      />
+      <CancelBookingWarnSheet
+        open={cancelWarnOpen}
+        queueNumber={displayQueue ?? baselineQueue}
+        timeLabel={`${selectedDateLabel} · ${selectedTimeLabel}`}
+        onKeep={() => setCancelWarnOpen(false)}
+        onConfirm={() => {
+          setCancelWarnOpen(false)
+          setBookingStatus('CANCELLED')
         }}
       />
     </div>

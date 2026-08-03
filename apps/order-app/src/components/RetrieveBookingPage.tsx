@@ -25,9 +25,11 @@ type Step = 'find' | 'pick' | 'status' | 'edit'
 type RetrieveBookingPageProps = {
   onBack: () => void
   onDone: () => void
+  /** After cancel → start a new booking */
+  onBookAgain?: () => void
 }
 
-export function RetrieveBookingPage({ onBack, onDone }: RetrieveBookingPageProps) {
+export function RetrieveBookingPage({ onBack, onDone, onBookAgain }: RetrieveBookingPageProps) {
   const dates = useMemo(() => buildLookupDates(new Date(), 7), [])
   const [step, setStep] = useState<Step>('find')
   const [phone, setPhone] = useState('')
@@ -285,6 +287,7 @@ export function RetrieveBookingPage({ onBack, onDone }: RetrieveBookingPageProps
               }}
               onDone={onDone}
               onEdit={() => setStep('edit')}
+              onCancelled={onBookAgain ?? onDone}
             />
           </motion.div>
         )}

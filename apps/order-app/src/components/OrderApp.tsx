@@ -43,6 +43,7 @@ export function OrderApp() {
             <RetrieveBookingPage
               onBack={() => setScreen('welcome')}
               onDone={() => setScreen('welcome')}
+              onBookAgain={() => setScreen('book')}
             />
           </motion.div>
         )}

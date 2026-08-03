@@ -9,7 +9,13 @@ export type BookingServiceId = (typeof BOOKING_SERVICES)[number]['id']
 
 export type BookingBarberId = 'ali' | 'siti' | 'ben' | 'anyone'
 
-export type LifecycleStatus = 'BOOKED' | 'ARRIVED' | 'IN_SERVICE' | 'PAID' | 'NO_SHOW'
+export type LifecycleStatus =
+  | 'BOOKED'
+  | 'ARRIVED'
+  | 'IN_SERVICE'
+  | 'PAID'
+  | 'NO_SHOW'
+  | 'CANCELLED'
 
 export type BookingMemberSnapshot = {
   name: string
@@ -123,6 +129,11 @@ export function partyServicesLabel(members: BookingMemberSnapshot[]) {
 
 export function canEditBooking(status: LifecycleStatus) {
   return status === 'BOOKED' || status === 'ARRIVED'
+}
+
+/** Same gate as edit: customer may cancel before they are in the chair. */
+export function canCancelBooking(status: LifecycleStatus) {
+  return canEditBooking(status)
 }
 
 /** New queue # when party grows or total chair time grows. */
