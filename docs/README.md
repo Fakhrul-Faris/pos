@@ -7,8 +7,11 @@
 
 | I need to… | Read |
 | :--- | :--- |
+| **Build the product (backend, HitPay, billing)** | **[`requirements.md`](requirements.md)** ← engineering PRD (Round 26) |
+| **HitPay questions still open** | [`open-hitpay.md`](open-hitpay.md) |
+| **Give an AI full Miki context** | [`for-ai.md`](for-ai.md) |
 | Understand what Miki is | This page + [`planning/initial-brd.md`](planning/initial-brd.md) |
-| **Barbershop (anything)** | **[`modules/barbershop/README.md`](modules/barbershop/README.md)** ← start here |
+| **Barbershop screens / UX** | **[`modules/barbershop/README.md`](modules/barbershop/README.md)** |
 | Barbershop product rules & state machine | [`modules/barbershop/spec.md`](modules/barbershop/spec.md) |
 | Trial → Lite → paid (barbershop) | [`modules/barbershop/pricing-funnel.md`](modules/barbershop/pricing-funnel.md) |
 | Features, packages & pricing tiers | [`modules/barbershop/features-and-pricing.md`](modules/barbershop/features-and-pricing.md) |
@@ -18,7 +21,8 @@
 | Universal platform (all verticals) | [`platform/README.md`](platform/README.md) |
 | Pricing model (no RM prices) | [`platform/pricing-model.md`](platform/pricing-model.md) |
 | Design tokens | [`platform/design-system/tokens.json`](platform/design-system/tokens.json) |
-| Backend modules & APIs | [`product/engineering-modules.md`](product/engineering-modules.md) |
+| Schema dump | [`db-schema.json`](db-schema.json) |
+| Backend module IDs | [`product/engineering-modules.md`](product/engineering-modules.md) |
 | Plan timeline & milestones | [`planning/phase1-plan.md`](planning/phase1-plan.md) |
 | GTM strategy (bootstrapped, viral loop) | [`planning/gtm-strategy.md`](planning/gtm-strategy.md) |
 | AI / AEO marketing strategy | [`planning/aeo-strategy.md`](planning/aeo-strategy.md) |
@@ -29,25 +33,29 @@
 ```
 docs/
 ├── README.md                      ← you are here
+├── for-ai.md                      ← compiled context for LLMs
+├── requirements.md                ENGINEERING PRD (Round 26)
+├── open-hitpay.md                 HitPay questions still unanswered
+├── db-schema.json                 Schema dump (not all built)
 ├── platform/                      UNIVERSAL — all verticals
 │   ├── README.md
 │   ├── architecture.md            Core vs country adapters
 │   ├── pricing-model.md           Trial → Lite → paid mechanics
-│   ├── payment-rails.md           HitPay aggregator (internal)
+│   ├── payment-rails.md           HitPay notes (see requirements.md for build rules)
 │   └── design-system/
 │       ├── README.md
 │       └── tokens.json            Design token SSOT
 ├── modules/
-│   └── barbershop/                BARBERSHOP SSOT
-│       ├── README.md              Module hub — start here
-│       ├── spec.md                Product rules
+│   └── barbershop/                BARBERSHOP UI / PRODUCT
+│       ├── README.md              Module hub — start here for screens
+│       ├── spec.md                Product rules (UX)
 │       ├── pricing-funnel.md      Trial → Lite → paid (barbershop)
 │       ├── features-and-pricing.md Feature catalog + tiers
 │       ├── ui.md                  Customer / POS / Owner screens
 │       ├── marketing.md           /barbershop landing copy
 │       └── financial.md           Barbershop pricing assumptions
 ├── product/
-│   └── engineering-modules.md     Backend modules (eng-owned)
+│   └── engineering-modules.md     Backend module IDs
 ├── design/
 │   ├── copy-style.md              Copy voice & replication guide
 │   ├── marketing-copy.md          Hub + all verticals marketing

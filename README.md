@@ -2,46 +2,47 @@
 
 **Queue, booking, and checkout for Malaysian service shops.**
 
-Phase 1 ships the **barbershop module**: customer QR booking, shared counter POS, owner web — BYOD, no hardware bundle.
+Phase 1 is the **barbershop module**: customer QR booking, shared counter POS, owner web — BYOD, no hardware bundle.
 
-## Start here
+## Developer start
 
-Full doc map: **[`docs/README.md`](docs/README.md)**
+1. Read **[`HANDOFF.md`](HANDOFF.md)** — run the apps.
+2. Read **[`docs/README.md`](docs/README.md)** — which spec to trust.
+3. Build behaviour from **[`docs/requirements.md`](docs/requirements.md)** (founder PRD, through Round 26).
+4. Build screens from **[`docs/modules/barbershop/`](docs/modules/barbershop/)** + the Next.js apps.
 
-| Document | Use |
+```bash
+npm install          # always at repo root
+npm run dev:landing  # :3000  marketing
+npm run dev:portal   # :3001  owner web
+npm run dev:pos      # :3002  counter POS
+npm run dev:order    # :3003  customer booking
+```
+
+Node.js 20+. Do not `npm install` inside a single `apps/*` folder.
+
+## What lives where
+
+| Path | What it is |
 | :--- | :--- |
-| [**docs/modules/barbershop/README.md**](docs/modules/barbershop/README.md) | **Barbershop module hub** — start here for Phase 1 |
-| [**docs/modules/barbershop/spec.md**](docs/modules/barbershop/spec.md) | Product rules — states, policies, roles |
-| [**docs/modules/barbershop/pricing-funnel.md**](docs/modules/barbershop/pricing-funnel.md) | Trial → Lite → paid explained |
-| [**docs/modules/barbershop/features-and-pricing.md**](docs/modules/barbershop/features-and-pricing.md) | Feature catalog + Ocelot / Mantis / Patriot pricing |
-| [**docs/modules/barbershop/marketing.md**](docs/modules/barbershop/marketing.md) | Barbershop marketing page copy |
-| [**docs/modules/barbershop/ui.md**](docs/modules/barbershop/ui.md) | IA + all screen specs (Customer, POS, Owner) |
-| [**docs/platform/README.md**](docs/platform/README.md) | Universal platform (tokens, pricing model, payment rails) |
-| [**docs/product/engineering-modules.md**](docs/product/engineering-modules.md) | Backend modules & APIs |
-| [**docs/planning/phase1-plan.md**](docs/planning/phase1-plan.md) | Timeline & milestones |
-| [**docs/financial/ssot.md**](docs/financial/ssot.md) | Costing, forecasts, SaaS metrics |
+| `apps/` | Current UI prototypes (Next.js 15) — in-memory, no API yet |
+| `packages/ui/` | Shared design tokens (`@miki/ui`) |
+| `docs/requirements.md` | **Engineering PRD** — backend, HitPay, billing, payroll |
+| `docs/open-hitpay.md` | HitPay questions still unanswered (Round 24) |
+| `docs/modules/barbershop/` | Barbershop product + screen specs (C/P/O) |
+| `docs/platform/` | Universal platform (tokens, pricing model) |
+| `docs/db-schema.json` | Schema dump (reference; not all of it is built) |
+| `prototype/motion/` | Motion gallery only (`npm run dev` → :5173) |
+| `.agents/` / `.cursor/` / `skills-lock.json` | Internal AI tooling — ignore for product work |
 
 ## Surfaces
 
-| Surface | Who | Document |
-| :--- | :--- | :--- |
-| Customer web | Customer phone | [`ui.md`](docs/modules/barbershop/ui.md) Part 1 (C-xx) |
-| Counter POS | Barber / manager (shared device) | [`ui.md`](docs/modules/barbershop/ui.md) Part 2 (P-xx) |
-| Owner web | Owner | [`ui.md`](docs/modules/barbershop/ui.md) Part 3 (O-xx) |
-
-## Apps & prototypes
-
-Interactive UI lives in the **Next.js monorepo** ([`apps/README.md`](apps/README.md)):
-
-```bash
-npm install
-npm run dev:landing  # Landing → :3000
-npm run dev:pos      # Staff POS → :3002
-npm run dev:portal   # Merchant portal → :3001
-```
-
-Legacy Vite prototypes: [`prototype/README.md`](prototype/README.md)
+| Surface | Who | App | Spec |
+| :--- | :--- | :--- | :--- |
+| Customer web | Customer phone | `apps/order-app` | [`ui.md`](docs/modules/barbershop/ui.md) Part 1 |
+| Counter POS | Barber / manager | `apps/staff-pos` | [`ui.md`](docs/modules/barbershop/ui.md) Part 2 |
+| Owner web | Owner | `apps/merchant-portal` | [`ui.md`](docs/modules/barbershop/ui.md) Part 3 |
 
 ## Plan tiers (not the product name)
 
-**Ocelot** · **Mantis** · **Patriot** · **Arsenal** — subscription packages. **Miki** is the company and platform.
+**Ocelot · Mantis · Patriot · Arsenal** are subscription packages. **Miki** is the company and platform. The engineering PRD also uses older tier names (FREE / STARTER / PLUS / PRO) — map them using [`docs/requirements.md`](docs/requirements.md) and [`docs/modules/barbershop/features-and-pricing.md`](docs/modules/barbershop/features-and-pricing.md).

@@ -6,7 +6,7 @@
 **Date:** July 2026  
 **Status:** Draft for team review (Haziq, Helmi)  
 **Changelog (1.1):** Aligned with Designer IA Brief — Support + platform Accounting in scope; Marketing deferred; Org→Brand→Branch / Brand billable unit; Finance ≠ Accounting; timeline flexible.  
-**Changelog (1.1a):** Schema gap close documented — see [`Miki Admin Portal — Schema Gaps.md`](./Miki%20Admin%20Portal%20%E2%80%94%20Schema%20Gaps.md); BRD §13 #6 marked done in `DBschema.json`.
+**Changelog (1.1a):** Schema gap close documented — see [`Miki Admin Portal — Schema Gaps.md`](./Miki%20Admin%20Portal%20%E2%80%94%20Schema%20Gaps.md); BRD §13 #6 marked done in `docs/db-schema.json`.
 
 **IA / nav / module map:** not maintained in this BRD — sole SSOT is [`Miki Admin Portal — Designer IA Brief.md`](./Miki%20Admin%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md).
 
@@ -164,7 +164,7 @@ Experiment log (not a social dashboard): posts grouped under experiments / hypot
 
 - Target scale: **~100 merchants** for the relevant planning horizon.
 - **Platform: website/desktop only** — no mobile/tablet optimization required for v1.
-- Target production schema: repo `DBschema.json` (hybrid with this BRD — see Designer IA Brief).
+- Target production schema: [`docs/db-schema.json`](../db-schema.json) (hybrid with this BRD — see Designer IA Brief).
 - No additional backend constraints flagged at this stage; to be confirmed with Haziq during FSD.
 - Schema gaps known for v1 money/governance modules (refund workflow, recon/settlement store, admin audit log, explicit lifecycle enums) — eng must close; design may proceed against agreed field lists in FSD.
 
@@ -202,7 +202,7 @@ Explicitly excluded from this release:
 | 3 | Finalize refund request field list (beyond receipt ID + reason) | Fakhrul |
 | 4 | Define detailed lifecycle state map (Org vs Brand; include `suspension_pending`) | Fakhrul |
 | 5 | Define sensitive data masking rules (owner bank details, etc.) | Fakhrul / Haziq |
-| 6 | ~~Schema additions: refund + dual-approval + reason codes; recon/settlement (or HitPay sync); admin audit log~~ **Done in `DBschema.json`** — see [`Miki Admin Portal — Schema Gaps.md`](./Miki%20Admin%20Portal%20%E2%80%94%20Schema%20Gaps.md); remaining = Mendix migration + HitPay field confirm | Haziq |
+| 6 | ~~Schema additions: refund + dual-approval + reason codes; recon/settlement (or HitPay sync); admin audit log~~ **Done in `docs/db-schema.json`** — see [`Miki Admin Portal — Schema Gaps.md`](./Miki%20Admin%20Portal%20%E2%80%94%20Schema%20Gaps.md); remaining = Mendix migration + HitPay field confirm | Haziq |
 | 7 | Support inbox: confirm submission fields / statuses used in v1 UI | Fakhrul |
 | 8 | Note for eng: `rubish$*` vs `shiftmanagement$*` overlap — cleanup; not product IA | Haziq |
 

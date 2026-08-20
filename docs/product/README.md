@@ -1,12 +1,14 @@
 # Product — Miki
 
-**Barbershop module (Phase 1):** [`../modules/barbershop/README.md`](../modules/barbershop/README.md) — all barbershop product, pricing, and UI docs.
-
+**Engineering PRD:** [`../requirements.md`](../requirements.md)  
+**Barbershop screens / UX:** [`../modules/barbershop/README.md`](../modules/barbershop/README.md)  
 **Universal platform:** [`../platform/README.md`](../platform/README.md)
 
 | Document | Purpose |
 | :--- | :--- |
-| [**engineering-modules.md**](engineering-modules.md) | Backend modules, APIs, build order *(engineering-owned)* |
+| [**../requirements.md**](../requirements.md) | Founder PRD — backend, HitPay, billing, payroll |
+| [**../open-hitpay.md**](../open-hitpay.md) | HitPay questions still unanswered |
+| [**engineering-modules.md**](engineering-modules.md) | Backend module IDs & build order |
 
 **Legacy redirects** (moved):
 

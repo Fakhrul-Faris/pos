@@ -1,6 +1,8 @@
 # Payment Rails — Miki · HitPay Aggregator Model
 
-**Status:** Draft — **pending co-founder approval**  
+**Status:** Historical draft (June 2026) — **do not implement from this file.**  
+**Build spec:** [`../requirements.md`](../requirements.md) (connected account per Brand, HitPay Recurring Billing, POS DuitNow QR + card). Remaining questions: [`../open-hitpay.md`](../open-hitpay.md).
+
 **Date:** June 2026  
 **Platform hub:** [`README.md`](README.md)  
 **Related:** [`../modules/barbershop/features-and-pricing.md`](../modules/barbershop/features-and-pricing.md) · [`architecture.md`](architecture.md) · [`../product/engineering-modules.md`](../product/engineering-modules.md) (MOD-12) · [`../financial/ssot.md`](../financial/ssot.md)

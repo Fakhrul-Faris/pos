@@ -9,7 +9,7 @@
 **Related SSOT (other concerns — not IA)**
 - Business requirements: [`Miki Admin Portal BRD.md`](./Miki%20Admin%20Portal%20BRD.md) (v1.1 — aligned with this brief)
 - User flows: [`Miki admin portal user flow.md`](./Miki%20admin%20portal%20user%20flow.md) (v1.2 — aligned with this brief)
-- Data bible: repo root `DBschema.json` (target production schema)
+- Data bible: [`docs/db-schema.json`](../db-schema.json) (target production schema)
 - Current prototype: `apps/admin-portal/`
 
 ---
@@ -22,7 +22,7 @@ Admins land on an **attention queue**, then work money decisions, merchant lifec
 
 **Hybrid rule (locked)**
 - **BRD + this brief** = what the admin product is
-- **`DBschema.json`** = production data ontology
+- **`docs/db-schema.json`** = production data ontology
 - Where they conflict, this brief states the resolve — do not invent a third model
 
 ---
@@ -209,7 +209,7 @@ Settings may live under avatar / footer — not required in primary rail for v1.
 
 ## 10. Schema gaps eng must close (design anyway)
 
-**Status (July 2026):** Structural gaps closed in `DBschema.json`. Field/ownership map: [`Miki Admin Portal — Schema Gaps.md`](./Miki%20Admin%20Portal%20%E2%80%94%20Schema%20Gaps.md).
+**Status (July 2026):** Structural gaps closed in `docs/db-schema.json`. Field/ownership map: [`Miki Admin Portal — Schema Gaps.md`](./Miki%20Admin%20Portal%20%E2%80%94%20Schema%20Gaps.md).
 
 Designers can proceed; eng implements Mendix/DB migration from that handoff:
 

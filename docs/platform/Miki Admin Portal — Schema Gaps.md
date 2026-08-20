@@ -2,7 +2,7 @@
 
 **Version:** 1.0  
 **Date:** July 2026  
-**Status:** Applied to `DBschema.json` (target production ontology)  
+**Status:** Applied to `docs/db-schema.json` (target production ontology)  
 **Authority:** Complements Designer IA Brief §10 and BRD §13 item 6. Product IA remains the Designer IA Brief.
 
 **Prototype mapping:** `apps/admin-portal/src/data/types.ts` + store actions.
@@ -37,7 +37,7 @@
 
 ---
 
-## 3. New tables (added to `DBschema.json`)
+## 3. New tables (added to `docs/db-schema.json`)
 
 ### 3.1 `adminops$auditlog`
 
@@ -142,4 +142,4 @@ These remain BRD open items; schema no longer blocks them:
 
 ---
 
-*End of eng handoff. Update this file if FSD renames enums; keep `DBschema.json` as the structural SSOT.*
+*End of eng handoff. Update this file if FSD renames enums; keep `docs/db-schema.json` as the structural SSOT.*

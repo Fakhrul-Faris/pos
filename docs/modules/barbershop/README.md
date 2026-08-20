@@ -1,7 +1,9 @@
 # Barbershop Module — SSOT
 
 **Platform:** Miki · **Phase:** 1 (first vertical)  
-**Start here** for anything barbershop — product, pricing, UI, marketing.
+**Start here** for barbershop **screens and UX**.
+
+**Build / backend / HitPay:** [`../../requirements.md`](../../requirements.md) — that PRD is the engineering authority (includes payroll, customer accounts, connected HitPay accounts). This folder describes the current UI prototype and marketing packaging.
 
 Universal platform rules: [`../../platform/README.md`](../../platform/README.md)
 
@@ -87,7 +89,7 @@ BARBERSHOP MODULE (this folder)
 | **Design** | This README → `spec.md` → `ui.md` → [`../../platform/design-system/`](../../platform/design-system/) |
 | **Marketing** | `marketing.md` → `compare.md` → `pricing-funnel.md` |
 | **Finance** | `financial.md` → `features-and-pricing.md` Part 2 |
-| **Engineering** | `spec.md` → `ui.md` → [`../../product/engineering-modules.md`](../../product/engineering-modules.md) |
+| **Engineering** | [`../../requirements.md`](../../requirements.md) → `spec.md` → `ui.md` → [`../../product/engineering-modules.md`](../../product/engineering-modules.md) |
 
 ---
 

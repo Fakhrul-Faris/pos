@@ -8,7 +8,7 @@
 **Screen IDs:** [`../modules/barbershop/ui.md`](../modules/barbershop/ui.md) · Part 2  
 **IA (screen-by-screen):** [`staff-pos-ia.md`](staff-pos-ia.md)  
 **Product rules:** [`../modules/barbershop/spec.md`](../modules/barbershop/spec.md)  
-**Prototype capabilities:** [`../../apps/staff-pos/README.md`](../../apps/staff-pos/README.md) · [`../../prototype/staff-pos/README.md`](../../prototype/staff-pos/README.md)
+**Prototype capabilities:** [`../../apps/staff-pos/README.md`](../../apps/staff-pos/README.md)
 
 This document turns the **Staff POS UX requirements** into concrete UI direction: personality, layout, components, states, motion, and screen composition rules. It does not replace product rules in `spec.md` or screen inventory in `ui.md` — it tells design and frontend **how those screens must look and behave**.
 

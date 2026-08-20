@@ -17,7 +17,7 @@
 | [**Miki Admin Portal BRD.md**](Miki%20Admin%20Portal%20BRD.md) | Admin portal **business requirements** SSOT |
 | [**Miki admin portal user flow.md**](Miki%20admin%20portal%20user%20flow.md) | Admin portal **user flows** SSOT (process only — no nav/IA) |
 | [**Miki Admin Portal — Designer IA Brief.md**](Miki%20Admin%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md) | Admin portal **IA / nav / module map** SSOT (sole IA source — do not duplicate) |
-| [**Miki Admin Portal — Schema Gaps.md**](Miki%20Admin%20Portal%20%E2%80%94%20Schema%20Gaps.md) | Admin portal **schema gap close** — refunds/recon/audit/lifecycle mapped to `DBschema.json` |
+| [**Miki Admin Portal — Schema Gaps.md**](Miki%20Admin%20Portal%20%E2%80%94%20Schema%20Gaps.md) | Admin portal **schema gap close** — refunds/recon/audit/lifecycle mapped to [`docs/db-schema.json`](../db-schema.json) |
 | [**Miki Merchant Portal — Designer IA Brief.md**](Miki%20Merchant%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md) | Merchant Portal **IA / nav / module map** SSOT (sole IA source — do not duplicate) |
 
 ---

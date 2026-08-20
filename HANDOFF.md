@@ -1,38 +1,27 @@
-# Miki apps - developer handoff
+# Miki — developer handoff
 
-Prototype UIs for barbershop POS. Client-side only (no API / auth / DB yet).
+UI prototypes for barbershop POS. **Client-side only** (no API / auth / DB yet). Refresh resets demo data.
 
-## Apps
+## Run
 
-| App | Command | URL |
-| --- | --- | --- |
-| Landing | `npm run dev:landing` | http://localhost:3000 |
-| Merchant portal | `npm run dev:portal` | http://localhost:3001 |
-| Staff POS | `npm run dev:pos` | http://localhost:3002 |
-| Order app (customer book + queue) | `npm run dev:order` | http://localhost:3003 |
-| Admin portal (optional) | `npm run dev:admin` | see that app's console for port |
-
-## Option A - from this zip
-
-1. Install **Node.js 20+** ([nodejs.org](https://nodejs.org/) or `nvm install 20`).
-2. Unzip this archive.
-3. In Terminal:
+1. Install **Node.js 20+**.
+2. From the repo root:
 
 ```bash
-cd miki-apps-handoff
 npm install
 ```
 
-4. Run each app in its **own** terminal tab (leave them running):
+3. Each app in its **own** terminal tab:
 
 ```bash
-npm run dev:landing
-npm run dev:portal
-npm run dev:pos
-npm run dev:order
+npm run dev:landing  # http://localhost:3000
+npm run dev:portal   # http://localhost:3001
+npm run dev:pos      # http://localhost:3002
+npm run dev:order    # http://localhost:3003  customer book + queue
+npm run dev:admin    # admin portal (optional)
 ```
 
-5. Open the URLs in the table above.
+Do **not** run `npm install` inside a single `apps/*` folder. Always install at the **repo root** (workspaces + `@miki/ui`).
 
 ### Build check (optional)
 
@@ -40,53 +29,55 @@ npm run dev:order
 npm run build
 ```
 
-## Option B - from GitHub (if you prefer git)
-
-Repo: https://github.com/Fakhrul-Faris/pos.git
+## Git
 
 ```bash
 git clone https://github.com/Fakhrul-Faris/pos.git
 cd pos
 npm install
-npm run dev:landing   # same commands as Option A
 ```
 
-Pull latest later with `git pull`.
+## What to read
 
-## Requirements
+| Need | Document |
+| :--- | :--- |
+| This page | How to run |
+| Engineering PRD (behaviour, HitPay, billing) | [`docs/requirements.md`](docs/requirements.md) |
+| HitPay items still open | [`docs/open-hitpay.md`](docs/open-hitpay.md) |
+| Screens (C / P / O) | [`docs/modules/barbershop/ui.md`](docs/modules/barbershop/ui.md) |
+| Product rules (barbershop UX) | [`docs/modules/barbershop/spec.md`](docs/modules/barbershop/spec.md) |
+| Schema dump | [`docs/db-schema.json`](docs/db-schema.json) |
+| Doc map | [`docs/README.md`](docs/README.md) |
 
-- **Node.js 20+** and npm (comes with Node)
-- macOS / Windows / Linux
-- Do **not** run `npm install` inside a single `apps/*` folder only. Always install at the **repo root** (workspaces + shared `@miki/ui`).
-
-## Layout (what is in the zip)
+## Layout
 
 ```
-package.json          # workspace scripts
-package-lock.json
+package.json
 apps/
-  landing/
-  merchant-portal/
-  staff-pos/
-  order-app/
-  admin-portal/       # included; optional to run
-packages/
-  ui/                 # shared design tokens - required
+  landing/            :3000
+  merchant-portal/    :3001
+  staff-pos/          :3002
+  order-app/          :3003
+  admin-portal/       optional
+packages/ui/          shared tokens — required
+docs/                 product + engineering SSOT
+prototype/motion/     motion gallery only
 ```
 
-## Notes
+## Demo phones (order-app)
 
-- Prototypes use in-memory state; refresh resets demo data.
-- Order-app demos: phone `01161209203` (loyalty + editable booking), `0123456789` (multi-match; one in-chair).
-- More detail: `apps/README.md`
+| Phone | Behaviour |
+| :--- | :--- |
+| `01161209203` | Returning guest (loyalty), one editable booking today |
+| `0123456789` | Two bookings today; one **IN_SERVICE** (no edit/cancel), one editable |
 
 ## Troubleshooting
 
 | Issue | Fix |
-| --- | --- |
-| `Cannot find module '@miki/ui'` | Run `npm install` at the **root**, not inside one app |
-| Port already in use | Stop the other process, or change the port in that app's `package.json` `dev` script |
+| :--- | :--- |
+| `Cannot find module '@miki/ui'` | `npm install` at the **root**, not inside one app |
+| Port already in use | Stop the other process, or change the port in that app's `package.json` |
 | Wrong Node version | `node -v` should be v20+ |
-| `npm install` fails | Delete `node_modules` and retry; check network / Node version |
+| `npm install` fails | Delete `node_modules` and retry |
 
-Questions: send them back with the repo or this zip.
+`.agents/` and `.cursor/` are internal AI skills — ignore them when building the product.

@@ -9,8 +9,8 @@
 | [**portal-personality-brief.md**](portal-personality-brief.md) | **Merchant Portal** — direction sentence, personality, visual rules |
 | [**staff-pos-ui-design.md**](staff-pos-ui-design.md) | **Staff POS** — UI design authority (personality, layout, components, states, P-xx composition) |
 | [**staff-pos-ia.md**](staff-pos-ia.md) | **Staff POS IA** — screen-by-screen map, components, layout regions (no sidebar) |
-| [**../prototype/merchant-portal/README.md**](../prototype/merchant-portal/README.md) | **Dashboard prototype** — live iteration (`npm run dev` → :5174) |
-| [**../prototype/staff-pos/README.md**](../prototype/staff-pos/README.md) | **Staff POS prototype** — counter tablet P-xx capabilities (`npm run dev:pos` → :3002) |
+| [**../../apps/staff-pos/README.md**](../../apps/staff-pos/README.md) | **Staff POS app** — `npm run dev:pos` → :3002 |
+| [**../../apps/merchant-portal/**](../../apps/merchant-portal/) | **Owner web** — `npm run dev:portal` → :3001 |
 | [**copy-style.md**](copy-style.md) | **Copy style guide** — voice, structure, replication checklist |
 | [**marketing-copy.md**](marketing-copy.md) | Hub + all verticals marketing copy |
 | [**web-structure.md**](web-structure.md) | Sitemap, routing, locked decisions |

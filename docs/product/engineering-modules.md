@@ -1,10 +1,11 @@
 # Feature Modules — Miki · Phase 1 Build & Design Spec
 
-**Platform:** Miki · **Module:** Barbershop booking, queue & POS (see [`../modules/barbershop/spec.md`](../modules/barbershop/spec.md))  
-**Screens:** [`../modules/barbershop/ui.md`](../modules/barbershop/ui.md)  
-**Authority:** [`../planning/phase1-plan.md`](../planning/phase1-plan.md) · [`../planning/initial-brd.md`](../planning/initial-brd.md)
+**Platform:** Miki · **Module:** Barbershop booking, queue & POS  
+**Behaviour SSOT:** [`../requirements.md`](../requirements.md)  
+**UX screens:** [`../modules/barbershop/ui.md`](../modules/barbershop/ui.md) · rules: [`../modules/barbershop/spec.md`](../modules/barbershop/spec.md)  
+**Authority:** [`../requirements.md`](../requirements.md) · [`../planning/phase1-plan.md`](../planning/phase1-plan.md)
 
-> **Changelog:** Generic walk-in-only queue superseded by barbershop booking calendar + shared POS. MyInvois **removed from barbershop v1** (receipt SMS only).
+> **Changelog:** Generic walk-in-only queue superseded by barbershop booking calendar + shared POS. HitPay build rules live in `requirements.md`, not in the June aggregator draft.
 
 ---
 

@@ -12,7 +12,7 @@
 - Features & pricing: [`../modules/barbershop/features-and-pricing.md`](../modules/barbershop/features-and-pricing.md)
 - Personality: [`../design/portal-personality-brief.md`](../design/portal-personality-brief.md)
 - Admin Portal IA (boundary): [`Miki Admin Portal — Designer IA Brief.md`](./Miki%20Admin%20Portal%20%E2%80%94%20Designer%20IA%20Brief.md)
-- Data bible: repo root `DBschema.json` (target production schema)
+- Data bible: [`docs/db-schema.json`](../db-schema.json) (target production schema)
 - Current prototype: `apps/merchant-portal/`
 
 ---
@@ -28,7 +28,7 @@ The **Merchant Portal** — laptop web app for shop **Owners** to run the busine
 
 **Hybrid rule (locked)**
 - Product docs + this brief = Merchant Portal product boundary
-- `DBschema.json` = production ontology
+- `docs/db-schema.json` = production ontology
 - Where they conflict, this brief states the resolve
 
 ---

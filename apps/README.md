@@ -1,6 +1,6 @@
 # Miki Apps — Next.js Monorepo
 
-Production-oriented home for **landing**, **merchant portal**, and **staff POS**, migrated from `prototype/`.
+Production-oriented home for **landing**, **merchant portal**, **staff POS**, **order-app**, and **admin portal**.
 
 ## Structure
 
@@ -10,11 +10,12 @@ apps/
   merchant-portal/   Owner web (O-xx) — port 3001
   staff-pos/         Counter POS (P-xx) — port 3002
   order-app/         Customer booking & queue (C-xx) — port 3003
+  admin-portal/      Miki internal ops
 packages/
   ui/                Shared Visitors design tokens (@miki/ui)
 ```
 
-Legacy Vite prototypes remain in `prototype/` for motion reference and archived POS/portal only.
+Motion demos only: `prototype/motion/`.
 
 ## Run
 
@@ -59,6 +60,7 @@ npm run build:order   # order app only
 
 ## Notes
 
-- All interactive UI is client-side (`'use client'`) with in-memory state — same as Vite prototypes.
-- **Staff POS prototype capabilities:** [`prototype/staff-pos/README.md`](../prototype/staff-pos/README.md)
-- Next steps: auth, API routes, real persistence. Customer surface lives at `apps/order-app` (working name).
+- All interactive UI is client-side (`'use client'`) with in-memory state.
+- **Staff POS capabilities:** [`staff-pos/README.md`](staff-pos/README.md)
+- Next steps: auth, API, real persistence. Customer surface: `apps/order-app`.
+- Behaviour SSOT: [`docs/requirements.md`](../docs/requirements.md)
